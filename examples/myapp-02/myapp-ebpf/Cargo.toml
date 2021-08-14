@@ -1,0 +1,25 @@
+[package]
+name = "myapp-ebpf"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+aya-bpf = { git = "http://github.com/alessandrod/aya", branch = "main" }
+aya-bpf-cty = { git = "http://github.com/alessandrod/aya", branch = "main" }
+myapp-common = { path = "../myapp-common" }
+memoffset = "0.6"
+
+[[bin]]
+name = "myapp"
+path = "src/main.rs"
+
+[profile.dev]
+panic = "abort"
+overflow-checks = false
+
+[profile.release]
+panic = "abort"
+
+[workspace]
+members = []
+

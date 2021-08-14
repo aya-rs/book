@@ -1,0 +1,14 @@
+[package]
+name = "myapp"
+version = "0.1.0"
+edition = "2018"
+publish = false
+
+[dependencies]
+aya = { git = "https://github.com/alessandrod/aya", branch="main" }
+myapp-common = { path = "../myapp-common", features=["userspace"] }
+anyhow = "1.0.42"
+
+[[bin]]
+name = "myapp"
+path = "src/main.rs"

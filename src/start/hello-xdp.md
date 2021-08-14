@@ -14,13 +14,7 @@ We must first write the eBPF component of our program.
 The logic for this program is located in `myapp-ebpf/src/main.rs` and currently looks like this:
 
 ```rust,ignore
-#![no_std]
-#![no_main]
-
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unreachable!()
-}
+{{#rustdoc_include ../../examples/myapp-00/myapp-ebpf/src/main.rs}}
 ```
 
 - `#![no_std]` is required since we cannot use the standard library.
@@ -29,29 +23,16 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 
 Let's expand this by adding an XDP program that permits all traffic.
 
-First we'll add some imports:
+First we'll make some use declarations:
 
 ```rust,ignore
-use aya_bpf::bindings::xdp_action;
-use aya_bpf::cty::c_long;
-use aya_bpf::macros::xdp;
-use aya_bpf::programs::XdpContext;
+{{#rustdoc_include ../../examples/myapp-01/myapp-ebpf/src/main.rs:use }}
 ```
 
 Then our application logic:
 
 ```rust,ignore
-#[xdp]
-pub fn xdp_firewall(ctx: XdpContext) -> u32 {
-    match unsafe { try_xdp_firewall(ctx) } {
-        Ok(ret) => ret,
-        Err(_) => xdp_action::XDP_ABORTED,
-    }
-}
-
-unsafe fn try_xdp_firewall(_ctx: XdpContext) -> Result<u32, c_long> {
-    Ok(xdp_action::XDP_PASS)
-}
+{{#rustdoc_include ../../examples/myapp-01/myapp-ebpf/src/main.rs:main }}
 ```
 
 - `#[xdp]` indicates that this function is an XDP program
@@ -83,35 +64,6 @@ We can see an `xdp_firewall` section here.
 
 Simple!
 
-### Completed Program
-
-```rust,ignore
-#![no_std]
-#![no_main]
-
-use aya_bpf::bindings::xdp_action;
-use aya_bpf::cty::c_long;
-use aya_bpf::macros::xdp;
-use aya_bpf::programs::XdpContext;
-
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unreachable!()
-}
-
-#[xdp]
-pub fn xdp_firewall(ctx: XdpContext) -> u32 {
-    match unsafe { try_xdp_firewall(ctx) } {
-        Ok(ret) => ret,
-        Err(_) => xdp_action::XDP_ABORTED,
-    }
-}
-
-unsafe fn try_xdp_firewall(_ctx: XdpContext) -> Result<u32, c_long> {
-    Ok(xdp_action::XDP_PASS)
-}
-```
-
 ## User-space Component
 
 Now our eBPF program is complete and compiled, we need a user-space program to load it and attach it to a trace point.
@@ -122,64 +74,26 @@ Fortunately, we have a program ready in `myapp/src/main.rs` which is going to do
 The generated application has the following content:
 
 ```rust,ignore
-fn main() {
-    if let Err(e) = try_main() {
-        eprintln!("error: {:#}", e);
-    }
-}
-
-fn try_main() -> Result<(), anyhow::Error> {
-    Ok(())
-}
+{{#rustdoc_include ../../examples/myapp-00/myapp/src/main.rs }}
 ```
 
 Let's adapt it to load our program.
 
-We will add a dependency on `ctrlc = "3.2"` to `myapp/Cargo.toml`, then add the following imports at the top of the `myapp/src/main.rs`:
+We will add a dependency on `ctrlc` to `myapp/Cargo.toml`:
+```toml
+{{#include ../../examples/myapp-01/myapp/Cargo.toml:11}}
+```
+
+Add the following declarations at the top of the `myapp/src/main.rs`:
 
 ```rust,ignore
-use aya::Bpf;
-use aya::programs::{Xdp, XdpFlags};
-use std::{
-    convert::TryInto,
-    env,
-    thread,
-    time::Duration,
-    sync::Arc,
-    sync::atomic::{AtomicBool, Ordering},
-};
+{{#rustdoc_include ../../examples/myapp-01/myapp/src/main.rs:use }}
 ```
 
 Then we'll adapt the `try_main` function to load our program:
 
 ```rust,ignore
-fn try_main() -> Result<(), anyhow::Error> {
-    let path = match env::args().nth(1) {
-        Some(iface) => iface,
-        None => panic!("not path provided"),
-    };
-    let iface = match env::args().nth(2) {
-        Some(iface) => iface,
-        None => "eth0".to_string(),
-    };
-    let mut bpf = Bpf::load_file(&path)?;
-    let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;
-    probe.load()?;
-    probe.attach(&iface, XdpFlags::default())?;
-
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
-
-    ctrlc::set_handler(move || {
-        r.store(false, Ordering::SeqCst);
-    }).expect("Error setting Ctrl-C handler");
-
-    println!("Waiting for Ctrl-C...");
-    while running.load(Ordering::SeqCst) {}
-    println!("Exiting...");
-
-    Ok(())
-}
+{{#rustdoc_include ../../examples/myapp-01/myapp/src/main.rs:try_main }}
 ```
 
 The program takes two positional arguments
