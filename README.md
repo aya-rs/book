@@ -6,7 +6,7 @@ This book is a living document, and is updated continuously.
 
 ## License
 
-The Embedded Rust Book (this project) is distributed under the following licenses:
+The Aya Book (this project) is distributed under the following licenses:
 
 * The code samples and free-standing Cargo projects contained within this book are licensed under the terms of both the [MIT License] and the [Apache License v2.0].
 * The written prose contained within this book is licensed under the terms of the Creative Commons [CC-BY-SA v4.0] license.
