@@ -3,7 +3,7 @@
 ## Prerequisites
 
 Before getting started you will need the Rust stable and nightly tool-chains installed on your system.
-This is easily achieved with [`rustup`]:
+This is easily achieved with [`rustup`](https://rustup.rs/):
 
 ```console
 rustup install stable
