@@ -216,13 +216,13 @@ and running a simple eBPF program and userspace application.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="development-environment"><a class="header" href="#development-environment">Development Environment</a></h1>
 <h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
 <p>Before getting started you will need the Rust stable and nightly tool-chains installed on your system.
-This is easily achieved with <a href="https://rustup.rs/"><code>rustup</code></a>:</p>
+This is easily achieved with <a href="https://rustup.rs"><code>rustup</code></a>:</p>
 <pre><code class="language-console">rustup install stable
-rustup install nightly --component rust-src
+rustup toolchain install nightly --component rust-src
 </code></pre>
 <p>Once you have the Rust tool-chains installed, you must also install the <code>bpf-linker</code> - for linking our eBPF program - and <code>cargo-generate</code> - for generating the project skeleton.</p>
 <pre><code class="language-console">cargo +nightly install bpf-linker
-cargo install --git https://github.com/cargo-generate/cargo-generate
+cargo install cargo-generate
 </code></pre>
 <h2 id="starting-a-new-project"><a class="header" href="#starting-a-new-project">Starting A New Project</a></h2>
 <p>To start a new project, you can use <code>cargo-generate</code>:</p>
