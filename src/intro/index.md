@@ -62,4 +62,4 @@ not dig into details on a topic, revisiting the topic in a later chapter.
 
 The source files from which this book is generated can be found on [GitHub][github].
 
-[github]: https://github.com/alessandrod/aya
+[github]: https://github.com/aya-rs/book
