@@ -14,7 +14,7 @@ Once you have the Rust tool-chains installed, you must also install the `bpf-lin
 
 ```console
 cargo +nightly install bpf-linker
-cargo install cargo-generate
+cargo install --git http://github.com/cargo-generate/cargo-generate
 ```
 
 ## Starting A New Project
@@ -22,7 +22,7 @@ cargo install cargo-generate
 To start a new project, you can use `cargo-generate`:
 
 ```console
-cargo generate https://github.com/dave-tucker/aya-template
+cargo generate https://github.com/aya-rs/aya-template
 ```
 
 This will prompt you for a project name. We'll be using `myapp` in this example
