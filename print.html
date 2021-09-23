@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="ebpf/index.html"><strong aria-hidden="true">2.</strong> eBPF Program Limitiations</a></li><li class="chapter-item expanded "><a href="start/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="start/development.html"><strong aria-hidden="true">3.1.</strong> Development Environment</a></li><li class="chapter-item expanded "><a href="start/hello-xdp.html"><strong aria-hidden="true">3.2.</strong> Hello XDP!</a></li><li class="chapter-item expanded "><a href="start/logging-packets.html"><strong aria-hidden="true">3.3.</strong> Logging Packets</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="ebpf/index.html"><strong aria-hidden="true">2.</strong> eBPF Program Limitiations</a></li><li class="chapter-item expanded "><a href="start/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="start/development.html"><strong aria-hidden="true">3.1.</strong> Development Environment</a></li><li class="chapter-item expanded "><a href="start/hello-xdp.html"><strong aria-hidden="true">3.2.</strong> Hello XDP!</a></li><li class="chapter-item expanded "><a href="start/logging-packets.html"><strong aria-hidden="true">3.3.</strong> Logging Packets</a></li></ol></li><li class="chapter-item expanded "><a href="aya/index.html"><strong aria-hidden="true">4.</strong> Working With Aya</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="aya/context.html"><strong aria-hidden="true">4.1.</strong> Reading Values From A Context</a></li><li class="chapter-item expanded "><a href="aya/aya-gen.html"><strong aria-hidden="true">4.2.</strong> Using aya-gen</a></li><li class="chapter-item expanded "><a href="aya/aya-log.html"><strong aria-hidden="true">4.3.</strong> Using aya-log</a></li></ol></li><li class="chapter-item expanded "><a href="programs/index.html"><strong aria-hidden="true">5.</strong> Program Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="programs/probes.html"><strong aria-hidden="true">5.1.</strong> Probes</a></li><li class="chapter-item expanded "><a href="programs/tracepoints.html"><strong aria-hidden="true">5.2.</strong> Tracepoints</a></li><li class="chapter-item expanded "><a href="programs/sockets.html"><strong aria-hidden="true">5.3.</strong> Socket Programs</a></li><li class="chapter-item expanded "><a href="programs/classifiers.html"><strong aria-hidden="true">5.4.</strong> Classifiers</a></li><li class="chapter-item expanded "><a href="programs/cgroups.html"><strong aria-hidden="true">5.5.</strong> Cgroups</a></li><li class="chapter-item expanded "><a href="programs/xdp.html"><strong aria-hidden="true">5.6.</strong> XDP</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -186,7 +186,7 @@ Rust 2018.</li>
 chapters build on concepts in earlier chapters, and earlier chapters may
 not dig into details on a topic, revisiting the topic in a later chapter.</p>
 <h2 id="source-code"><a class="header" href="#source-code">Source Code</a></h2>
-<p>The source files from which this book is generated can be found on <a href="https://github.com/alessandrod/aya">GitHub</a>.</p>
+<p>The source files from which this book is generated can be found on <a href="https://github.com/aya-rs/book">GitHub</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ebpf-program-constraints"><a class="header" href="#ebpf-program-constraints">eBPF Program Constraints</a></h1>
 <p>The eBPF Virtual Machine, where our eBPF programs will be run, is a constrained runtime environment:</p>
 <ul>
@@ -222,11 +222,11 @@ rustup toolchain install nightly --component rust-src
 </code></pre>
 <p>Once you have the Rust tool-chains installed, you must also install the <code>bpf-linker</code> - for linking our eBPF program - and <code>cargo-generate</code> - for generating the project skeleton.</p>
 <pre><code class="language-console">cargo +nightly install bpf-linker
-cargo install cargo-generate
+cargo install --git http://github.com/cargo-generate/cargo-generate
 </code></pre>
 <h2 id="starting-a-new-project"><a class="header" href="#starting-a-new-project">Starting A New Project</a></h2>
 <p>To start a new project, you can use <code>cargo-generate</code>:</p>
-<pre><code class="language-console">cargo generate https://github.com/dave-tucker/aya-template
+<pre><code class="language-console">cargo generate https://github.com/aya-rs/aya-template
 </code></pre>
 <p>This will prompt you for a project name. We'll be using <code>myapp</code> in this example</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-xdp"><a class="header" href="#hello-xdp">Hello XDP!</a></h1>
@@ -1047,6 +1047,28 @@ LOG: SRC 18.168.253.132, ACTION 2
 LOG: SRC 18.168.253.132, ACTION 2
 LOG: SRC 140.82.121.6, ACTION 2
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="working-with-aya"><a class="header" href="#working-with-aya">Working With Aya</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="reading-values-from-a-context"><a class="header" href="#reading-values-from-a-context">Reading Values From A Context</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="using-aya-gen"><a class="header" href="#using-aya-gen">Using aya-gen</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="using-aya-log"><a class="header" href="#using-aya-log">Using aya-log</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="program-types"><a class="header" href="#program-types">Program Types</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="probes"><a class="header" href="#probes">Probes</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tracepoints"><a class="header" href="#tracepoints">Tracepoints</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="sockets"><a class="header" href="#sockets">Sockets</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="classifiers"><a class="header" href="#classifiers">Classifiers</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cgroups"><a class="header" href="#cgroups">Cgroups</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="xdp"><a class="header" href="#xdp">XDP</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
 
                     </main>
 

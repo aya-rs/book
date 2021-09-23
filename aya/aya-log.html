@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Introduction - Building eBPF Programs With Aya</title>
+        <title>Using aya-log - Building eBPF Programs With Aya</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro/index.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../ebpf/index.html"><strong aria-hidden="true">2.</strong> eBPF Program Limitiations</a></li><li class="chapter-item expanded "><a href="../start/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../start/development.html"><strong aria-hidden="true">3.1.</strong> Development Environment</a></li><li class="chapter-item expanded "><a href="../start/hello-xdp.html"><strong aria-hidden="true">3.2.</strong> Hello XDP!</a></li><li class="chapter-item expanded "><a href="../start/logging-packets.html"><strong aria-hidden="true">3.3.</strong> Logging Packets</a></li></ol></li><li class="chapter-item expanded "><a href="../aya/index.html"><strong aria-hidden="true">4.</strong> Working With Aya</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../aya/context.html"><strong aria-hidden="true">4.1.</strong> Reading Values From A Context</a></li><li class="chapter-item expanded "><a href="../aya/aya-gen.html"><strong aria-hidden="true">4.2.</strong> Using aya-gen</a></li><li class="chapter-item expanded "><a href="../aya/aya-log.html"><strong aria-hidden="true">4.3.</strong> Using aya-log</a></li></ol></li><li class="chapter-item expanded "><a href="../programs/index.html"><strong aria-hidden="true">5.</strong> Program Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../programs/probes.html"><strong aria-hidden="true">5.1.</strong> Probes</a></li><li class="chapter-item expanded "><a href="../programs/tracepoints.html"><strong aria-hidden="true">5.2.</strong> Tracepoints</a></li><li class="chapter-item expanded "><a href="../programs/sockets.html"><strong aria-hidden="true">5.3.</strong> Socket Programs</a></li><li class="chapter-item expanded "><a href="../programs/classifiers.html"><strong aria-hidden="true">5.4.</strong> Classifiers</a></li><li class="chapter-item expanded "><a href="../programs/cgroups.html"><strong aria-hidden="true">5.5.</strong> Cgroups</a></li><li class="chapter-item expanded "><a href="../programs/xdp.html"><strong aria-hidden="true">5.6.</strong> XDP</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../ebpf/index.html"><strong aria-hidden="true">2.</strong> eBPF Program Limitiations</a></li><li class="chapter-item expanded "><a href="../start/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../start/development.html"><strong aria-hidden="true">3.1.</strong> Development Environment</a></li><li class="chapter-item expanded "><a href="../start/hello-xdp.html"><strong aria-hidden="true">3.2.</strong> Hello XDP!</a></li><li class="chapter-item expanded "><a href="../start/logging-packets.html"><strong aria-hidden="true">3.3.</strong> Logging Packets</a></li></ol></li><li class="chapter-item expanded "><a href="../aya/index.html"><strong aria-hidden="true">4.</strong> Working With Aya</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../aya/context.html"><strong aria-hidden="true">4.1.</strong> Reading Values From A Context</a></li><li class="chapter-item expanded "><a href="../aya/aya-gen.html"><strong aria-hidden="true">4.2.</strong> Using aya-gen</a></li><li class="chapter-item expanded "><a href="../aya/aya-log.html" class="active"><strong aria-hidden="true">4.3.</strong> Using aya-log</a></li></ol></li><li class="chapter-item expanded "><a href="../programs/index.html"><strong aria-hidden="true">5.</strong> Program Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../programs/probes.html"><strong aria-hidden="true">5.1.</strong> Probes</a></li><li class="chapter-item expanded "><a href="../programs/tracepoints.html"><strong aria-hidden="true">5.2.</strong> Tracepoints</a></li><li class="chapter-item expanded "><a href="../programs/sockets.html"><strong aria-hidden="true">5.3.</strong> Socket Programs</a></li><li class="chapter-item expanded "><a href="../programs/classifiers.html"><strong aria-hidden="true">5.4.</strong> Classifiers</a></li><li class="chapter-item expanded "><a href="../programs/cgroups.html"><strong aria-hidden="true">5.5.</strong> Cgroups</a></li><li class="chapter-item expanded "><a href="../programs/xdp.html"><strong aria-hidden="true">5.6.</strong> XDP</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,64 +134,17 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<p>Welcome to Building eBPF Programs with Aya: An introductory book about using the Rust
-Programming Language and Aya library to build extended Berkley Packet Filter (eBPF)
-programs.</p>
-<h2 id="who-aya-is-for"><a class="header" href="#who-aya-is-for">Who Aya Is For</a></h2>
-<p>Rust is proving to be a popular systems programming language because of its
-safety features and excellent C interoperability. The safety features are less
-important in the context of eBPF as programs often need to read kernel memory, which
-is considered unsafe. However, what Rust combined with Aya does offer is a fast and 
-efficient development experience:</p>
-<ul>
-<li>Cargo for project scaffolding, build, test and debugging</li>
-<li>Generation of Rust bindings to Kernel Headers with Compile-Once, Run-Everywhere (CO-RE) support</li>
-<li>Easy code sharing between user-space and eBPF programs</li>
-<li>Fast compile times</li>
-<li>No runtime dependency on LLVM or BCC</li>
-</ul>
-<h2 id="scope"><a class="header" href="#scope">Scope</a></h2>
-<p>The goals of this book are:</p>
-<ul>
-<li>
-<p>Get developers up to speed with eBPF Rust development. i.e. How to set
-up a development environment.</p>
-</li>
-<li>
-<p>Share <em>current</em> best practices about using Rust for eBPF</p>
-</li>
-</ul>
-<h2 id="who-this-book-is-for"><a class="header" href="#who-this-book-is-for">Who This Book is For</a></h2>
-<p>This book caters towards people with either some eBPF or some Rust background. For those without any prior knowledge we suggest you read the &quot;Assumptions and Prerequisites&quot; section first. You can check out the &quot;Other Resources&quot; section to find resources on topics you might want to read up on.</p>
-<h3 id="assumptions-and-prerequisites"><a class="header" href="#assumptions-and-prerequisites">Assumptions and Prerequisites</a></h3>
-<ul>
-<li>You are comfortable using the Rust Programming Language, and have written,
-run, and debugged Rust applications on a desktop environment. You should also
-be familiar with the idioms of the <a href="https://doc.rust-lang.org/edition-guide/">2018 edition</a> as this book targets
-Rust 2018.</li>
-</ul>
-<ul>
-<li>You are familiar with the core concepts of eBPF</li>
-</ul>
-<h3 id="other-resources"><a class="header" href="#other-resources">Other Resources</a></h3>
-<p>If you are unfamiliar with anything mentioned above or if you want more information about a specific topic mentioned in this book you might find some of these resources helpful.</p>
-<table><thead><tr><th>Topic</th><th>Resource</th><th>Description</th></tr></thead><tbody>
-<tr><td>Rust</td><td><a href="https://doc.rust-lang.org/book/">Rust Book</a></td><td>If you are not yet comfortable with Rust, we highly suggest reading this book.</td></tr>
-<tr><td>eBPF</td><td><a href="https://docs.cilium.io/en/stable/bpf/">Cilium BPF and XDP Reference Guide</a></td><td>If you are not yet comfortable with eBPF, this guide is excellent.</td></tr>
-</tbody></table>
-<h2 id="how-to-use-this-book"><a class="header" href="#how-to-use-this-book">How to Use This Book</a></h2>
-<p>This book generally assumes that you’re reading it front-to-back. Later
-chapters build on concepts in earlier chapters, and earlier chapters may
-not dig into details on a topic, revisiting the topic in a later chapter.</p>
-<h2 id="source-code"><a class="header" href="#source-code">Source Code</a></h2>
-<p>The source files from which this book is generated can be found on <a href="https://github.com/aya-rs/book">GitHub</a>.</p>
+                        <h1 id="using-aya-log"><a class="header" href="#using-aya-log">Using aya-log</a></h1>
+<p>This page is a work in progress, please feel free to open a Pull Request!</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="next" href="../ebpf/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="prev" href="../aya/aya-gen.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../programs/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
@@ -200,7 +153,10 @@ not dig into details on a topic, revisiting the topic in a later chapter.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="next" href="../ebpf/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="prev" href="../aya/aya-gen.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../programs/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
