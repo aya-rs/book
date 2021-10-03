@@ -14,7 +14,7 @@ Once you have the Rust tool-chains installed, you must also install the `bpf-lin
 
 ```console
 cargo +nightly install bpf-linker
-cargo install --git http://github.com/cargo-generate/cargo-generate
+cargo install --git http://github.com/cargo-generate/cargo-generate cargo-generate
 ```
 
 ## Starting A New Project
