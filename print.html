@@ -449,7 +449,7 @@ use std::{
 <p>Finally, we can attach it to an interface with <code>probe.attach(&amp;iface, XdpFlags::default())?;</code></p>
 <p>Let's try it out!</p>
 <pre><code class="language-console">$ cargo build
-$ sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp wlp2s0
+$ sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp wlp2s0
 Waiting for Ctrl-C...
 Exiting...
 </code></pre>
