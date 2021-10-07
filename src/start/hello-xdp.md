@@ -114,7 +114,7 @@ Let's try it out!
 
 ```console
 $ cargo build
-$ sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp wlp2s0
+$ sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp wlp2s0
 Waiting for Ctrl-C...
 Exiting...
 ```
