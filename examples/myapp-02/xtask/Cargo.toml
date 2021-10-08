@@ -8,4 +8,4 @@ edition = "2018"
 [dependencies]
 structopt = {version = "0.3", default-features = false }
 anyhow = "1"
-aya-gen = { git = "http://github.com/alessandrod/aya", branch = "main" }
+aya-gen = { git = "http://github.com/aya-rs/aya", branch = "main" }
