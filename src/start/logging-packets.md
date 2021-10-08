@@ -82,7 +82,7 @@ Add a new dependencies to `xtask/Cargo.toml`:
 
 ```toml
 [dependencies]
-aya-gen = { git = "http://github.com/alessandrod/aya", branch = "main" }
+aya-gen = { git = "http://github.com/aya-rs/aya", branch = "main" }
 ```
 
 Finally, we must add the command to the enum in `xtask/src/main.rs`:
