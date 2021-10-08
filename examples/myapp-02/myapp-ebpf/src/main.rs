@@ -4,7 +4,7 @@
 use aya_bpf::{
     bindings::xdp_action,
     macros::{map, xdp},
-    maps::PerfMap,
+    maps::PerfEventArray,
     programs::XdpContext,
 };
 
@@ -24,7 +24,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 
 // ANCHOR: map
 #[map(name = "EVENTS")]
-static mut EVENTS: PerfMap<PacketLog> = PerfMap::<PacketLog>::with_max_entries(1024, 0);
+static mut EVENTS: PerfEventArray<PacketLog> = PerfEventArray::<PacketLog>::with_max_entries(1024, 0);
 // ANCHOR_END: map
 
 #[xdp]
