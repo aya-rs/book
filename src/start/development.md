@@ -17,6 +17,11 @@ cargo +nightly install bpf-linker
 cargo install --git http://github.com/cargo-generate/cargo-generate cargo-generate
 ```
 
+If you don't have and don't want to install LLVM, you can use rust-llvm feature:
+```console
+cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.2 --no-default-features --features rust-llvm -- bpf-linker
+```
+
 ## Starting A New Project
 
 To start a new project, you can use `cargo-generate`:
