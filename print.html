@@ -512,7 +512,7 @@ unsafe impl aya::Pod for PacketLog {}
 </span><span class="boring">use aya_bpf::{
 </span><span class="boring">    bindings::xdp_action,
 </span><span class="boring">    macros::{map, xdp},
-</span><span class="boring">    maps::PerfMap,
+</span><span class="boring">    maps::PerfEventArray,
 </span><span class="boring">    programs::XdpContext,
 </span><span class="boring">};
 </span><span class="boring">
@@ -529,7 +529,7 @@ unsafe impl aya::Pod for PacketLog {}
 </span><span class="boring">}
 </span><span class="boring">
 </span>#[map(name = &quot;EVENTS&quot;)]
-static mut EVENTS: PerfMap&lt;PacketLog&gt; = PerfMap::&lt;PacketLog&gt;::with_max_entries(1024, 0);
+static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketLog&gt;::with_max_entries(1024, 0);
 <span class="boring">
 </span><span class="boring">#[xdp]
 </span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
@@ -602,7 +602,7 @@ static mut EVENTS: PerfMap&lt;PacketLog&gt; = PerfMap::&lt;PacketLog&gt;::with_m
 </span><span class="boring">    };
 </span><span class="boring">
 </span><span class="boring">    let data = fs::read(path)?;
-</span><span class="boring">    let mut bpf = Bpf::load(&amp;data, None)?;
+</span><span class="boring">    let mut bpf = Bpf::load(&amp;data)?;
 </span><span class="boring">
 </span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
 </span><span class="boring">    probe.load()?;
@@ -748,7 +748,7 @@ enum Command {
 </span><span class="boring">use aya_bpf::{
 </span><span class="boring">    bindings::xdp_action,
 </span><span class="boring">    macros::{map, xdp},
-</span><span class="boring">    maps::PerfMap,
+</span><span class="boring">    maps::PerfEventArray,
 </span><span class="boring">    programs::XdpContext,
 </span><span class="boring">};
 </span><span class="boring">
@@ -765,7 +765,7 @@ use bindings::{ethhdr, iphdr};
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">#[map(name = &quot;EVENTS&quot;)]
-</span><span class="boring">static mut EVENTS: PerfMap&lt;PacketLog&gt; = PerfMap::&lt;PacketLog&gt;::with_max_entries(1024, 0);
+</span><span class="boring">static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketLog&gt;::with_max_entries(1024, 0);
 </span><span class="boring">
 </span><span class="boring">#[xdp]
 </span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
@@ -817,7 +817,7 @@ use bindings::{ethhdr, iphdr};
 </span><span class="boring">use aya_bpf::{
 </span><span class="boring">    bindings::xdp_action,
 </span><span class="boring">    macros::{map, xdp},
-</span><span class="boring">    maps::PerfMap,
+</span><span class="boring">    maps::PerfEventArray,
 </span><span class="boring">    programs::XdpContext,
 </span><span class="boring">};
 </span><span class="boring">
@@ -834,7 +834,7 @@ use bindings::{ethhdr, iphdr};
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">#[map(name = &quot;EVENTS&quot;)]
-</span><span class="boring">static mut EVENTS: PerfMap&lt;PacketLog&gt; = PerfMap::&lt;PacketLog&gt;::with_max_entries(1024, 0);
+</span><span class="boring">static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketLog&gt;::with_max_entries(1024, 0);
 </span><span class="boring">
 </span><span class="boring">#[xdp]
 </span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
@@ -892,7 +892,7 @@ It is marked as <code>unsafe</code> because when calling the function, you must 
 </span><span class="boring">use aya_bpf::{
 </span><span class="boring">    bindings::xdp_action,
 </span><span class="boring">    macros::{map, xdp},
-</span><span class="boring">    maps::PerfMap,
+</span><span class="boring">    maps::PerfEventArray,
 </span><span class="boring">    programs::XdpContext,
 </span><span class="boring">};
 </span><span class="boring">
@@ -909,7 +909,7 @@ It is marked as <code>unsafe</code> because when calling the function, you must 
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">#[map(name = &quot;EVENTS&quot;)]
-</span><span class="boring">static mut EVENTS: PerfMap&lt;PacketLog&gt; = PerfMap::&lt;PacketLog&gt;::with_max_entries(1024, 0);
+</span><span class="boring">static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketLog&gt;::with_max_entries(1024, 0);
 </span><span class="boring">
 </span><span class="boring">#[xdp]
 </span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
@@ -964,7 +964,7 @@ a single field from a struct, rather than reading the whole struct and accessing
 While this is do-able using <code>PerfEventArray</code> and <code>mio</code> or <code>epoll</code>, the code is much less easy to follow. Instead, we'll use <code>tokio</code> to make our user-space application async.</p>
 <p>Let's add some dependencies to <code>myapp/src/Cargo.toml</code>:</p>
 <pre><code class="language-toml">[dependencies]
-aya = { git = &quot;https://github.com/alessandrod/aya&quot;, branch=&quot;main&quot;, features=[&quot;async_tokio&quot;] }
+aya = { git = &quot;https://github.com/aya-rs/aya&quot;, branch=&quot;main&quot;, features=[&quot;async_tokio&quot;] }
 myapp-common = { path = &quot;../myapp-common&quot;, features=[&quot;userspace&quot;] }
 anyhow = &quot;1.0.42&quot;
 bytes = &quot;1&quot;
@@ -998,7 +998,7 @@ async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     };
 
     let data = fs::read(path)?;
-    let mut bpf = Bpf::load(&amp;data, None)?;
+    let mut bpf = Bpf::load(&amp;data)?;
 
     let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
     probe.load()?;
