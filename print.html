@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="ebpf/index.html"><strong aria-hidden="true">2.</strong> eBPF Program Limitiations</a></li><li class="chapter-item expanded "><a href="start/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="start/development.html"><strong aria-hidden="true">3.1.</strong> Development Environment</a></li><li class="chapter-item expanded "><a href="start/hello-xdp.html"><strong aria-hidden="true">3.2.</strong> Hello XDP!</a></li><li class="chapter-item expanded "><a href="start/logging-packets.html"><strong aria-hidden="true">3.3.</strong> Logging Packets</a></li></ol></li><li class="chapter-item expanded "><a href="aya/index.html"><strong aria-hidden="true">4.</strong> Working With Aya</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="aya/context.html"><strong aria-hidden="true">4.1.</strong> Reading Values From A Context</a></li><li class="chapter-item expanded "><a href="aya/aya-gen.html"><strong aria-hidden="true">4.2.</strong> Using aya-gen</a></li><li class="chapter-item expanded "><a href="aya/aya-log.html"><strong aria-hidden="true">4.3.</strong> Using aya-log</a></li></ol></li><li class="chapter-item expanded "><a href="programs/index.html"><strong aria-hidden="true">5.</strong> Program Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="programs/probes.html"><strong aria-hidden="true">5.1.</strong> Probes</a></li><li class="chapter-item expanded "><a href="programs/tracepoints.html"><strong aria-hidden="true">5.2.</strong> Tracepoints</a></li><li class="chapter-item expanded "><a href="programs/sockets.html"><strong aria-hidden="true">5.3.</strong> Socket Programs</a></li><li class="chapter-item expanded "><a href="programs/classifiers.html"><strong aria-hidden="true">5.4.</strong> Classifiers</a></li><li class="chapter-item expanded "><a href="programs/cgroups.html"><strong aria-hidden="true">5.5.</strong> Cgroups</a></li><li class="chapter-item expanded "><a href="programs/xdp.html"><strong aria-hidden="true">5.6.</strong> XDP</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="ebpf/index.html"><strong aria-hidden="true">2.</strong> eBPF Program Limitiations</a></li><li class="chapter-item expanded "><a href="start/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="start/development.html"><strong aria-hidden="true">3.1.</strong> Development Environment</a></li><li class="chapter-item expanded "><a href="start/hello-xdp.html"><strong aria-hidden="true">3.2.</strong> Hello XDP!</a></li><li class="chapter-item expanded "><a href="start/logging-packets.html"><strong aria-hidden="true">3.3.</strong> Logging Packets</a></li><li class="chapter-item expanded "><a href="start/dropping-packets.html"><strong aria-hidden="true">3.4.</strong> Dropping Packets</a></li></ol></li><li class="chapter-item expanded "><a href="aya/index.html"><strong aria-hidden="true">4.</strong> Working With Aya</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="aya/context.html"><strong aria-hidden="true">4.1.</strong> Reading Values From A Context</a></li><li class="chapter-item expanded "><a href="aya/aya-gen.html"><strong aria-hidden="true">4.2.</strong> Using aya-gen</a></li><li class="chapter-item expanded "><a href="aya/aya-log.html"><strong aria-hidden="true">4.3.</strong> Using aya-log</a></li></ol></li><li class="chapter-item expanded "><a href="programs/index.html"><strong aria-hidden="true">5.</strong> Program Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="programs/probes.html"><strong aria-hidden="true">5.1.</strong> Probes</a></li><li class="chapter-item expanded "><a href="programs/tracepoints.html"><strong aria-hidden="true">5.2.</strong> Tracepoints</a></li><li class="chapter-item expanded "><a href="programs/sockets.html"><strong aria-hidden="true">5.3.</strong> Socket Programs</a></li><li class="chapter-item expanded "><a href="programs/classifiers.html"><strong aria-hidden="true">5.4.</strong> Classifiers</a></li><li class="chapter-item expanded "><a href="programs/cgroups.html"><strong aria-hidden="true">5.5.</strong> Cgroups</a></li><li class="chapter-item expanded "><a href="programs/xdp.html"><strong aria-hidden="true">5.6.</strong> XDP</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -1045,6 +1045,357 @@ LOG: SRC 192.168.1.21, ACTION 2
 LOG: SRC 18.168.253.132, ACTION 2
 LOG: SRC 18.168.253.132, ACTION 2
 LOG: SRC 18.168.253.132, ACTION 2
+LOG: SRC 140.82.121.6, ACTION 2
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dropping-packets"><a class="header" href="#dropping-packets">Dropping Packets</a></h1>
+<p>In the previous chapter, our XDP logged traffic. In this chapter we're going to extend it
+to allow the dropping of traffic</p>
+<h2 id="design"><a class="header" href="#design">Design</a></h2>
+<p>In order for our program to drop packets, we're going to need a list of IP Addresses to drop.
+Seeing as we want to do quick lookups a HashMap would be a good datastructure.
+Therefore:</p>
+<ul>
+<li>We need to create a HashMap in our BPF Program</li>
+<li>Check the IP Address from the packet against the HashMap to make a forwarding decision</li>
+<li>Add entries to the blocklist from userspace</li>
+</ul>
+<h3 id="ebpf-map-creation-1"><a class="header" href="#ebpf-map-creation-1">eBPF: Map Creation</a></h3>
+<p>Let's create a new map called <code>BLOCKLIST</code> in <code>myapp-ebpf/src/main.rs</code></p>
+<pre><code class="language-rust ignore"><span class="boring">#![no_std]
+</span><span class="boring">#![no_main]
+</span><span class="boring">
+</span><span class="boring">use aya_bpf::{
+</span><span class="boring">    bindings::xdp_action,
+</span><span class="boring">    macros::{map, xdp},
+</span><span class="boring">    maps::{HashMap, PerfEventArray},
+</span><span class="boring">    programs::XdpContext,
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">use core::mem;
+</span><span class="boring">use memoffset::offset_of;
+</span><span class="boring">use myapp_common::PacketLog;
+</span><span class="boring">
+</span><span class="boring">mod bindings;
+</span><span class="boring">use bindings::{ethhdr, iphdr};
+</span><span class="boring">
+</span><span class="boring">#[panic_handler]
+</span><span class="boring">fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
+</span><span class="boring">    unreachable!()
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[map(name = &quot;EVENTS&quot;)]
+</span><span class="boring">static mut EVENTS: PerfEventArray&lt;PacketLog&gt; =
+</span><span class="boring">    PerfEventArray::&lt;PacketLog&gt;::with_max_entries(1024, 0);
+</span><span class="boring">
+</span>#[map(name = &quot;BLOCKLIST&quot;)]
+static mut BLOCKLIST: HashMap&lt;u32, u32&gt; = HashMap::&lt;u32, u32&gt;::with_max_entries(1024, 0);
+<span class="boring">
+</span><span class="boring">#[xdp]
+</span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
+</span><span class="boring">    match try_xdp_firewall(ctx) {
+</span><span class="boring">        Ok(ret) =&gt; ret,
+</span><span class="boring">        Err(_) =&gt; xdp_action::XDP_ABORTED,
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[inline(always)]
+</span><span class="boring">unsafe fn ptr_at&lt;T&gt;(ctx: &amp;XdpContext, offset: usize) -&gt; Result&lt;*const T, ()&gt; {
+</span><span class="boring">    let start = ctx.data();
+</span><span class="boring">    let end = ctx.data_end();
+</span><span class="boring">    let len = mem::size_of::&lt;T&gt;();
+</span><span class="boring">
+</span><span class="boring">    if start + offset + len &gt; end {
+</span><span class="boring">        return Err(());
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok((start + offset) as *const T)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn block_ip(address: u32) -&gt; bool {
+</span><span class="boring">    unsafe { BLOCKLIST.get(&amp;address).is_some() }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn try_xdp_firewall(ctx: XdpContext) -&gt; Result&lt;u32, ()&gt; {
+</span><span class="boring">    let h_proto = u16::from_be(unsafe { *ptr_at(&amp;ctx, offset_of!(ethhdr, h_proto))? });
+</span><span class="boring">    if h_proto != ETH_P_IP {
+</span><span class="boring">        return Ok(xdp_action::XDP_PASS);
+</span><span class="boring">    }
+</span><span class="boring">    let source = u32::from_be(unsafe { *ptr_at(&amp;ctx, ETH_HDR_LEN + offset_of!(iphdr, saddr))? });
+</span><span class="boring">
+</span><span class="boring">    let action = if block_ip(source) {
+</span><span class="boring">        xdp_action::XDP_DROP
+</span><span class="boring">    } else {
+</span><span class="boring">        xdp_action::XDP_PASS
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    let log_entry = PacketLog {
+</span><span class="boring">        ipv4_address: source,
+</span><span class="boring">        action: action,
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    unsafe {
+</span><span class="boring">        EVENTS.output(&amp;ctx, &amp;log_entry, 0);
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(action)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">const ETH_P_IP: u16 = 0x0800;
+</span><span class="boring">const ETH_HDR_LEN: usize = mem::size_of::&lt;ethhdr&gt;();
+</span></code></pre>
+<h3 id="ebpf-forwarding-decision"><a class="header" href="#ebpf-forwarding-decision">eBPF: Forwarding Decision</a></h3>
+<p>In order to make our forwarding decision, we first need to read from the HashMap.
+We'll implement a function called <code>block_ip</code> which will return <code>true</code> if the IP should be blocked and <code>false</code> if it should pass.</p>
+<pre><code class="language-rust ignore"><span class="boring">#![no_std]
+</span><span class="boring">#![no_main]
+</span><span class="boring">
+</span><span class="boring">use aya_bpf::{
+</span><span class="boring">    bindings::xdp_action,
+</span><span class="boring">    macros::{map, xdp},
+</span><span class="boring">    maps::{HashMap, PerfEventArray},
+</span><span class="boring">    programs::XdpContext,
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">use core::mem;
+</span><span class="boring">use memoffset::offset_of;
+</span><span class="boring">use myapp_common::PacketLog;
+</span><span class="boring">
+</span><span class="boring">mod bindings;
+</span><span class="boring">use bindings::{ethhdr, iphdr};
+</span><span class="boring">
+</span><span class="boring">#[panic_handler]
+</span><span class="boring">fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
+</span><span class="boring">    unreachable!()
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[map(name = &quot;EVENTS&quot;)]
+</span><span class="boring">static mut EVENTS: PerfEventArray&lt;PacketLog&gt; =
+</span><span class="boring">    PerfEventArray::&lt;PacketLog&gt;::with_max_entries(1024, 0);
+</span><span class="boring">
+</span><span class="boring">#[map(name = &quot;BLOCKLIST&quot;)]
+</span><span class="boring">static mut BLOCKLIST: HashMap&lt;u32, u32&gt; = HashMap::&lt;u32, u32&gt;::with_max_entries(1024, 0);
+</span><span class="boring">
+</span><span class="boring">#[xdp]
+</span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
+</span><span class="boring">    match try_xdp_firewall(ctx) {
+</span><span class="boring">        Ok(ret) =&gt; ret,
+</span><span class="boring">        Err(_) =&gt; xdp_action::XDP_ABORTED,
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[inline(always)]
+</span><span class="boring">unsafe fn ptr_at&lt;T&gt;(ctx: &amp;XdpContext, offset: usize) -&gt; Result&lt;*const T, ()&gt; {
+</span><span class="boring">    let start = ctx.data();
+</span><span class="boring">    let end = ctx.data_end();
+</span><span class="boring">    let len = mem::size_of::&lt;T&gt;();
+</span><span class="boring">
+</span><span class="boring">    if start + offset + len &gt; end {
+</span><span class="boring">        return Err(());
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok((start + offset) as *const T)
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn block_ip(address: u32) -&gt; bool {
+    unsafe { BLOCKLIST.get(&amp;address).is_some() }
+}
+<span class="boring">
+</span><span class="boring">fn try_xdp_firewall(ctx: XdpContext) -&gt; Result&lt;u32, ()&gt; {
+</span><span class="boring">    let h_proto = u16::from_be(unsafe { *ptr_at(&amp;ctx, offset_of!(ethhdr, h_proto))? });
+</span><span class="boring">    if h_proto != ETH_P_IP {
+</span><span class="boring">        return Ok(xdp_action::XDP_PASS);
+</span><span class="boring">    }
+</span><span class="boring">    let source = u32::from_be(unsafe { *ptr_at(&amp;ctx, ETH_HDR_LEN + offset_of!(iphdr, saddr))? });
+</span><span class="boring">
+</span><span class="boring">    let action = if block_ip(source) {
+</span><span class="boring">        xdp_action::XDP_DROP
+</span><span class="boring">    } else {
+</span><span class="boring">        xdp_action::XDP_PASS
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    let log_entry = PacketLog {
+</span><span class="boring">        ipv4_address: source,
+</span><span class="boring">        action: action,
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    unsafe {
+</span><span class="boring">        EVENTS.output(&amp;ctx, &amp;log_entry, 0);
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(action)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">const ETH_P_IP: u16 = 0x0800;
+</span><span class="boring">const ETH_HDR_LEN: usize = mem::size_of::&lt;ethhdr&gt;();
+</span></code></pre>
+<p>We'll then call <code>block_ip</code> to determine the fate of the packet:</p>
+<pre><code class="language-rust ignore"><span class="boring">#![no_std]
+</span><span class="boring">#![no_main]
+</span><span class="boring">
+</span><span class="boring">use aya_bpf::{
+</span><span class="boring">    bindings::xdp_action,
+</span><span class="boring">    macros::{map, xdp},
+</span><span class="boring">    maps::{HashMap, PerfEventArray},
+</span><span class="boring">    programs::XdpContext,
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">use core::mem;
+</span><span class="boring">use memoffset::offset_of;
+</span><span class="boring">use myapp_common::PacketLog;
+</span><span class="boring">
+</span><span class="boring">mod bindings;
+</span><span class="boring">use bindings::{ethhdr, iphdr};
+</span><span class="boring">
+</span><span class="boring">#[panic_handler]
+</span><span class="boring">fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
+</span><span class="boring">    unreachable!()
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[map(name = &quot;EVENTS&quot;)]
+</span><span class="boring">static mut EVENTS: PerfEventArray&lt;PacketLog&gt; =
+</span><span class="boring">    PerfEventArray::&lt;PacketLog&gt;::with_max_entries(1024, 0);
+</span><span class="boring">
+</span><span class="boring">#[map(name = &quot;BLOCKLIST&quot;)]
+</span><span class="boring">static mut BLOCKLIST: HashMap&lt;u32, u32&gt; = HashMap::&lt;u32, u32&gt;::with_max_entries(1024, 0);
+</span><span class="boring">
+</span><span class="boring">#[xdp]
+</span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
+</span><span class="boring">    match try_xdp_firewall(ctx) {
+</span><span class="boring">        Ok(ret) =&gt; ret,
+</span><span class="boring">        Err(_) =&gt; xdp_action::XDP_ABORTED,
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[inline(always)]
+</span><span class="boring">unsafe fn ptr_at&lt;T&gt;(ctx: &amp;XdpContext, offset: usize) -&gt; Result&lt;*const T, ()&gt; {
+</span><span class="boring">    let start = ctx.data();
+</span><span class="boring">    let end = ctx.data_end();
+</span><span class="boring">    let len = mem::size_of::&lt;T&gt;();
+</span><span class="boring">
+</span><span class="boring">    if start + offset + len &gt; end {
+</span><span class="boring">        return Err(());
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok((start + offset) as *const T)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn block_ip(address: u32) -&gt; bool {
+</span><span class="boring">    unsafe { BLOCKLIST.get(&amp;address).is_some() }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn try_xdp_firewall(ctx: XdpContext) -&gt; Result&lt;u32, ()&gt; {
+</span><span class="boring">    let h_proto = u16::from_be(unsafe { *ptr_at(&amp;ctx, offset_of!(ethhdr, h_proto))? });
+</span><span class="boring">    if h_proto != ETH_P_IP {
+</span><span class="boring">        return Ok(xdp_action::XDP_PASS);
+</span><span class="boring">    }
+</span><span class="boring">    let source = u32::from_be(unsafe { *ptr_at(&amp;ctx, ETH_HDR_LEN + offset_of!(iphdr, saddr))? });
+</span><span class="boring">
+</span>    let action = if block_ip(source) {
+        xdp_action::XDP_DROP
+    } else {
+        xdp_action::XDP_PASS
+    };
+<span class="boring">
+</span><span class="boring">    let log_entry = PacketLog {
+</span><span class="boring">        ipv4_address: source,
+</span><span class="boring">        action: action,
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    unsafe {
+</span><span class="boring">        EVENTS.output(&amp;ctx, &amp;log_entry, 0);
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(action)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">const ETH_P_IP: u16 = 0x0800;
+</span><span class="boring">const ETH_HDR_LEN: usize = mem::size_of::&lt;ethhdr&gt;();
+</span></code></pre>
+<h3 id="userspace-adding-ip-addresses-to-block"><a class="header" href="#userspace-adding-ip-addresses-to-block">Userspace: Adding IP Addresses to Block</a></h3>
+<p>In order to add addresses to block, we first need to get a reference to the <code>BLOCKLIST</code> map.
+Once we have it, it's simply a case of calling <code>blocklist.insert()</code>.
+We'll use the <code>IPv4Addr</code> type to represent our IP address as it's human-readable and can be easily converted to a <code>u32</code>. We'll block all traffic to <code>1.1.1.1</code> for this example.</p>
+<pre><code class="language-rust ignore"><span class="boring">use aya::{
+</span><span class="boring">    maps::perf::AsyncPerfEventArray,
+</span><span class="boring">    programs::{Xdp, XdpFlags},
+</span><span class="boring">    util::online_cpus,
+</span><span class="boring">    Bpf,
+</span><span class="boring">};
+</span><span class="boring">use bytes::BytesMut;
+</span><span class="boring">use std::{
+</span><span class="boring">    convert::{TryFrom, TryInto},
+</span><span class="boring">    env, fs, net,
+</span><span class="boring">};
+</span><span class="boring">use tokio::{signal, task};
+</span><span class="boring">
+</span><span class="boring">use myapp_common::PacketLog;
+</span><span class="boring">
+</span><span class="boring">#[tokio::main]
+</span><span class="boring">async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
+</span><span class="boring">    let path = match env::args().nth(1) {
+</span><span class="boring">        Some(iface) =&gt; iface,
+</span><span class="boring">        None =&gt; panic!(&quot;not path provided&quot;),
+</span><span class="boring">    };
+</span><span class="boring">    let iface = match env::args().nth(2) {
+</span><span class="boring">        Some(iface) =&gt; iface,
+</span><span class="boring">        None =&gt; &quot;eth0&quot;.to_string(),
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    let data = fs::read(path)?;
+</span><span class="boring">    let mut bpf = Bpf::load(&amp;data)?;
+</span><span class="boring">
+</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
+</span><span class="boring">    probe.load()?;
+</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())?;
+</span><span class="boring">
+</span><span class="boring">    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut(&quot;EVENTS&quot;)?)?;
+</span><span class="boring">
+</span><span class="boring">    for cpu_id in online_cpus()? {
+</span><span class="boring">        let mut buf = perf_array.open(cpu_id, None)?;
+</span><span class="boring">
+</span><span class="boring">        task::spawn(async move {
+</span><span class="boring">            let mut buffers = (0..10)
+</span><span class="boring">                .map(|_| BytesMut::with_capacity(1024))
+</span><span class="boring">                .collect::&lt;Vec&lt;_&gt;&gt;();
+</span><span class="boring">
+</span><span class="boring">            loop {
+</span><span class="boring">                let events = buf.read_events(&amp;mut buffers).await.unwrap();
+</span><span class="boring">                for i in 0..events.read {
+</span><span class="boring">                    let buf = &amp;mut buffers[i];
+</span><span class="boring">                    let ptr = buf.as_ptr() as *const PacketLog;
+</span><span class="boring">                    let data = unsafe { ptr.read_unaligned() };
+</span><span class="boring">                    let src_addr = net::Ipv4Addr::from(data.ipv4_address);
+</span><span class="boring">                    println!(&quot;LOG: SRC {}, ACTION {}&quot;, src_addr, data.action);
+</span><span class="boring">                }
+</span><span class="boring">            }
+</span><span class="boring">        });
+</span><span class="boring">    }
+</span><span class="boring">    signal::ctrl_c().await.expect(&quot;failed to listen for event&quot;);
+</span><span class="boring">    Ok::&lt;_, anyhow::Error&gt;(())
+</span><span class="boring">}
+</span></code></pre>
+<blockquote>
+<p>💡 <strong>HINT: A quick note on Endianness</strong></p>
+<p>IP Addresses are always NetworkEndian (BigEndian). However, in our eBPF Program we convert
+it to HostEndian format using <code>u32::from_be</code>. Therefore it's correct to write our IP Addresses
+in host-endian format when used as Map Keys.
+If you had not converted it in your eBPF Program then you would need to convert it to
+BigEndian format for use as a key.</p>
+</blockquote>
+<h2 id="running-the-program-1"><a class="header" href="#running-the-program-1">Running the program</a></h2>
+<pre><code class="language-console">cargo build
+cargo xtask build-ebpf
+sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp wlp2s0
+</code></pre>
+<pre><code class="language-console">LOG: SRC 192.168.1.205, ACTION 2
+LOG: SRC 1.1.1.1, ACTION 1
+LOG: SRC 192.168.1.21, ACTION 2
+LOG: SRC 192.168.1.21, ACTION 2
+LOG: SRC 18.168.253.132, ACTION 2
+LOG: SRC 1.1.1.1, ACTION 1
+LOG: SRC 18.168.253.132, ACTION 2
+LOG: SRC 18.168.253.132, ACTION 2
+LOG: SRC 1.1.1.1, ACTION 1
 LOG: SRC 140.82.121.6, ACTION 2
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="working-with-aya"><a class="header" href="#working-with-aya">Working With Aya</a></h1>
