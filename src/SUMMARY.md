@@ -6,6 +6,7 @@
   - [Development Environment](./start/development.md)
   - [Hello XDP!](./start/hello-xdp.md)
   - [Logging Packets](./start/logging-packets.md)
+  - [Dropping Packets](./start/dropping-packets.md)
 - [Working With Aya](./aya/index.md)
   - [Reading Values From A Context](./aya/context.md)
   - [Using aya-gen](./aya/aya-gen.md)
