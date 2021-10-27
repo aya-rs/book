@@ -6,6 +6,8 @@ use std::{
     env,
     sync::Arc,
     sync::atomic::{AtomicBool, Ordering},
+    thread,
+    time::Duration
 };
 // ANCHOR_END: use
 
@@ -38,7 +40,9 @@ fn try_main() -> Result<(), anyhow::Error> {
     }).expect("Error setting Ctrl-C handler");
 
     println!("Waiting for Ctrl-C...");
-    while running.load(Ordering::SeqCst) {}
+    while running.load(Ordering::SeqCst) {
+        thread::sleep(Duration::from_millis(500))
+    }
     println!("Exiting...");
 
     Ok(())
