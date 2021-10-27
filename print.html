@@ -356,6 +356,8 @@ use std::{
     env,
     sync::Arc,
     sync::atomic::{AtomicBool, Ordering},
+    thread,
+    time::Duration
 };
 <span class="boring">
 </span><span class="boring">fn main() {
@@ -386,7 +388,9 @@ use std::{
 </span><span class="boring">    }).expect(&quot;Error setting Ctrl-C handler&quot;);
 </span><span class="boring">
 </span><span class="boring">    println!(&quot;Waiting for Ctrl-C...&quot;);
-</span><span class="boring">    while running.load(Ordering::SeqCst) {}
+</span><span class="boring">    while running.load(Ordering::SeqCst) {
+</span><span class="boring">        thread::sleep(Duration::from_millis(500))
+</span><span class="boring">    }
 </span><span class="boring">    println!(&quot;Exiting...&quot;);
 </span><span class="boring">
 </span><span class="boring">    Ok(())
@@ -400,6 +404,8 @@ use std::{
 </span><span class="boring">    env,
 </span><span class="boring">    sync::Arc,
 </span><span class="boring">    sync::atomic::{AtomicBool, Ordering},
+</span><span class="boring">    thread,
+</span><span class="boring">    time::Duration
 </span><span class="boring">};
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -430,7 +436,9 @@ use std::{
     }).expect(&quot;Error setting Ctrl-C handler&quot;);
 
     println!(&quot;Waiting for Ctrl-C...&quot;);
-    while running.load(Ordering::SeqCst) {}
+    while running.load(Ordering::SeqCst) {
+        thread::sleep(Duration::from_millis(500))
+    }
     println!(&quot;Exiting...&quot;);
 
     Ok(())
