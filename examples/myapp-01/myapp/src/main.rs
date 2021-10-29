@@ -25,7 +25,7 @@ fn try_main() -> Result<(), anyhow::Error> {
     };
     let iface = match env::args().nth(2) {
         Some(iface) => iface,
-        None => "eth0".to_string(),
+        None => "lo".to_string(),
     };
     let mut bpf = Bpf::load_file(&path)?;
     let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;

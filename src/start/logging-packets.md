@@ -124,7 +124,7 @@ With our helper function in place, we can:
 1. Read the Ethertype field to check if we have an IPv4 packet.
 1. Read the IPv4 Source Address from the IP header
 
-First let's add another dependency on `memoffset = "0.6"` to `myapp-ebpf/Cargo.toml`, and then we'll change our `try_xdp_firewall` function to look like this:
+First let's add another dependency on `memoffset = "0.6.4"` to `myapp-ebpf/Cargo.toml`, and then we'll change our `try_xdp_firewall` function to look like this:
 
 ```rust,ignore
 {{#rustdoc_include ../../examples/myapp-02/myapp-ebpf/src/main.rs:try}}
@@ -167,15 +167,15 @@ We no longer need to sleep, as we run until we receive the `CTRL+C` signal.
 ```console
 cargo build
 cargo xtask build-ebpf
-sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp wlp2s0
+sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp lo
 ```
 
 ```console
-LOG: SRC 192.168.1.205, ACTION 2
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 140.82.121.6, ACTION 2
+LOG: SRC 127.0.0.1, ACTION 2
+LOG: SRC 127.0.0.53, ACTION 2
+LOG: SRC 127.0.0.1, ACTION 2
+LOG: SRC 127.0.0.53, ACTION 2
+LOG: SRC 127.0.0.1, ACTION 2
+LOG: SRC 127.0.0.1, ACTION 2
+LOG: SRC 127.0.0.1, ACTION 2
 ```

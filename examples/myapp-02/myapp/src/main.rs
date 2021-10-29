@@ -22,7 +22,7 @@ async fn main() -> Result<(), anyhow::Error> {
     };
     let iface = match env::args().nth(2) {
         Some(iface) => iface,
-        None => "eth0".to_string(),
+        None => "lo".to_string(),
     };
 
     let data = fs::read(path)?;
