@@ -1,38 +1,41 @@
 use aya::{
     maps::HashMap,
-    maps::perf::{AsyncPerfEventArray},
+    maps::perf::AsyncPerfEventArray,
     programs::{Xdp, XdpFlags},
     util::online_cpus,
     Bpf,
 };
+use structopt::StructOpt;
 use bytes::BytesMut;
-use std::{convert::{TryFrom, TryInto}, env, fs, net::{self, Ipv4Addr}};
+use std::{
+    convert::{TryFrom, TryInto}, 
+    env, fs, net::{self, Ipv4Addr},
+};
 use tokio::{signal, task};
 
 use myapp_common::PacketLog;
 
+#[derive(Debug, StructOpt)]
+struct Opt {
+    #[structopt(short, long)]
+    path: String,
+    #[structopt(short, long, default_value = "eth0")]
+    iface: String,
+}
+
 // ANCHOR: main
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
-    let path = match env::args().nth(1) {
-        Some(iface) => iface,
-        None => panic!("not path provided"),
-    };
-    let iface = match env::args().nth(2) {
-        Some(iface) => iface,
-        None => "lo".to_string(),
-    };
-
-    let data = fs::read(path)?;
-    let mut bpf = Bpf::load(&data)?;
-
-    let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;
-    probe.load()?;
-    probe.attach(&iface, XdpFlags::default())?;
+    let opt = Opt::from_args();
+    let mut bpf = Bpf::load_file(&opt.path)?;
+    let program: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;
+    program.load()?;
+    program.attach(&opt.iface, XdpFlags::default())?;
 
     // ANCHOR: block_address
     let mut blocklist: HashMap<_, u32, u32> = HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
-    let block_addr : u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
+    // Let's block localhost IP addresses
+    let block_addr : u32 = Ipv4Addr::new(127, 0, 0, 1).try_into()?;
     blocklist.insert(block_addr, 0, 0)?;
     // ANCHOR_END: block_address
 

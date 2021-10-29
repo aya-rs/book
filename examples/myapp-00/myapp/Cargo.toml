@@ -8,6 +8,7 @@ publish = false
 aya = { git = "https://github.com/alessandrod/aya", branch="main" }
 myapp-common = { path = "../myapp-common", features=["userspace"] }
 anyhow = "1.0.42"
+structopt = { version = "0.3"}
 
 [[bin]]
 name = "myapp"

@@ -10,6 +10,7 @@ myapp-common = { path = "../myapp-common", features=["userspace"] }
 anyhow = "1.0.42"
 bytes = "1"
 tokio = { version = "1.9.0", features = ["full"] }
+structopt = { version = "0.3"}
 
 [[bin]]
 name = "myapp"
