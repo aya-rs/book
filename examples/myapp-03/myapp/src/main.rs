@@ -35,7 +35,7 @@ async fn main() -> Result<(), anyhow::Error> {
     // ANCHOR: block_address
     let mut blocklist: HashMap<_, u32, u32> = HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
     // Let's block localhost IP addresses
-    let block_addr : u32 = Ipv4Addr::new(127, 0, 0, 1).try_into()?;
+    let block_addr : u32 = Ipv4Addr::new(192, 168, 0, 10).try_into()?;
     blocklist.insert(block_addr, 0, 0)?;
     // ANCHOR_END: block_address
 
