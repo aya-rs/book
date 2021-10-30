@@ -27,7 +27,7 @@ struct Opt {
 async fn main() -> Result<(), anyhow::Error> {
     let opt = Opt::from_args();
     let mut bpf = Bpf::load_file(&opt.path)?;
-    let program: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;
+    let program: &mut Xdp = bpf.program_mut("myapp")?.try_into()?;
     program.load()?;
     program.attach(&opt.iface, XdpFlags::default())?;
 

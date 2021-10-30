@@ -15,7 +15,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 }
 
 // ANCHOR: main
-#[xdp]
+#[xdp(name="myapp")]
 pub fn xdp_firewall(ctx: XdpContext) -> u32 {
     match unsafe { try_xdp_firewall(ctx) } {
         Ok(ret) => ret,

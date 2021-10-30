@@ -33,7 +33,7 @@ static mut EVENTS: PerfEventArray<PacketLog> =
 static mut BLOCKLIST: HashMap<u32, u32> = HashMap::<u32, u32>::with_max_entries(1024, 0);
 // ANCHOR_END: blocklist
 
-#[xdp]
+#[xdp(name="myapp")]
 pub fn xdp_firewall(ctx: XdpContext) -> u32 {
     match try_xdp_firewall(ctx) {
         Ok(ret) => ret,

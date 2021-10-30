@@ -35,7 +35,7 @@ Then our application logic:
 {{#rustdoc_include ../../examples/myapp-01/myapp-ebpf/src/main.rs:main }}
 ```
 
-- `#[xdp]` indicates that this function is an XDP program
+- `#[xdp(name="myapp")]` indicates that this function is an XDP program
 - The `try_xdp_firewall` function returns a Result that permits all traffic
 - The `xdp_firewall` program calls `try_xdp_firewall` and handles any errors by returning `XDP_ABORTED`, which will drop the packet and raise a tracepoint exception.
 
@@ -106,7 +106,7 @@ The line `let mut bpf = Bpf::load_file(&path)?;`:
 - Creates any maps
 - If your system supports BPF Type Format (BTF), it will read the current BTF description and performs any necessary relocations
 
-Once our file is loaded, we can extract the XDP probe with `let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;` and then load it in to the kernel with `probe.load()`.
+Once our file is loaded, we can extract the XDP probe with `let probe: &mut Xdp = bpf.program_mut("myapp")?.try_into()?;` and then load it in to the kernel with `probe.load()`.
 
 Finally, we can attach it to an interface with `probe.attach(&iface, XdpFlags::default())?;`
 

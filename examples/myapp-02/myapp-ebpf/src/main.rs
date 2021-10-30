@@ -27,7 +27,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 static mut EVENTS: PerfEventArray<PacketLog> = PerfEventArray::<PacketLog>::with_max_entries(1024, 0);
 // ANCHOR_END: map
 
-#[xdp]
+#[xdp(name="myapp")]
 pub fn xdp_firewall(ctx: XdpContext) -> u32 {
     match try_xdp_firewall(ctx) {
         Ok(ret) => ret,
