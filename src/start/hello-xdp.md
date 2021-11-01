@@ -4,7 +4,9 @@
 
 While there are myriad trace points to attach to and program types to write we should start somewhere simple.
 
-XDP (eXpress Data Path) programs permit our eBPF program to make decisions about packets that have been received on the interface to which our program is attached. To keep things simple, we'll build a very simplistic firewall to permit or deny traffic.
+XDP (eXpress Data Path) programs permit our eBPF program to make decisions about packets that have been sent out on the interface to which our program is attached. To keep things simple, we'll build a very simplistic firewall to permit or deny traffic.
+
+> In this example you will be attaching XDP programs to a network interface. The guide assumes you have an interface called `eth0`, but you may select any NIC on your machine.
 
 ## eBPF Component
 

@@ -56,10 +56,10 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     if h_proto != ETH_P_IP {
         return Ok(xdp_action::XDP_PASS);
     }
-    let source = u32::from_be(unsafe { *ptr_at(&ctx, ETH_HDR_LEN + offset_of!(iphdr, saddr))? });
+    let dest = u32::from_be(unsafe { *ptr_at(&ctx, ETH_HDR_LEN + offset_of!(iphdr, daddr))? });
 
     let log_entry = PacketLog {
-        ipv4_address: source,
+        ipv4_address: dest,
         action: xdp_action::XDP_PASS,
     };
     unsafe {

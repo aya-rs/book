@@ -41,7 +41,7 @@ We'll then call `block_ip` to determine the fate of the packet:
 
 In order to add addresses to block, we first need to get a reference to the `BLOCKLIST` map.
 Once we have it, it's simply a case of calling `blocklist.insert()`.
-We'll use the `IPv4Addr` type to represent our IP address as it's human-readable and can be easily converted to a `u32`. We'll block all traffic **to** `192.168.0.10` sent over the `lo` interface, for this example.
+We'll use the `IPv4Addr` type to represent our IP address as it's human-readable and can be easily converted to a `u32`. We'll block all traffic **to** `192.168.0.10` sent over the `eth0` interface, for this example.
 
 ```rust,ignore
 {{#rustdoc_include ../../examples/myapp-02/myapp/src/main.rs:block_address}}
@@ -61,26 +61,26 @@ We'll use the `IPv4Addr` type to represent our IP address as it's human-readable
 ```console
 cargo build
 cargo xtask build-ebpf
-sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp --intf lo
+sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp --iface eth0
 ```
 
 ### Testing the Allowed IP addresses
 
 ```console
-curl --interface lo 192.168.0.22
+curl --interface eth0 192.168.0.22
 ```
 
 ```console
-LOG: SRC 192.168.0.22, ACTION 2
-LOG: SRC 192.168.0.22, ACTION 2
+LOG: DST 192.168.0.22, ACTION 2
+LOG: DST 192.168.0.22, ACTION 2
 ```
 
 ### Testing the Blocked IP address
 ```console
-curl --interface lo 192.168.0.10
+curl --interface eth0 192.168.0.10
 ```
 
 ```console
-LOG: SRC 192.168.0.10, ACTION 1
-LOG: SRC 192.168.0.10, ACTION 1
+LOG: DST 192.168.0.10, ACTION 1
+LOG: DST 192.168.0.10, ACTION 1
 ```
