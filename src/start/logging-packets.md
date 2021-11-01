@@ -3,6 +3,7 @@
 In the previous chapter, our XDP application ran for 10 seconds and permitted some traffic.
 There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted
 
+The source for this chapter can be found [here](https://github.com/aya-rs/book/tree/main/examples/myapp-02).
 
 ## Getting Data to User-Space
 

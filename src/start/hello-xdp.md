@@ -8,6 +8,8 @@ XDP (eXpress Data Path) programs permit our eBPF program to make decisions about
 
 > In this example you will be attaching XDP programs to a network interface. The guide assumes you have an interface called `eth0`, but you may select any NIC on your machine.
 
+The source for this chapter can be found [here](https://github.com/aya-rs/book/tree/main/examples/myapp-01).
+
 ## eBPF Component
 
 ### Permit All
