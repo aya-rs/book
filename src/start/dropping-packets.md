@@ -69,7 +69,7 @@ sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp --iface
 ### Testing the Allowed IP addresses
 
 ```console
-curl --interface eth0 192.168.0.22
+curl 192.168.0.22
 ```
 
 ```console
@@ -79,7 +79,7 @@ LOG: DST 192.168.0.22, ACTION 2
 
 ### Testing the Blocked IP address
 ```console
-curl --interface eth0 192.168.0.10
+curl 192.168.0.10
 ```
 
 ```console
