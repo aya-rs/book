@@ -1,7 +1,7 @@
 # Logging Packets
 
-In the previous chapter, our XDP application ran for 10 seconds and permitted some traffic.
-There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted
+In the previous chapter, our XDP application ran until Ctrl-C was hit and permitted all the traffic.
+There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted.
 
 
 ## Getting Data to User-Space
@@ -41,7 +41,7 @@ When the eBPF program is loaded by Aya, the map will be created for us.
 
 ### Userspace: Map Creation
 
-After our call to `probe.attach()` we'll add the following code.
+After our call to `probe.attach()` we'll add the following code:
 
 
 ```rust,ignore

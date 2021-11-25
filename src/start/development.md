@@ -29,10 +29,9 @@ To start a new project, you can use `cargo-generate`:
 ```console
 cargo generate https://github.com/aya-rs/aya-template
 ```
+This will prompt you for a project name - we'll be using `myapp` in this example. It will also prompt you for a program type and possibly other options depending on the chosen type (for example, the attach direction for network classifiers).
 
-This will prompt you for a project name, a type of eBPF program, and possibly for other
-choices depending on the eBPF program (for example, the 'attach direction: Ingress or Egress'
-for the classifier type. You can add those options to the `cargo generate` command, for example:
+If you prefer, you can set template options directly from the command line:
 ```console
 cargo generate --name xdpfw -d program_type=xdp https://github.com/aya-rs/aya-template
 ```
@@ -42,6 +41,3 @@ cargo generate --name tcfw -d program_type=classifier -d direction=Ingress https
 ```
 
 See https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml for the full list of available options.
-
-
-We'll be using the `myapp` name for the next examples.

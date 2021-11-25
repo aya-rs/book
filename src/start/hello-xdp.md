@@ -14,16 +14,17 @@ We must first write the eBPF component of our program.
 The logic for this program is located in `myapp-ebpf/src/main.rs` and currently looks like this:
 
 ```rust,ignore
-{{#rustdoc_include ../../examples/myapp-00/myapp-ebpf/src/main.rs}}
+{{#rustdoc_include ../../examples/myapp-01/myapp-ebpf/src/main.rs:all}}
 ```
 
 - `#![no_std]` is required since we cannot use the standard library.
 - `#![no_main]` is required as we have no main function.
 - The `#[panic_handler]` is required to keep the compiler happy, although it is never used since we cannot panic.
 
-Let's expand this by adding an XDP program that permits all traffic.
+This is a minimal generated XDP program that permits all traffic.
 
-First we'll make some use declarations:
+Let's look at some of its details.
+First we make some `use` declarations:
 
 ```rust,ignore
 {{#rustdoc_include ../../examples/myapp-01/myapp-ebpf/src/main.rs:use }}
@@ -35,11 +36,11 @@ Then our application logic:
 {{#rustdoc_include ../../examples/myapp-01/myapp-ebpf/src/main.rs:main }}
 ```
 
-- `#[xdp]` indicates that this function is an XDP program
-- The `try_xdp_firewall` function returns a Result that permits all traffic
-- The `xdp_firewall` program calls `try_xdp_firewall` and handles any errors by returning `XDP_ABORTED`, which will drop the packet and raise a tracepoint exception.
+- `#[xdp(name="myapp")]` indicates that this function is an XDP program.
+- The `try_myapp` function returns a Result that currenlty permits all traffic.
+- The `myapp` program calls `try_myapp` and handles any errors by returning `XDP_ABORTED`, which will drop the packet and raise a tracepoint exception.
 
-Now we can compile this using `cargo xtask build-ebpf`
+Now we can compile this using `cargo xtask build-ebpf`.
 
 ### Verifying The Program
 
@@ -51,14 +52,14 @@ $ llvm-objdump -S target/bpfel-unknown-none/debug/myapp
 target/bpfel-unknown-none/debug/myapp:  file format elf64-bpf
 
 
-Disassembly of section xdp:
+Disassembly of section xdp/myapp:
 
-0000000000000000 <xdp_firewall>:
+0000000000000000 <myapp>:
        0:       b7 00 00 00 02 00 00 00 r0 = 2
        1:       95 00 00 00 00 00 00 00 exit
 ```
 
-We can see an `xdp_firewall` section here.
+We can see an `xdp/myapp` section here.
 `r0 = 2` sets register `0` to `2`, which is the value of the `XDP_PASS` action.
 `exit` ends the program.
 
@@ -67,54 +68,71 @@ Simple!
 ## User-space Component
 
 Now our eBPF program is complete and compiled, we need a user-space program to load it and attach it to a trace point.
-Fortunately, we have a program ready in `myapp/src/main.rs` which is going to do that for us.
+Fortunately, we have a generated program ready in `myapp/src/main.rs` which is going to do that for us.
 
 ### Starting Out
 
 The generated application has the following content:
 
 ```rust,ignore
-{{#rustdoc_include ../../examples/myapp-00/myapp/src/main.rs }}
+{{#rustdoc_include ../../examples/myapp-01/myapp/src/main.rs:all }}
 ```
 
-Let's adapt it to load our program.
+Let's look at the details of this program.
 
-We will add a dependency on `ctrlc` to `myapp/Cargo.toml`:
+There is a dependency on `ctrlc` added to `myapp/Cargo.toml`:
 ```toml
 {{#include ../../examples/myapp-01/myapp/Cargo.toml:11}}
 ```
 
-Add the following declarations at the top of the `myapp/src/main.rs`:
+The following `use` declarations are added at the top of the `myapp/src/main.rs`:
 
 ```rust,ignore
 {{#rustdoc_include ../../examples/myapp-01/myapp/src/main.rs:use }}
 ```
 
-Then we'll adapt the `try_main` function to load our program:
+
+`try_main` function loads our program:
 
 ```rust,ignore
 {{#rustdoc_include ../../examples/myapp-01/myapp/src/main.rs:try_main }}
 ```
 
-The program takes two positional arguments
-- The path to our eBPF application
-- The interface we wish to attach it to (defaults to `eth0`)
 
-The line `let mut bpf = Bpf::load_file(&path)?;`:
-- Opens the file
+The program optionally takes an argument for the interface we wish to attach it to (defaults to `eth0`).
+
+`include_bytes_aligned!` copies the contents of the BPF object file
+into a variable at the compile time.
+The statement `let mut bpf = Bpf::load_file(data)?;`:
 - Reads the ELF contents
 - Creates any maps
 - If your system supports BPF Type Format (BTF), it will read the current BTF description and performs any necessary relocations
 
-Once our file is loaded, we can extract the XDP probe with `let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;` and then load it in to the kernel with `probe.load()`.
+Once our file is loaded, we can extract the XDP program with `let program: &mut Xdp = bpf.program_mut("myapp")?.try_into()?;` and then load it in to the kernel with `program.load()`.
 
-Finally, we can attach it to an interface with `probe.attach(&iface, XdpFlags::default())?;`
+Finally, we can attach it to an interface with `program.attach(&opt.iface, XdpFlags::default())?;`
 
 Let's try it out!
 
 ```console
+# change directory to the root or myapp
 $ cargo build
-$ sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp wlp2s0
+$ cargo xtask run -- -h
+myapp 0.1.0
+
+USAGE:
+    myapp [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -i, --iface <iface>     [default: eth0]
+
+# add -i or --iface parameter if need to attach to an interface other than eth0
+# - for example, cargo xtask run -- -i wlp2s0
+$ cargo xtask run
 Waiting for Ctrl-C...
 Exiting...
 ```
@@ -134,7 +152,7 @@ If you issue the `sudo bpftool prog list` command when `myapp` is running you ca
 
 ```console
 84: xdp  tag 3b185187f1855c4c  gpl
-        loaded_at 2021-08-05T13:35:06+0100  uid 0
+        loaded_at 2022-01-07T12:17:54+0000  uid 0
         xlated 16B  jited 18B  memlock 4096B
         pids myapp(69184)
 ```

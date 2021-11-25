@@ -5,10 +5,10 @@ edition = "2018"
 
 [features]
 default = []
-userspace = [ "aya" ]
+user = [ "aya" ]
 
 [dependencies]
-aya = { git = "https://github.com/alessandrod/aya", branch="main", optional=true }
+aya = { git = "https://github.com/aya-rs/aya", branch="main", optional=true }
 
 [lib]
 path = "src/lib.rs"
