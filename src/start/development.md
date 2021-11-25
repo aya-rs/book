@@ -31,8 +31,8 @@ cargo generate https://github.com/aya-rs/aya-template
 ```
 
 This will prompt you for a project name, a type of eBPF program, and possibly for other
-choices depending on the eBPF program (for example, the 'attach direction: Ingress or Egress'
-for the classifier type. You can add those options to the `cargo generate` command, for example:
+choices depending on the eBPF program (for example, the `attach direction: Ingress or Egress`
+for the classifier type). You can also set template options directly from the command line:
 ```console
 cargo generate --name xdpfw -d program_type=xdp https://github.com/aya-rs/aya-template
 ```
