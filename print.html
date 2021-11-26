@@ -239,7 +239,14 @@ cargo install --git http://github.com/cargo-generate/cargo-generate cargo-genera
 <p>To start a new project, you can use <code>cargo-generate</code>:</p>
 <pre><code class="language-console">cargo generate https://github.com/aya-rs/aya-template
 </code></pre>
-<p>This will prompt you for a project name. We'll be using <code>myapp</code> in this example</p>
+<p>This will prompt you for a project name - we'll be using <code>myapp</code> in this example. It will also prompt you for a program type and possibly other options depending on the chosen type (for example, the attach direction for network classifiers).</p>
+<p>If you prefer, you can set template options directly from the command line:</p>
+<pre><code class="language-console">cargo generate --name xdpfw -d program_type=xdp https://github.com/aya-rs/aya-template
+</code></pre>
+<p>or</p>
+<pre><code class="language-console">cargo generate --name tcfw -d program_type=classifier -d direction=Ingress https://github.com/aya-rs/aya-template
+</code></pre>
+<p>See https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml for the full list of available options.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-xdp"><a class="header" href="#hello-xdp">Hello XDP!</a></h1>
 <h2 id="example-project"><a class="header" href="#example-project">Example Project</a></h2>
 <p>While there are myriad trace points to attach to and program types to write we should start somewhere simple.</p>
