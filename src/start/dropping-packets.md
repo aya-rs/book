@@ -11,8 +11,10 @@ Seeing as we want to do quick lookups a HashMap would be a good datastructure.
 Therefore:
 
 - We need to create a HashMap in our BPF Program
-- Check the IP Address from the packet against the HashMap to make a forwarding decision
+- Check the destination IP Address from the packet against the HashMap to make a forwarding decision
 - Add entries to the blocklist from userspace
+
+The source for this chapter can be found [here](https://github.com/aya-rs/book/tree/main/examples/myapp-03).
 
 ### eBPF: Map Creation
 
@@ -41,10 +43,10 @@ We'll then call `block_ip` to determine the fate of the packet:
 
 In order to add addresses to block, we first need to get a reference to the `BLOCKLIST` map.
 Once we have it, it's simply a case of calling `blocklist.insert()`.
-We'll use the `IPv4Addr` type to represent our IP address as it's human-readable and can be easily converted to a `u32`. We'll block all traffic to `1.1.1.1` for this example.
+We'll use the `IPv4Addr` type to represent our IP address as it's human-readable and can be easily converted to a `u32`. We'll block all traffic **to** `192.168.0.10` sent over the `eth0` interface, for this example.
 
 ```rust,ignore
-{{#rustdoc_include ../../examples/myapp-02/myapp/src/main.rs:block_address}}
+{{#rustdoc_include ../../examples/myapp-03/myapp/src/main.rs:block_address}}
 ```
 
 > 💡 **HINT: A quick note on Endianness**
@@ -61,18 +63,26 @@ We'll use the `IPv4Addr` type to represent our IP address as it's human-readable
 ```console
 cargo build
 cargo xtask build-ebpf
-sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp wlp2s0
+sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp --iface eth0
+```
+
+### Testing the Allowed IP addresses
+
+```console
+curl 192.168.0.22
 ```
 
 ```console
-LOG: SRC 192.168.1.205, ACTION 2
-LOG: SRC 1.1.1.1, ACTION 1
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 1.1.1.1, ACTION 1
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 1.1.1.1, ACTION 1
-LOG: SRC 140.82.121.6, ACTION 2
+LOG: DST 192.168.0.22, ACTION 2
+LOG: DST 192.168.0.22, ACTION 2
+```
+
+### Testing the Blocked IP address
+```console
+curl 192.168.0.10
+```
+
+```console
+LOG: DST 192.168.0.10, ACTION 1
+LOG: DST 192.168.0.10, ACTION 1
 ```

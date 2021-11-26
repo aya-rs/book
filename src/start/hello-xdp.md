@@ -6,6 +6,30 @@ While there are myriad trace points to attach to and program types to write we s
 
 XDP (eXpress Data Path) programs permit our eBPF program to make decisions about packets that have been received on the interface to which our program is attached. To keep things simple, we'll build a very simplistic firewall to permit or deny traffic.
 
+> In this example you will be attaching XDP programs to a network interface. The guide assumes you have an interface called `eth0`, but you may select any NIC on your machine.
+> 
+> For a list of interfaces you can use `ip addr list`,
+> ```console
+> 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+>     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+>     inet 127.0.0.1/8 scope host lo
+>        valid_lft forever preferred_lft forever
+>     inet6 ::1/128 scope host 
+>        valid_lft forever preferred_lft forever
+> 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+>     link/ether 00:1c:42:79:b1:a2 brd ff:ff:ff:ff:ff:ff
+>     inet 10.211.55.6/24 brd 10.211.55.255 scope global dynamic noprefixroute eth0
+>        valid_lft 1348sec preferred_lft 1348sec
+>     inet6 fdb2:2c26:f4e4:0:ea92:21e7:8874:c835/64 scope global temporary dynamic 
+>        valid_lft 604351sec preferred_lft 85629sec
+>     inet6 fdb2:2c26:f4e4:0:9f8d:b814:392f:aa04/64 scope global dynamic mngtmpaddr noprefixroute 
+>        valid_lft 2591645sec preferred_lft 604445sec
+>     inet6 fe80::f1e5:4c79:35e6:78e/64 scope link noprefixroute 
+>        valid_lft forever preferred_lft forever
+> ```
+
+The source for this chapter can be found [here](https://github.com/aya-rs/book/tree/main/examples/myapp-01).
+
 ## eBPF Component
 
 ### Permit All
@@ -35,7 +59,7 @@ Then our application logic:
 {{#rustdoc_include ../../examples/myapp-01/myapp-ebpf/src/main.rs:main }}
 ```
 
-- `#[xdp]` indicates that this function is an XDP program
+- `#[xdp(name="myapp")]` indicates that this function is an XDP program
 - The `try_xdp_firewall` function returns a Result that permits all traffic
 - The `xdp_firewall` program calls `try_xdp_firewall` and handles any errors by returning `XDP_ABORTED`, which will drop the packet and raise a tracepoint exception.
 
@@ -106,7 +130,7 @@ The line `let mut bpf = Bpf::load_file(&path)?;`:
 - Creates any maps
 - If your system supports BPF Type Format (BTF), it will read the current BTF description and performs any necessary relocations
 
-Once our file is loaded, we can extract the XDP probe with `let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;` and then load it in to the kernel with `probe.load()`.
+Once our file is loaded, we can extract the XDP probe with `let probe: &mut Xdp = bpf.program_mut("myapp")?.try_into()?;` and then load it in to the kernel with `probe.load()`.
 
 Finally, we can attach it to an interface with `probe.attach(&iface, XdpFlags::default())?;`
 

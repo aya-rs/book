@@ -3,6 +3,7 @@
 In the previous chapter, our XDP application ran for 10 seconds and permitted some traffic.
 There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted
 
+The source for this chapter can be found [here](https://github.com/aya-rs/book/tree/main/examples/myapp-02).
 
 ## Getting Data to User-Space
 
@@ -57,10 +58,10 @@ Now we've got our maps set up, let's add some data!
 ### Generating Bindings To vmlinux.h
 
 To get useful data to add to our maps, we first need some useful data structures to populate with data from the `XdpContext`.
-We want to log the Source IP Address of incoming traffic, so we'll need to:
+We want to log the Destination IP Address of incoming traffic, so we'll need to:
 
 1. Read the Ethernet Header to determine if this is an IPv4 Packet
-1. Read the Source IP Address from the IPv4 Header
+1. Read the Destination IP Address from the IPv4 Header
 
 The two structs in the kernel for this are `ethhdr` from `uapi/linux/if_ether.h` and `iphdr` from `uapi/linux/ip.h`.
 If I were to use bindgen to generate Rust bindings for those headers, I'd be tied to the kernel version of the system that I'm developing on.
@@ -124,7 +125,7 @@ With our helper function in place, we can:
 1. Read the Ethertype field to check if we have an IPv4 packet.
 1. Read the IPv4 Source Address from the IP header
 
-First let's add another dependency on `memoffset = "0.6"` to `myapp-ebpf/Cargo.toml`, and then we'll change our `try_xdp_firewall` function to look like this:
+First let's add another dependency on `memoffset = "0.6.4"` to `myapp-ebpf/Cargo.toml`, and then we'll change our `try_xdp_firewall` function to look like this:
 
 ```rust,ignore
 {{#rustdoc_include ../../examples/myapp-02/myapp-ebpf/src/main.rs:try}}
@@ -135,7 +136,7 @@ First let's add another dependency on `memoffset = "0.6"` to `myapp-ebpf/Cargo.t
 > As there is limited stack space, it's more memory efficient to use the `offset_of!` macro to read
 > a single field from a struct, rather than reading the whole struct and accessing the field by name.
 
-Once we have our IPv4 source address, we can create a `PacketLog` struct and output this to our PerfEventArray
+Once we have our IPv4 destination address, we can create a `PacketLog` struct and output this to our PerfEventArray
 
 ## Reading Data
 
@@ -167,15 +168,11 @@ We no longer need to sleep, as we run until we receive the `CTRL+C` signal.
 ```console
 cargo build
 cargo xtask build-ebpf
-sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp wlp2s0
+sudo ./target/debug/myapp ./target/bpfel-unknown-none/debug/myapp lo
 ```
 
 ```console
-LOG: SRC 192.168.1.205, ACTION 2
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 140.82.121.6, ACTION 2
+LOG: DST 192.168.0.10, ACTION 2
+LOG: DST 192.168.0.10, ACTION 2
+LOG: DST 192.168.0.10, ACTION 2
 ```
