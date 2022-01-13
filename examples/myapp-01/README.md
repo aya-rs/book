@@ -24,5 +24,5 @@ cargo build
 ## Run
 
 ```bash
-cargo run --package myapp -bin myapp
+cargo xtask run
 ```
