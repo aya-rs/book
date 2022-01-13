@@ -41,7 +41,7 @@ When the eBPF program is loaded by Aya, the map will be created for us.
 
 ### Userspace: Map Creation
 
-After our call to `probe.attach()` we'll add the following code:
+After our call to `program.attach()` we'll add the following code:
 
 
 ```rust,ignore
