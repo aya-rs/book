@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -89,7 +89,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -143,8 +143,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="logging-packets"><a class="header" href="#logging-packets">Logging Packets</a></h1>
-<p>In the previous chapter, our XDP application ran for 10 seconds and permitted some traffic.
-There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted</p>
+<p>In the previous chapter, our XDP application ran until Ctrl-C was hit and permitted all the traffic.
+There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted.</p>
 <h2 id="getting-data-to-user-space"><a class="header" href="#getting-data-to-user-space">Getting Data to User-Space</a></h2>
 <h3 id="sharing-data"><a class="header" href="#sharing-data">Sharing Data</a></h3>
 <p>To get data from kernel-space to user-space we use an eBPF map. There are numerous types of maps to chose from, but in this example we'll be using a PerfEventArray.</p>
@@ -248,7 +248,7 @@ static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketL
 </span></code></pre>
 <p>When the eBPF program is loaded by Aya, the map will be created for us.</p>
 <h3 id="userspace-map-creation"><a class="header" href="#userspace-map-creation">Userspace: Map Creation</a></h3>
-<p>After our call to <code>probe.attach()</code> we'll add the following code.</p>
+<p>After our call to <code>program.attach()</code> we'll add the following code:</p>
 <pre><code class="language-rust ignore"><span class="boring">use aya::{
 </span><span class="boring">    maps::perf::AsyncPerfEventArray,
 </span><span class="boring">    programs::{Xdp, XdpFlags},

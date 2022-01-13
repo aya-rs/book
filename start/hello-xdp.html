@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -89,7 +89,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -153,9 +153,27 @@ The logic for this program is located in <code>myapp-ebpf/src/main.rs</code> and
 <pre><code class="language-rust ignore">#![no_std]
 #![no_main]
 
+use aya_bpf::{
+    bindings::xdp_action,
+    macros::xdp,
+    programs::XdpContext,
+};
+
+#[xdp(name=&quot;myapp&quot;)]
+pub fn myapp(ctx: XdpContext) -&gt; u32 {
+    match unsafe { try_myapp(ctx) } {
+        Ok(ret) =&gt; ret,
+        Err(_) =&gt; xdp_action::XDP_ABORTED,
+    }
+}
+
+unsafe fn try_myapp(_ctx: XdpContext) -&gt; Result&lt;u32, u32&gt; {
+    Ok(xdp_action::XDP_PASS)
+}
+
 #[panic_handler]
 fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
-    unreachable!()
+    unsafe { core::hint::unreachable_unchecked() }
 }
 </code></pre>
 <ul>
@@ -163,65 +181,68 @@ fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
 <li><code>#![no_main]</code> is required as we have no main function.</li>
 <li>The <code>#[panic_handler]</code> is required to keep the compiler happy, although it is never used since we cannot panic.</li>
 </ul>
-<p>Let's expand this by adding an XDP program that permits all traffic.</p>
-<p>First we'll make some use declarations:</p>
+<p>This is a minimal generated XDP program that permits all traffic.</p>
+<p>Let's look at some of its details.
+First we make some <code>use</code> declarations:</p>
 <pre><code class="language-rust ignore"><span class="boring">#![no_std]
 </span><span class="boring">#![no_main]
 </span><span class="boring">
-</span>use aya_bpf::bindings::xdp_action;
-use aya_bpf::cty::c_long;
-use aya_bpf::macros::xdp;
-use aya_bpf::programs::XdpContext;
+</span>use aya_bpf::{
+    bindings::xdp_action,
+    macros::xdp,
+    programs::XdpContext,
+};
 <span class="boring">
-</span><span class="boring">#[panic_handler]
-</span><span class="boring">fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
-</span><span class="boring">    unreachable!()
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">#[xdp]
-</span><span class="boring">pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
-</span><span class="boring">    match unsafe { try_xdp_firewall(ctx) } {
+</span><span class="boring">#[xdp(name=&quot;myapp&quot;)]
+</span><span class="boring">pub fn myapp(ctx: XdpContext) -&gt; u32 {
+</span><span class="boring">    match unsafe { try_myapp(ctx) } {
 </span><span class="boring">        Ok(ret) =&gt; ret,
 </span><span class="boring">        Err(_) =&gt; xdp_action::XDP_ABORTED,
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">unsafe fn try_xdp_firewall(_ctx: XdpContext) -&gt; Result&lt;u32, c_long&gt; {
+</span><span class="boring">unsafe fn try_myapp(_ctx: XdpContext) -&gt; Result&lt;u32, u32&gt; {
 </span><span class="boring">    Ok(xdp_action::XDP_PASS)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[panic_handler]
+</span><span class="boring">fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
+</span><span class="boring">    unsafe { core::hint::unreachable_unchecked() }
 </span><span class="boring">}
 </span></code></pre>
 <p>Then our application logic:</p>
 <pre><code class="language-rust ignore"><span class="boring">#![no_std]
 </span><span class="boring">#![no_main]
 </span><span class="boring">
-</span><span class="boring">use aya_bpf::bindings::xdp_action;
-</span><span class="boring">use aya_bpf::cty::c_long;
-</span><span class="boring">use aya_bpf::macros::xdp;
-</span><span class="boring">use aya_bpf::programs::XdpContext;
+</span><span class="boring">use aya_bpf::{
+</span><span class="boring">    bindings::xdp_action,
+</span><span class="boring">    macros::xdp,
+</span><span class="boring">    programs::XdpContext,
+</span><span class="boring">};
 </span><span class="boring">
-</span><span class="boring">#[panic_handler]
-</span><span class="boring">fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
-</span><span class="boring">    unreachable!()
-</span><span class="boring">}
-</span><span class="boring">
-</span>#[xdp]
-pub fn xdp_firewall(ctx: XdpContext) -&gt; u32 {
-    match unsafe { try_xdp_firewall(ctx) } {
+</span>#[xdp(name=&quot;myapp&quot;)]
+pub fn myapp(ctx: XdpContext) -&gt; u32 {
+    match unsafe { try_myapp(ctx) } {
         Ok(ret) =&gt; ret,
         Err(_) =&gt; xdp_action::XDP_ABORTED,
     }
 }
 
-unsafe fn try_xdp_firewall(_ctx: XdpContext) -&gt; Result&lt;u32, c_long&gt; {
+unsafe fn try_myapp(_ctx: XdpContext) -&gt; Result&lt;u32, u32&gt; {
     Ok(xdp_action::XDP_PASS)
 }
-</code></pre>
+<span class="boring">
+</span><span class="boring">#[panic_handler]
+</span><span class="boring">fn panic(_info: &amp;core::panic::PanicInfo) -&gt; ! {
+</span><span class="boring">    unsafe { core::hint::unreachable_unchecked() }
+</span><span class="boring">}
+</span></code></pre>
 <ul>
-<li><code>#[xdp]</code> indicates that this function is an XDP program</li>
-<li>The <code>try_xdp_firewall</code> function returns a Result that permits all traffic</li>
-<li>The <code>xdp_firewall</code> program calls <code>try_xdp_firewall</code> and handles any errors by returning <code>XDP_ABORTED</code>, which will drop the packet and raise a tracepoint exception.</li>
+<li><code>#[xdp(name=&quot;myapp&quot;)]</code> indicates that this function is an XDP program.</li>
+<li>The <code>try_myapp</code> function returns a Result that currenlty permits all traffic.</li>
+<li>The <code>myapp</code> program calls <code>try_myapp</code> and handles any errors by returning <code>XDP_ABORTED</code>, which will drop the packet and raise a tracepoint exception.</li>
 </ul>
-<p>Now we can compile this using <code>cargo xtask build-ebpf</code></p>
+<p>Now we can compile this using <code>cargo xtask build-ebpf</code>.</p>
 <h3 id="verifying-the-program"><a class="header" href="#verifying-the-program">Verifying The Program</a></h3>
 <p>Let's take a look at the compiled eBPF program:</p>
 <pre><code class="language-console">$ llvm-objdump -S target/bpfel-unknown-none/debug/myapp
@@ -229,114 +250,61 @@ unsafe fn try_xdp_firewall(_ctx: XdpContext) -&gt; Result&lt;u32, c_long&gt; {
 target/bpfel-unknown-none/debug/myapp:  file format elf64-bpf
 
 
-Disassembly of section xdp:
+Disassembly of section xdp/myapp:
 
-0000000000000000 &lt;xdp_firewall&gt;:
+0000000000000000 &lt;myapp&gt;:
        0:       b7 00 00 00 02 00 00 00 r0 = 2
        1:       95 00 00 00 00 00 00 00 exit
 </code></pre>
-<p>We can see an <code>xdp_firewall</code> section here.
+<p>We can see an <code>xdp/myapp</code> section here.
 <code>r0 = 2</code> sets register <code>0</code> to <code>2</code>, which is the value of the <code>XDP_PASS</code> action.
 <code>exit</code> ends the program.</p>
 <p>Simple!</p>
 <h2 id="user-space-component"><a class="header" href="#user-space-component">User-space Component</a></h2>
 <p>Now our eBPF program is complete and compiled, we need a user-space program to load it and attach it to a trace point.
-Fortunately, we have a program ready in <code>myapp/src/main.rs</code> which is going to do that for us.</p>
+Fortunately, we have a generated program ready in <code>myapp/src/main.rs</code> which is going to do that for us.</p>
 <h3 id="starting-out"><a class="header" href="#starting-out">Starting Out</a></h3>
 <p>The generated application has the following content:</p>
-<pre><code class="language-rust ignore">fn main() {
+<pre><code class="language-rust ignore">use aya::{Bpf, include_bytes_aligned};
+use aya::programs::{Xdp, XdpFlags};
+use std::{
+    convert::{TryFrom,TryInto},
+    sync::Arc,
+    sync::atomic::{AtomicBool, Ordering},
+    thread,
+    time::Duration,
+};
+use structopt::StructOpt;
+
+fn main() {
     if let Err(e) = try_main() {
         eprintln!(&quot;error: {:#}&quot;, e);
     }
 }
 
-fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
-    Ok(())
+#[derive(Debug, StructOpt)]
+struct Opt {
+    #[structopt(short, long, default_value = &quot;eth0&quot;)]
+    iface: String,
 }
-</code></pre>
-<p>Let's adapt it to load our program.</p>
-<p>We will add a dependency on <code>ctrlc</code> to <code>myapp/Cargo.toml</code>:</p>
-<pre><code class="language-toml">ctrlc = &quot;3.2&quot;
-</code></pre>
-<p>Add the following declarations at the top of the <code>myapp/src/main.rs</code>:</p>
-<pre><code class="language-rust ignore">use aya::Bpf;
-use aya::programs::{Xdp, XdpFlags};
-use std::{
-    convert::TryInto,
-    env,
-    sync::Arc,
-    sync::atomic::{AtomicBool, Ordering},
-    thread,
-    time::Duration
-};
-<span class="boring">
-</span><span class="boring">fn main() {
-</span><span class="boring">    if let Err(e) = try_main() {
-</span><span class="boring">        eprintln!(&quot;error: {:#}&quot;, e);
-</span><span class="boring">    }
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
-</span><span class="boring">    let path = match env::args().nth(1) {
-</span><span class="boring">        Some(iface) =&gt; iface,
-</span><span class="boring">        None =&gt; panic!(&quot;not path provided&quot;),
-</span><span class="boring">    };
-</span><span class="boring">    let iface = match env::args().nth(2) {
-</span><span class="boring">        Some(iface) =&gt; iface,
-</span><span class="boring">        None =&gt; &quot;eth0&quot;.to_string(),
-</span><span class="boring">    };
-</span><span class="boring">    let mut bpf = Bpf::load_file(&amp;path)?;
-</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
-</span><span class="boring">    probe.load()?;
-</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())?;
-</span><span class="boring">
-</span><span class="boring">    let running = Arc::new(AtomicBool::new(true));
-</span><span class="boring">    let r = running.clone();
-</span><span class="boring">
-</span><span class="boring">    ctrlc::set_handler(move || {
-</span><span class="boring">        r.store(false, Ordering::SeqCst);
-</span><span class="boring">    }).expect(&quot;Error setting Ctrl-C handler&quot;);
-</span><span class="boring">
-</span><span class="boring">    println!(&quot;Waiting for Ctrl-C...&quot;);
-</span><span class="boring">    while running.load(Ordering::SeqCst) {
-</span><span class="boring">        thread::sleep(Duration::from_millis(500))
-</span><span class="boring">    }
-</span><span class="boring">    println!(&quot;Exiting...&quot;);
-</span><span class="boring">
-</span><span class="boring">    Ok(())
-</span><span class="boring">}
-</span></code></pre>
-<p>Then we'll adapt the <code>try_main</code> function to load our program:</p>
-<pre><code class="language-rust ignore"><span class="boring">use aya::Bpf;
-</span><span class="boring">use aya::programs::{Xdp, XdpFlags};
-</span><span class="boring">use std::{
-</span><span class="boring">    convert::TryInto,
-</span><span class="boring">    env,
-</span><span class="boring">    sync::Arc,
-</span><span class="boring">    sync::atomic::{AtomicBool, Ordering},
-</span><span class="boring">    thread,
-</span><span class="boring">    time::Duration
-</span><span class="boring">};
-</span><span class="boring">
-</span><span class="boring">fn main() {
-</span><span class="boring">    if let Err(e) = try_main() {
-</span><span class="boring">        eprintln!(&quot;error: {:#}&quot;, e);
-</span><span class="boring">    }
-</span><span class="boring">}
-</span><span class="boring">
-</span>fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
-    let path = match env::args().nth(1) {
-        Some(iface) =&gt; iface,
-        None =&gt; panic!(&quot;not path provided&quot;),
-    };
-    let iface = match env::args().nth(2) {
-        Some(iface) =&gt; iface,
-        None =&gt; &quot;eth0&quot;.to_string(),
-    };
-    let mut bpf = Bpf::load_file(&amp;path)?;
-    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
-    probe.load()?;
-    probe.attach(&amp;iface, XdpFlags::default())?;
+
+fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
+    let opt = Opt::from_args();
+    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+    // runtime. This approach is recommended for most real-world use cases. If you would
+    // like to specify the eBPF program at runtime rather than at compile-time, you can
+    // reach for `Bpf::load_file` instead.
+    #[cfg(debug_assertions)]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        &quot;../../target/bpfel-unknown-none/debug/myapp&quot;
+    ))?;
+    #[cfg(not(debug_assertions))]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        &quot;../../target/bpfel-unknown-none/release/myapp&quot;
+    ))?;
+    let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
+    program.load()?;
+    program.attach(&amp;opt.iface, XdpFlags::default())?;
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
@@ -354,23 +322,156 @@ use std::{
     Ok(())
 }
 </code></pre>
-<p>The program takes two positional arguments</p>
+<p>Let's look at the details of this program.</p>
+<p>There is a dependency on <code>ctrlc</code> added to <code>myapp/Cargo.toml</code>:</p>
+<pre><code class="language-toml">ctrlc = &quot;3.2&quot;
+</code></pre>
+<p>The following <code>use</code> declarations are added at the top of the <code>myapp/src/main.rs</code>:</p>
+<pre><code class="language-rust ignore">use aya::{Bpf, include_bytes_aligned};
+use aya::programs::{Xdp, XdpFlags};
+use std::{
+    convert::{TryFrom,TryInto},
+    sync::Arc,
+    sync::atomic::{AtomicBool, Ordering},
+    thread,
+    time::Duration,
+};
+use structopt::StructOpt;
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    if let Err(e) = try_main() {
+</span><span class="boring">        eprintln!(&quot;error: {:#}&quot;, e);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, StructOpt)]
+</span><span class="boring">struct Opt {
+</span><span class="boring">    #[structopt(short, long, default_value = &quot;eth0&quot;)]
+</span><span class="boring">    iface: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
+</span><span class="boring">    let opt = Opt::from_args();
+</span><span class="boring">    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+</span><span class="boring">    // runtime. This approach is recommended for most real-world use cases. If you would
+</span><span class="boring">    // like to specify the eBPF program at runtime rather than at compile-time, you can
+</span><span class="boring">    // reach for `Bpf::load_file` instead.
+</span><span class="boring">    #[cfg(debug_assertions)]
+</span><span class="boring">    let mut bpf = Bpf::load(include_bytes_aligned!(
+</span><span class="boring">        &quot;../../target/bpfel-unknown-none/debug/myapp&quot;
+</span><span class="boring">    ))?;
+</span><span class="boring">    #[cfg(not(debug_assertions))]
+</span><span class="boring">    let mut bpf = Bpf::load(include_bytes_aligned!(
+</span><span class="boring">        &quot;../../target/bpfel-unknown-none/release/myapp&quot;
+</span><span class="boring">    ))?;
+</span><span class="boring">    let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
+</span><span class="boring">    program.load()?;
+</span><span class="boring">    program.attach(&amp;opt.iface, XdpFlags::default())?;
+</span><span class="boring">
+</span><span class="boring">    let running = Arc::new(AtomicBool::new(true));
+</span><span class="boring">    let r = running.clone();
+</span><span class="boring">
+</span><span class="boring">    ctrlc::set_handler(move || {
+</span><span class="boring">        r.store(false, Ordering::SeqCst);
+</span><span class="boring">    }).expect(&quot;Error setting Ctrl-C handler&quot;);
+</span><span class="boring">
+</span><span class="boring">    println!(&quot;Waiting for Ctrl-C...&quot;);
+</span><span class="boring">    while running.load(Ordering::SeqCst) {
+</span><span class="boring">        thread::sleep(Duration::from_millis(500))
+</span><span class="boring">    }
+</span><span class="boring">    println!(&quot;Exiting...&quot;);
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}
+</span></code></pre>
+<p><code>try_main</code> function loads our program:</p>
+<pre><code class="language-rust ignore"><span class="boring">use aya::{Bpf, include_bytes_aligned};
+</span><span class="boring">use aya::programs::{Xdp, XdpFlags};
+</span><span class="boring">use std::{
+</span><span class="boring">    convert::{TryFrom,TryInto},
+</span><span class="boring">    sync::Arc,
+</span><span class="boring">    sync::atomic::{AtomicBool, Ordering},
+</span><span class="boring">    thread,
+</span><span class="boring">    time::Duration,
+</span><span class="boring">};
+</span><span class="boring">use structopt::StructOpt;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    if let Err(e) = try_main() {
+</span><span class="boring">        eprintln!(&quot;error: {:#}&quot;, e);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug, StructOpt)]
+</span><span class="boring">struct Opt {
+</span><span class="boring">    #[structopt(short, long, default_value = &quot;eth0&quot;)]
+</span><span class="boring">    iface: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
+    let opt = Opt::from_args();
+    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+    // runtime. This approach is recommended for most real-world use cases. If you would
+    // like to specify the eBPF program at runtime rather than at compile-time, you can
+    // reach for `Bpf::load_file` instead.
+    #[cfg(debug_assertions)]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        &quot;../../target/bpfel-unknown-none/debug/myapp&quot;
+    ))?;
+    #[cfg(not(debug_assertions))]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        &quot;../../target/bpfel-unknown-none/release/myapp&quot;
+    ))?;
+    let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
+    program.load()?;
+    program.attach(&amp;opt.iface, XdpFlags::default())?;
+
+    let running = Arc::new(AtomicBool::new(true));
+    let r = running.clone();
+
+    ctrlc::set_handler(move || {
+        r.store(false, Ordering::SeqCst);
+    }).expect(&quot;Error setting Ctrl-C handler&quot;);
+
+    println!(&quot;Waiting for Ctrl-C...&quot;);
+    while running.load(Ordering::SeqCst) {
+        thread::sleep(Duration::from_millis(500))
+    }
+    println!(&quot;Exiting...&quot;);
+
+    Ok(())
+}
+</code></pre>
+<p>The program optionally takes an argument for the interface we wish to attach it to (defaults to <code>eth0</code>).</p>
+<p><code>include_bytes_aligned!</code> copies the contents of the BPF object file
+into a variable at the compile time.
+The statement <code>let mut bpf = Bpf::load_file(data)?;</code>:</p>
 <ul>
-<li>The path to our eBPF application</li>
-<li>The interface we wish to attach it to (defaults to <code>eth0</code>)</li>
-</ul>
-<p>The line <code>let mut bpf = Bpf::load_file(&amp;path)?;</code>:</p>
-<ul>
-<li>Opens the file</li>
 <li>Reads the ELF contents</li>
 <li>Creates any maps</li>
 <li>If your system supports BPF Type Format (BTF), it will read the current BTF description and performs any necessary relocations</li>
 </ul>
-<p>Once our file is loaded, we can extract the XDP probe with <code>let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;</code> and then load it in to the kernel with <code>probe.load()</code>.</p>
-<p>Finally, we can attach it to an interface with <code>probe.attach(&amp;iface, XdpFlags::default())?;</code></p>
+<p>Once our file is loaded, we can extract the XDP program with <code>let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;)?.try_into()?;</code> and then load it in to the kernel with <code>program.load()</code>.</p>
+<p>Finally, we can attach it to an interface with <code>program.attach(&amp;opt.iface, XdpFlags::default())?;</code></p>
 <p>Let's try it out!</p>
-<pre><code class="language-console">$ cargo build
-$ sudo ./target/debug/myapp --path ./target/bpfel-unknown-none/debug/myapp wlp2s0
+<pre><code class="language-console"># change directory to the root or myapp
+$ cargo build
+$ cargo xtask run -- -h
+myapp 0.1.0
+
+USAGE:
+    myapp [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -i, --iface &lt;iface&gt;     [default: eth0]
+
+# add -i or --iface parameter if need to attach to an interface other than eth0
+# - for example, cargo xtask run -- -i wlp2s0
+$ cargo xtask run
 Waiting for Ctrl-C...
 Exiting...
 </code></pre>
@@ -384,7 +485,7 @@ Exiting...
 On exit, Aya takes care of detaching the program for us.</p>
 <p>If you issue the <code>sudo bpftool prog list</code> command when <code>myapp</code> is running you can verify that it is loaded:</p>
 <pre><code class="language-console">84: xdp  tag 3b185187f1855c4c  gpl
-        loaded_at 2021-08-05T13:35:06+0100  uid 0
+        loaded_at 2022-01-07T12:17:54+0000  uid 0
         xlated 16B  jited 18B  memlock 4096B
         pids myapp(69184)
 </code></pre>
