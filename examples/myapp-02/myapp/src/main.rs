@@ -18,7 +18,7 @@ use myapp_common::PacketLog;
 async fn main() -> Result<(), anyhow::Error> {
     let path = match env::args().nth(1) {
         Some(iface) => iface,
-        None => panic!("not path provided"),
+        None => panic!("no path provided"),
     };
     let iface = match env::args().nth(2) {
         Some(iface) => iface,
@@ -28,7 +28,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let data = fs::read(path)?;
     let mut bpf = Bpf::load(&data)?;
 
-    let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;
+    let probe: &mut Xdp = bpf.program_mut("xdp").ok_or(anyhow::anyhow!("failed to load bpf program"))?.try_into()?;
     probe.load()?;
     probe.attach(&iface, XdpFlags::default())?;
 
