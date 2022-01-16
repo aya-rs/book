@@ -1,9 +1,10 @@
 // ANCHOR: all
 // ANCHOR: use
+use anyhow::Context;
 use aya::{Bpf, include_bytes_aligned};
 use aya::programs::{Xdp, XdpFlags};
 use std::{
-    convert::{TryFrom,TryInto},
+    convert::TryInto,
     sync::Arc,
     sync::atomic::{AtomicBool, Ordering},
     thread,
@@ -41,7 +42,8 @@ fn try_main() -> Result<(), anyhow::Error> {
     ))?;
     let program: &mut Xdp = bpf.program_mut("myapp").unwrap().try_into()?;
     program.load()?;
-    program.attach(&opt.iface, XdpFlags::default())?;
+    program.attach(&opt.iface, XdpFlags::default())
+        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();

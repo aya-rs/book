@@ -1,3 +1,4 @@
+use anyhow::Context;
 use aya::{
     maps::perf::AsyncPerfEventArray,
     programs::{Xdp, XdpFlags},
@@ -28,9 +29,11 @@ async fn main() -> Result<(), anyhow::Error> {
     let data = fs::read(path)?;
     let mut bpf = Bpf::load(&data)?;
 
-    let probe: &mut Xdp = bpf.program_mut("xdp").ok_or(anyhow::anyhow!("failed to load bpf program"))?.try_into()?;
+    let probe: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
     probe.load()?;
-    probe.attach(&iface, XdpFlags::default())?;
+    probe.attach(&iface, XdpFlags::default())
+        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
+
 
     // ANCHOR: map
     let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut("EVENTS")?)?;
