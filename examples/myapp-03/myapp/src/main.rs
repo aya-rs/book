@@ -1,3 +1,4 @@
+use anyhow::Context;
 use aya::{
     maps::HashMap,
     maps::perf::{AsyncPerfEventArray},
@@ -26,9 +27,10 @@ async fn main() -> Result<(), anyhow::Error> {
     let data = fs::read(path)?;
     let mut bpf = Bpf::load(&data)?;
 
-    let probe: &mut Xdp = bpf.program_mut("xdp")?.try_into()?;
+    let probe: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
     probe.load()?;
-    probe.attach(&iface, XdpFlags::default())?;
+    probe.attach(&iface, XdpFlags::default())
+        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
     // ANCHOR: block_address
     let mut blocklist: HashMap<_, u32, u32> = HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
