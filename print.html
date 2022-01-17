@@ -370,10 +370,11 @@ Disassembly of section xdp/myapp:
 Fortunately, we have a generated program ready in <code>myapp/src/main.rs</code> which is going to do that for us.</p>
 <h3 id="starting-out"><a class="header" href="#starting-out">Starting Out</a></h3>
 <p>The generated application has the following content:</p>
-<pre><code class="language-rust ignore">use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore">use anyhow::Context;
+use aya::{Bpf, include_bytes_aligned};
 use aya::programs::{Xdp, XdpFlags};
 use std::{
-    convert::{TryFrom,TryInto},
+    convert::TryInto,
     sync::Arc,
     sync::atomic::{AtomicBool, Ordering},
     thread,
@@ -409,7 +410,8 @@ fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
     ))?;
     let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
     program.load()?;
-    program.attach(&amp;opt.iface, XdpFlags::default())?;
+    program.attach(&amp;opt.iface, XdpFlags::default())
+        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
@@ -432,10 +434,11 @@ fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
 <pre><code class="language-toml">ctrlc = &quot;3.2&quot;
 </code></pre>
 <p>The following <code>use</code> declarations are added at the top of the <code>myapp/src/main.rs</code>:</p>
-<pre><code class="language-rust ignore">use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore">use anyhow::Context;
+use aya::{Bpf, include_bytes_aligned};
 use aya::programs::{Xdp, XdpFlags};
 use std::{
-    convert::{TryFrom,TryInto},
+    convert::TryInto,
     sync::Arc,
     sync::atomic::{AtomicBool, Ordering},
     thread,
@@ -471,7 +474,8 @@ use structopt::StructOpt;
 </span><span class="boring">    ))?;
 </span><span class="boring">    let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
 </span><span class="boring">    program.load()?;
-</span><span class="boring">    program.attach(&amp;opt.iface, XdpFlags::default())?;
+</span><span class="boring">    program.attach(&amp;opt.iface, XdpFlags::default())
+</span><span class="boring">        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 </span><span class="boring">
 </span><span class="boring">    let running = Arc::new(AtomicBool::new(true));
 </span><span class="boring">    let r = running.clone();
@@ -490,10 +494,11 @@ use structopt::StructOpt;
 </span><span class="boring">}
 </span></code></pre>
 <p><code>try_main</code> function loads our program:</p>
-<pre><code class="language-rust ignore"><span class="boring">use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore"><span class="boring">use anyhow::Context;
+</span><span class="boring">use aya::{Bpf, include_bytes_aligned};
 </span><span class="boring">use aya::programs::{Xdp, XdpFlags};
 </span><span class="boring">use std::{
-</span><span class="boring">    convert::{TryFrom,TryInto},
+</span><span class="boring">    convert::TryInto,
 </span><span class="boring">    sync::Arc,
 </span><span class="boring">    sync::atomic::{AtomicBool, Ordering},
 </span><span class="boring">    thread,
@@ -529,7 +534,8 @@ use structopt::StructOpt;
     ))?;
     let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
     program.load()?;
-    program.attach(&amp;opt.iface, XdpFlags::default())?;
+    program.attach(&amp;opt.iface, XdpFlags::default())
+        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
@@ -702,7 +708,8 @@ static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketL
 <p>When the eBPF program is loaded by Aya, the map will be created for us.</p>
 <h3 id="userspace-map-creation"><a class="header" href="#userspace-map-creation">Userspace: Map Creation</a></h3>
 <p>After our call to <code>program.attach()</code> we'll add the following code:</p>
-<pre><code class="language-rust ignore"><span class="boring">use aya::{
+<pre><code class="language-rust ignore"><span class="boring">use anyhow::Context;
+</span><span class="boring">use aya::{
 </span><span class="boring">    maps::perf::AsyncPerfEventArray,
 </span><span class="boring">    programs::{Xdp, XdpFlags},
 </span><span class="boring">    util::online_cpus,
@@ -721,7 +728,7 @@ static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketL
 </span><span class="boring">async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
 </span><span class="boring">    let path = match env::args().nth(1) {
 </span><span class="boring">        Some(iface) =&gt; iface,
-</span><span class="boring">        None =&gt; panic!(&quot;not path provided&quot;),
+</span><span class="boring">        None =&gt; panic!(&quot;no path provided&quot;),
 </span><span class="boring">    };
 </span><span class="boring">    let iface = match env::args().nth(2) {
 </span><span class="boring">        Some(iface) =&gt; iface,
@@ -731,9 +738,11 @@ static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketL
 </span><span class="boring">    let data = fs::read(path)?;
 </span><span class="boring">    let mut bpf = Bpf::load(&amp;data)?;
 </span><span class="boring">
-</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
+</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;).unwrap().try_into()?;
 </span><span class="boring">    probe.load()?;
-</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())?;
+</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())
+</span><span class="boring">        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
+</span><span class="boring">
 </span><span class="boring">
 </span>    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut(&quot;EVENTS&quot;)?)?;
 <span class="boring">
@@ -1098,7 +1107,8 @@ bytes = &quot;1&quot;
 tokio = { version = &quot;1.9.0&quot;, features = [&quot;full&quot;] }
 </code></pre>
 <p>And adjust our <code>main</code> function in <code>myapp/src/main.rs</code> to look like this:</p>
-<pre><code class="language-rust ignore"><span class="boring">use aya::{
+<pre><code class="language-rust ignore"><span class="boring">use anyhow::Context;
+</span><span class="boring">use aya::{
 </span><span class="boring">    maps::perf::AsyncPerfEventArray,
 </span><span class="boring">    programs::{Xdp, XdpFlags},
 </span><span class="boring">    util::online_cpus,
@@ -1117,7 +1127,7 @@ tokio = { version = &quot;1.9.0&quot;, features = [&quot;full&quot;] }
 async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     let path = match env::args().nth(1) {
         Some(iface) =&gt; iface,
-        None =&gt; panic!(&quot;not path provided&quot;),
+        None =&gt; panic!(&quot;no path provided&quot;),
     };
     let iface = match env::args().nth(2) {
         Some(iface) =&gt; iface,
@@ -1127,9 +1137,11 @@ async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     let data = fs::read(path)?;
     let mut bpf = Bpf::load(&amp;data)?;
 
-    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
+    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;).unwrap().try_into()?;
     probe.load()?;
-    probe.attach(&amp;iface, XdpFlags::default())?;
+    probe.attach(&amp;iface, XdpFlags::default())
+        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
+
 
     let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut(&quot;EVENTS&quot;)?)?;
 
@@ -1442,7 +1454,8 @@ We'll implement a function called <code>block_ip</code> which will return <code>
 <p>In order to add addresses to block, we first need to get a reference to the <code>BLOCKLIST</code> map.
 Once we have it, it's simply a case of calling <code>blocklist.insert()</code>.
 We'll use the <code>IPv4Addr</code> type to represent our IP address as it's human-readable and can be easily converted to a <code>u32</code>. We'll block all traffic to <code>1.1.1.1</code> for this example.</p>
-<pre><code class="language-rust ignore"><span class="boring">use aya::{
+<pre><code class="language-rust ignore"><span class="boring">use anyhow::Context;
+</span><span class="boring">use aya::{
 </span><span class="boring">    maps::perf::AsyncPerfEventArray,
 </span><span class="boring">    programs::{Xdp, XdpFlags},
 </span><span class="boring">    util::online_cpus,
@@ -1461,7 +1474,7 @@ We'll use the <code>IPv4Addr</code> type to represent our IP address as it's hum
 </span><span class="boring">async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
 </span><span class="boring">    let path = match env::args().nth(1) {
 </span><span class="boring">        Some(iface) =&gt; iface,
-</span><span class="boring">        None =&gt; panic!(&quot;not path provided&quot;),
+</span><span class="boring">        None =&gt; panic!(&quot;no path provided&quot;),
 </span><span class="boring">    };
 </span><span class="boring">    let iface = match env::args().nth(2) {
 </span><span class="boring">        Some(iface) =&gt; iface,
@@ -1471,9 +1484,11 @@ We'll use the <code>IPv4Addr</code> type to represent our IP address as it's hum
 </span><span class="boring">    let data = fs::read(path)?;
 </span><span class="boring">    let mut bpf = Bpf::load(&amp;data)?;
 </span><span class="boring">
-</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
+</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;).unwrap().try_into()?;
 </span><span class="boring">    probe.load()?;
-</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())?;
+</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())
+</span><span class="boring">        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
+</span><span class="boring">
 </span><span class="boring">
 </span><span class="boring">    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut(&quot;EVENTS&quot;)?)?;
 </span><span class="boring">

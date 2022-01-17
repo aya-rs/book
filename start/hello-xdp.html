@@ -265,10 +265,11 @@ Disassembly of section xdp/myapp:
 Fortunately, we have a generated program ready in <code>myapp/src/main.rs</code> which is going to do that for us.</p>
 <h3 id="starting-out"><a class="header" href="#starting-out">Starting Out</a></h3>
 <p>The generated application has the following content:</p>
-<pre><code class="language-rust ignore">use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore">use anyhow::Context;
+use aya::{Bpf, include_bytes_aligned};
 use aya::programs::{Xdp, XdpFlags};
 use std::{
-    convert::{TryFrom,TryInto},
+    convert::TryInto,
     sync::Arc,
     sync::atomic::{AtomicBool, Ordering},
     thread,
@@ -304,7 +305,8 @@ fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
     ))?;
     let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
     program.load()?;
-    program.attach(&amp;opt.iface, XdpFlags::default())?;
+    program.attach(&amp;opt.iface, XdpFlags::default())
+        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
@@ -327,10 +329,11 @@ fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
 <pre><code class="language-toml">ctrlc = &quot;3.2&quot;
 </code></pre>
 <p>The following <code>use</code> declarations are added at the top of the <code>myapp/src/main.rs</code>:</p>
-<pre><code class="language-rust ignore">use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore">use anyhow::Context;
+use aya::{Bpf, include_bytes_aligned};
 use aya::programs::{Xdp, XdpFlags};
 use std::{
-    convert::{TryFrom,TryInto},
+    convert::TryInto,
     sync::Arc,
     sync::atomic::{AtomicBool, Ordering},
     thread,
@@ -366,7 +369,8 @@ use structopt::StructOpt;
 </span><span class="boring">    ))?;
 </span><span class="boring">    let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
 </span><span class="boring">    program.load()?;
-</span><span class="boring">    program.attach(&amp;opt.iface, XdpFlags::default())?;
+</span><span class="boring">    program.attach(&amp;opt.iface, XdpFlags::default())
+</span><span class="boring">        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 </span><span class="boring">
 </span><span class="boring">    let running = Arc::new(AtomicBool::new(true));
 </span><span class="boring">    let r = running.clone();
@@ -385,10 +389,11 @@ use structopt::StructOpt;
 </span><span class="boring">}
 </span></code></pre>
 <p><code>try_main</code> function loads our program:</p>
-<pre><code class="language-rust ignore"><span class="boring">use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore"><span class="boring">use anyhow::Context;
+</span><span class="boring">use aya::{Bpf, include_bytes_aligned};
 </span><span class="boring">use aya::programs::{Xdp, XdpFlags};
 </span><span class="boring">use std::{
-</span><span class="boring">    convert::{TryFrom,TryInto},
+</span><span class="boring">    convert::TryInto,
 </span><span class="boring">    sync::Arc,
 </span><span class="boring">    sync::atomic::{AtomicBool, Ordering},
 </span><span class="boring">    thread,
@@ -424,7 +429,8 @@ use structopt::StructOpt;
     ))?;
     let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;).unwrap().try_into()?;
     program.load()?;
-    program.attach(&amp;opt.iface, XdpFlags::default())?;
+    program.attach(&amp;opt.iface, XdpFlags::default())
+        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();

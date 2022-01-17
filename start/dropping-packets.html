@@ -410,7 +410,8 @@ We'll implement a function called <code>block_ip</code> which will return <code>
 <p>In order to add addresses to block, we first need to get a reference to the <code>BLOCKLIST</code> map.
 Once we have it, it's simply a case of calling <code>blocklist.insert()</code>.
 We'll use the <code>IPv4Addr</code> type to represent our IP address as it's human-readable and can be easily converted to a <code>u32</code>. We'll block all traffic to <code>1.1.1.1</code> for this example.</p>
-<pre><code class="language-rust ignore"><span class="boring">use aya::{
+<pre><code class="language-rust ignore"><span class="boring">use anyhow::Context;
+</span><span class="boring">use aya::{
 </span><span class="boring">    maps::perf::AsyncPerfEventArray,
 </span><span class="boring">    programs::{Xdp, XdpFlags},
 </span><span class="boring">    util::online_cpus,
@@ -429,7 +430,7 @@ We'll use the <code>IPv4Addr</code> type to represent our IP address as it's hum
 </span><span class="boring">async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
 </span><span class="boring">    let path = match env::args().nth(1) {
 </span><span class="boring">        Some(iface) =&gt; iface,
-</span><span class="boring">        None =&gt; panic!(&quot;not path provided&quot;),
+</span><span class="boring">        None =&gt; panic!(&quot;no path provided&quot;),
 </span><span class="boring">    };
 </span><span class="boring">    let iface = match env::args().nth(2) {
 </span><span class="boring">        Some(iface) =&gt; iface,
@@ -439,9 +440,11 @@ We'll use the <code>IPv4Addr</code> type to represent our IP address as it's hum
 </span><span class="boring">    let data = fs::read(path)?;
 </span><span class="boring">    let mut bpf = Bpf::load(&amp;data)?;
 </span><span class="boring">
-</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;)?.try_into()?;
+</span><span class="boring">    let probe: &amp;mut Xdp = bpf.program_mut(&quot;xdp&quot;).unwrap().try_into()?;
 </span><span class="boring">    probe.load()?;
-</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())?;
+</span><span class="boring">    probe.attach(&amp;iface, XdpFlags::default())
+</span><span class="boring">        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
+</span><span class="boring">
 </span><span class="boring">
 </span><span class="boring">    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut(&quot;EVENTS&quot;)?)?;
 </span><span class="boring">
