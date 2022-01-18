@@ -223,17 +223,17 @@ not dig into details on a topic, revisiting the topic in a later chapter.</p>
 and running a simple eBPF program and userspace application.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="development-environment"><a class="header" href="#development-environment">Development Environment</a></h1>
 <h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
-<p>Before getting started you will need the Rust stable and nightly tool-chains installed on your system.
+<p>Before getting started you will need the Rust stable and nightly toolchains installed on your system. (The nightly toolchain is needed to use the bpf-linker installed in the next step.)
 This is easily achieved with <a href="https://rustup.rs"><code>rustup</code></a>:</p>
 <pre><code class="language-console">rustup install stable
 rustup toolchain install nightly --component rust-src
 </code></pre>
-<p>Once you have the Rust tool-chains installed, you must also install the <code>bpf-linker</code> - for linking our eBPF program - and <code>cargo-generate</code> - for generating the project skeleton.</p>
-<pre><code class="language-console">cargo +nightly install bpf-linker
+<p>Once you have the Rust toolchains installed, you must also install the <code>bpf-linker</code> - for linking our eBPF program - and <code>cargo-generate</code> - for generating the project skeleton.</p>
+<pre><code class="language-console">cargo install bpf-linker
 cargo install --git http://github.com/cargo-generate/cargo-generate cargo-generate
 </code></pre>
-<p>If you don't have and don't want to install LLVM, you can use rust-llvm feature:</p>
-<pre><code class="language-console">cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.2 --no-default-features --features rust-llvm -- bpf-linker
+<p>If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:</p>
+<pre><code class="language-console">cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
 </code></pre>
 <h2 id="starting-a-new-project"><a class="header" href="#starting-a-new-project">Starting A New Project</a></h2>
 <p>To start a new project, you can use <code>cargo-generate</code>:</p>
