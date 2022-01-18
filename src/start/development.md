@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Before getting started you will need the Rust stable and nightly tool-chains installed on your system.
+Before getting started you will need the Rust stable and nightly toolchains installed on your system. (The nightly toolchain is needed to use the bpf-linker installed in the next step.)
 This is easily achieved with [`rustup`](https://rustup.rs):
 
 ```console
@@ -10,16 +10,16 @@ rustup install stable
 rustup toolchain install nightly --component rust-src
 ```
 
-Once you have the Rust tool-chains installed, you must also install the `bpf-linker` - for linking our eBPF program - and `cargo-generate` - for generating the project skeleton.
+Once you have the Rust toolchains installed, you must also install the `bpf-linker` - for linking our eBPF program - and `cargo-generate` - for generating the project skeleton.
 
 ```console
-cargo +nightly install bpf-linker
+cargo install bpf-linker
 cargo install --git http://github.com/cargo-generate/cargo-generate cargo-generate
 ```
 
-If you don't have and don't want to install LLVM, you can use rust-llvm feature:
+If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:
 ```console
-cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.2 --no-default-features --features rust-llvm -- bpf-linker
+cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
 ```
 
 ## Starting A New Project
