@@ -429,7 +429,7 @@ We'll use the <code>IPv4Addr</code> type to represent our IP address as it's hum
 </span><span class="boring">#[tokio::main]
 </span><span class="boring">async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
 </span><span class="boring">    let path = match env::args().nth(1) {
-</span><span class="boring">        Some(iface) =&gt; iface,
+</span><span class="boring">        Some(path) =&gt; path,
 </span><span class="boring">        None =&gt; panic!(&quot;no path provided&quot;),
 </span><span class="boring">    };
 </span><span class="boring">    let iface = match env::args().nth(2) {

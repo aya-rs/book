@@ -268,7 +268,7 @@ static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketL
 </span><span class="boring">#[tokio::main]
 </span><span class="boring">async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
 </span><span class="boring">    let path = match env::args().nth(1) {
-</span><span class="boring">        Some(iface) =&gt; iface,
+</span><span class="boring">        Some(path) =&gt; path,
 </span><span class="boring">        None =&gt; panic!(&quot;no path provided&quot;),
 </span><span class="boring">    };
 </span><span class="boring">    let iface = match env::args().nth(2) {
@@ -667,7 +667,7 @@ tokio = { version = &quot;1.9.0&quot;, features = [&quot;full&quot;] }
 </span>#[tokio::main]
 async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     let path = match env::args().nth(1) {
-        Some(iface) =&gt; iface,
+        Some(path) =&gt; path,
         None =&gt; panic!(&quot;no path provided&quot;),
     };
     let iface = match env::args().nth(2) {
