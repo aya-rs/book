@@ -18,7 +18,7 @@ use myapp_common::PacketLog;
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     let path = match env::args().nth(1) {
-        Some(iface) => iface,
+        Some(path) => path,
         None => panic!("no path provided"),
     };
     let iface = match env::args().nth(2) {
