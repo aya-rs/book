@@ -80,9 +80,11 @@ The generated application has the following content:
 
 Let's look at the details of this program.
 
-There is a dependency on `ctrlc` added to `myapp/Cargo.toml`:
+There is a dependency on `tokio` added to `myapp/Cargo.toml` - `tokio`
+provides the [Ctrl-C handler](https://docs.rs/tokio/latest/tokio/signal/fn.ctrl_c.html) functionality and will also come useful later when we
+expand the functionality of the initial program:
 ```toml
-{{#include ../../examples/myapp-01/myapp/Cargo.toml:11}}
+{{#include ../../examples/myapp-01/myapp/Cargo.toml:15}}
 ```
 
 The following `use` declarations are added at the top of the `myapp/src/main.rs`:
@@ -92,10 +94,10 @@ The following `use` declarations are added at the top of the `myapp/src/main.rs`
 ```
 
 
-`try_main` function loads our program:
+The async main function loads and runs our program:
 
 ```rust,ignore
-{{#rustdoc_include ../../examples/myapp-01/myapp/src/main.rs:try_main }}
+{{#rustdoc_include ../../examples/myapp-01/myapp/src/main.rs:tokiomain }}
 ```
 
 
@@ -110,7 +112,9 @@ The statement `let mut bpf = Bpf::load_file(data)?;`:
 
 Once our file is loaded, we can extract the XDP program with `let program: &mut Xdp = bpf.program_mut("myapp")?.try_into()?;` and then load it in to the kernel with `program.load()`.
 
-Finally, we can attach it to an interface with `program.attach(&opt.iface, XdpFlags::default())?;`
+Finally, we can attach it to an interface with `program.attach(&opt.iface, XdpFlags::default())?;`.  As the error message indicates, it is possible to use
+`XdpFlags::SKB_MODE` instead of `XdpFlags::default()` as the second argument for
+`program.attach` if the default attachment mode is not supported.
 
 Let's try it out!
 
@@ -133,7 +137,7 @@ OPTIONS:
 # add -i or --iface parameter if need to attach to an interface other than eth0
 # - for example, cargo xtask run -- -i wlp2s0
 $ cargo xtask run
-Waiting for Ctrl-C...
+10:58:21 [INFO] myapp: [myapp/src/main.rs:51] Waiting for Ctrl-C...
 Exiting...
 ```
 

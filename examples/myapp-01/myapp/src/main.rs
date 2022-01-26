@@ -1,23 +1,14 @@
 // ANCHOR: all
 // ANCHOR: use
+use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
-use aya::{Bpf, include_bytes_aligned};
 use aya::programs::{Xdp, XdpFlags};
-use std::{
-    convert::TryInto,
-    sync::Arc,
-    sync::atomic::{AtomicBool, Ordering},
-    thread,
-    time::Duration,
-};
+use log::info;
+use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
+use std::convert::TryInto;
 use structopt::StructOpt;
+use tokio::signal;
 // ANCHOR_END: use
-
-fn main() {
-    if let Err(e) = try_main() {
-        eprintln!("error: {:#}", e);
-    }
-}
 
 #[derive(Debug, StructOpt)]
 struct Opt {
@@ -25,10 +16,22 @@ struct Opt {
     iface: String,
 }
 
-// ANCHOR: try_main
-fn try_main() -> Result<(), anyhow::Error> {
+// ANCHOR: tokiomain
+#[tokio::main]
+async fn main() -> Result<(), anyhow::Error> {
     let opt = Opt::from_args();
-    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+
+    TermLogger::init(
+        LevelFilter::Debug,
+        ConfigBuilder::new()
+            .set_target_level(LevelFilter::Error)
+            .set_location_level(LevelFilter::Error)
+            .build(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )?;
+
+    // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
@@ -45,20 +48,11 @@ fn try_main() -> Result<(), anyhow::Error> {
     program.attach(&opt.iface, XdpFlags::default())
         .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
-
-    ctrlc::set_handler(move || {
-        r.store(false, Ordering::SeqCst);
-    }).expect("Error setting Ctrl-C handler");
-
-    println!("Waiting for Ctrl-C...");
-    while running.load(Ordering::SeqCst) {
-        thread::sleep(Duration::from_millis(500))
-    }
-    println!("Exiting...");
+    info!("Waiting for Ctrl-C...");
+    signal::ctrl_c().await?;
+    info!("Exiting...");
 
     Ok(())
 }
-// ANCHOR_END: try_main
-// ANCHOR_END: all
+// ANCHOR_END: tokiomain
+
