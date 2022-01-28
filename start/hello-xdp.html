@@ -265,23 +265,14 @@ Disassembly of section xdp/myapp:
 Fortunately, we have a generated program ready in <code>myapp/src/main.rs</code> which is going to do that for us.</p>
 <h3 id="starting-out"><a class="header" href="#starting-out">Starting Out</a></h3>
 <p>The generated application has the following content:</p>
-<pre><code class="language-rust ignore">use anyhow::Context;
-use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore">use aya::{include_bytes_aligned, Bpf};
+use anyhow::Context;
 use aya::programs::{Xdp, XdpFlags};
-use std::{
-    convert::TryInto,
-    sync::Arc,
-    sync::atomic::{AtomicBool, Ordering},
-    thread,
-    time::Duration,
-};
+use log::info;
+use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
+use std::convert::TryInto;
 use structopt::StructOpt;
-
-fn main() {
-    if let Err(e) = try_main() {
-        eprintln!(&quot;error: {:#}&quot;, e);
-    }
-}
+use tokio::signal;
 
 #[derive(Debug, StructOpt)]
 struct Opt {
@@ -289,9 +280,21 @@ struct Opt {
     iface: String,
 }
 
-fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
+#[tokio::main]
+async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     let opt = Opt::from_args();
-    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+
+    TermLogger::init(
+        LevelFilter::Debug,
+        ConfigBuilder::new()
+            .set_target_level(LevelFilter::Error)
+            .set_location_level(LevelFilter::Error)
+            .build(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )?;
+
+    // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
@@ -308,54 +311,51 @@ fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
     program.attach(&amp;opt.iface, XdpFlags::default())
         .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
-
-    ctrlc::set_handler(move || {
-        r.store(false, Ordering::SeqCst);
-    }).expect(&quot;Error setting Ctrl-C handler&quot;);
-
-    println!(&quot;Waiting for Ctrl-C...&quot;);
-    while running.load(Ordering::SeqCst) {
-        thread::sleep(Duration::from_millis(500))
-    }
-    println!(&quot;Exiting...&quot;);
+    info!(&quot;Waiting for Ctrl-C...&quot;);
+    signal::ctrl_c().await?;
+    info!(&quot;Exiting...&quot;);
 
     Ok(())
 }
+
 </code></pre>
 <p>Let's look at the details of this program.</p>
-<p>There is a dependency on <code>ctrlc</code> added to <code>myapp/Cargo.toml</code>:</p>
-<pre><code class="language-toml">ctrlc = &quot;3.2&quot;
+<p>There is a dependency on <code>tokio</code> added to <code>myapp/Cargo.toml</code> - <code>tokio</code>
+provides the <a href="https://docs.rs/tokio/latest/tokio/signal/fn.ctrl_c.html">Ctrl-C handler</a> functionality and will also come useful later when we
+expand the functionality of the initial program:</p>
+<pre><code class="language-toml">tokio = { version = &quot;1.5.0&quot;, features = [&quot;macros&quot;, &quot;rt&quot;, &quot;rt-multi-thread&quot;, &quot;net&quot;, &quot;signal&quot;] }
 </code></pre>
 <p>The following <code>use</code> declarations are added at the top of the <code>myapp/src/main.rs</code>:</p>
-<pre><code class="language-rust ignore">use anyhow::Context;
-use aya::{Bpf, include_bytes_aligned};
+<pre><code class="language-rust ignore">use aya::{include_bytes_aligned, Bpf};
+use anyhow::Context;
 use aya::programs::{Xdp, XdpFlags};
-use std::{
-    convert::TryInto,
-    sync::Arc,
-    sync::atomic::{AtomicBool, Ordering},
-    thread,
-    time::Duration,
-};
+use log::info;
+use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
+use std::convert::TryInto;
 use structopt::StructOpt;
+use tokio::signal;
 <span class="boring">
-</span><span class="boring">fn main() {
-</span><span class="boring">    if let Err(e) = try_main() {
-</span><span class="boring">        eprintln!(&quot;error: {:#}&quot;, e);
-</span><span class="boring">    }
-</span><span class="boring">}
-</span><span class="boring">
 </span><span class="boring">#[derive(Debug, StructOpt)]
 </span><span class="boring">struct Opt {
 </span><span class="boring">    #[structopt(short, long, default_value = &quot;eth0&quot;)]
 </span><span class="boring">    iface: String,
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
+</span><span class="boring">#[tokio::main]
+</span><span class="boring">async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
 </span><span class="boring">    let opt = Opt::from_args();
-</span><span class="boring">    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+</span><span class="boring">
+</span><span class="boring">    TermLogger::init(
+</span><span class="boring">        LevelFilter::Debug,
+</span><span class="boring">        ConfigBuilder::new()
+</span><span class="boring">            .set_target_level(LevelFilter::Error)
+</span><span class="boring">            .set_location_level(LevelFilter::Error)
+</span><span class="boring">            .build(),
+</span><span class="boring">        TerminalMode::Mixed,
+</span><span class="boring">        ColorChoice::Auto,
+</span><span class="boring">    )?;
+</span><span class="boring">
+</span><span class="boring">    // This will include your eBPF object file as raw bytes at compile-time and load it at
 </span><span class="boring">    // runtime. This approach is recommended for most real-world use cases. If you would
 </span><span class="boring">    // like to specify the eBPF program at runtime rather than at compile-time, you can
 </span><span class="boring">    // reach for `Bpf::load_file` instead.
@@ -372,40 +372,23 @@ use structopt::StructOpt;
 </span><span class="boring">    program.attach(&amp;opt.iface, XdpFlags::default())
 </span><span class="boring">        .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 </span><span class="boring">
-</span><span class="boring">    let running = Arc::new(AtomicBool::new(true));
-</span><span class="boring">    let r = running.clone();
-</span><span class="boring">
-</span><span class="boring">    ctrlc::set_handler(move || {
-</span><span class="boring">        r.store(false, Ordering::SeqCst);
-</span><span class="boring">    }).expect(&quot;Error setting Ctrl-C handler&quot;);
-</span><span class="boring">
-</span><span class="boring">    println!(&quot;Waiting for Ctrl-C...&quot;);
-</span><span class="boring">    while running.load(Ordering::SeqCst) {
-</span><span class="boring">        thread::sleep(Duration::from_millis(500))
-</span><span class="boring">    }
-</span><span class="boring">    println!(&quot;Exiting...&quot;);
+</span><span class="boring">    info!(&quot;Waiting for Ctrl-C...&quot;);
+</span><span class="boring">    signal::ctrl_c().await?;
+</span><span class="boring">    info!(&quot;Exiting...&quot;);
 </span><span class="boring">
 </span><span class="boring">    Ok(())
 </span><span class="boring">}
-</span></code></pre>
-<p><code>try_main</code> function loads our program:</p>
-<pre><code class="language-rust ignore"><span class="boring">use anyhow::Context;
-</span><span class="boring">use aya::{Bpf, include_bytes_aligned};
-</span><span class="boring">use aya::programs::{Xdp, XdpFlags};
-</span><span class="boring">use std::{
-</span><span class="boring">    convert::TryInto,
-</span><span class="boring">    sync::Arc,
-</span><span class="boring">    sync::atomic::{AtomicBool, Ordering},
-</span><span class="boring">    thread,
-</span><span class="boring">    time::Duration,
-</span><span class="boring">};
-</span><span class="boring">use structopt::StructOpt;
 </span><span class="boring">
-</span><span class="boring">fn main() {
-</span><span class="boring">    if let Err(e) = try_main() {
-</span><span class="boring">        eprintln!(&quot;error: {:#}&quot;, e);
-</span><span class="boring">    }
-</span><span class="boring">}
+</span></code></pre>
+<p>The async main function loads and runs our program:</p>
+<pre><code class="language-rust ignore"><span class="boring">use aya::{include_bytes_aligned, Bpf};
+</span><span class="boring">use anyhow::Context;
+</span><span class="boring">use aya::programs::{Xdp, XdpFlags};
+</span><span class="boring">use log::info;
+</span><span class="boring">use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
+</span><span class="boring">use std::convert::TryInto;
+</span><span class="boring">use structopt::StructOpt;
+</span><span class="boring">use tokio::signal;
 </span><span class="boring">
 </span><span class="boring">#[derive(Debug, StructOpt)]
 </span><span class="boring">struct Opt {
@@ -413,9 +396,21 @@ use structopt::StructOpt;
 </span><span class="boring">    iface: String,
 </span><span class="boring">}
 </span><span class="boring">
-</span>fn try_main() -&gt; Result&lt;(), anyhow::Error&gt; {
+</span>#[tokio::main]
+async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     let opt = Opt::from_args();
-    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+
+    TermLogger::init(
+        LevelFilter::Debug,
+        ConfigBuilder::new()
+            .set_target_level(LevelFilter::Error)
+            .set_location_level(LevelFilter::Error)
+            .build(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )?;
+
+    // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
@@ -432,22 +427,14 @@ use structopt::StructOpt;
     program.attach(&amp;opt.iface, XdpFlags::default())
         .context(&quot;failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE&quot;)?;
 
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
-
-    ctrlc::set_handler(move || {
-        r.store(false, Ordering::SeqCst);
-    }).expect(&quot;Error setting Ctrl-C handler&quot;);
-
-    println!(&quot;Waiting for Ctrl-C...&quot;);
-    while running.load(Ordering::SeqCst) {
-        thread::sleep(Duration::from_millis(500))
-    }
-    println!(&quot;Exiting...&quot;);
+    info!(&quot;Waiting for Ctrl-C...&quot;);
+    signal::ctrl_c().await?;
+    info!(&quot;Exiting...&quot;);
 
     Ok(())
 }
-</code></pre>
+<span class="boring">
+</span></code></pre>
 <p>The program optionally takes an argument for the interface we wish to attach it to (defaults to <code>eth0</code>).</p>
 <p><code>include_bytes_aligned!</code> copies the contents of the BPF object file
 into a variable at the compile time.
@@ -458,7 +445,9 @@ The statement <code>let mut bpf = Bpf::load_file(data)?;</code>:</p>
 <li>If your system supports BPF Type Format (BTF), it will read the current BTF description and performs any necessary relocations</li>
 </ul>
 <p>Once our file is loaded, we can extract the XDP program with <code>let program: &amp;mut Xdp = bpf.program_mut(&quot;myapp&quot;)?.try_into()?;</code> and then load it in to the kernel with <code>program.load()</code>.</p>
-<p>Finally, we can attach it to an interface with <code>program.attach(&amp;opt.iface, XdpFlags::default())?;</code></p>
+<p>Finally, we can attach it to an interface with <code>program.attach(&amp;opt.iface, XdpFlags::default())?;</code>.  As the error message indicates, it is possible to use
+<code>XdpFlags::SKB_MODE</code> instead of <code>XdpFlags::default()</code> as the second argument for
+<code>program.attach</code> if the default attachment mode is not supported.</p>
 <p>Let's try it out!</p>
 <pre><code class="language-console"># change directory to the root or myapp
 $ cargo build
@@ -478,7 +467,7 @@ OPTIONS:
 # add -i or --iface parameter if need to attach to an interface other than eth0
 # - for example, cargo xtask run -- -i wlp2s0
 $ cargo xtask run
-Waiting for Ctrl-C...
+10:58:21 [INFO] myapp: [myapp/src/main.rs:51] Waiting for Ctrl-C...
 Exiting...
 </code></pre>
 <p>That was uneventful. Did it work?</p>
