@@ -18,6 +18,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install latest stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: rust-src
+
       - uses: Swatinem/rust-cache@v1
 
       - name: Install Dependencies
@@ -25,6 +37,15 @@ jobs:
 
       - name: Run tests
         run: mdbook build && mdbook test
+
+      - name: Check Examples
+        run: |
+          for example in "myapp-01" "myapp-02" "myapp-03"; do
+            pushd "examples/${example}"
+            cargo xtask build-ebpf
+            cargo build
+            popd
+          done
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
