@@ -69,6 +69,7 @@ nav:
       - Dropping Packets: book/start/dropping-packets.md
     - Working With Aya:
       - book/aya/index.md
+      - Program Lifecycle: book/aya/lifecycle.md 
       - Reading Values From A Context: book/aya/context.md
       - Using aya-gen: book/aya/aya-gen.md
       - Using aya-log: book/aya/aya-log.md
