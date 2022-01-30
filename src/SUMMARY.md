@@ -8,6 +8,7 @@
   - [Logging Packets](./start/logging-packets.md)
   - [Dropping Packets](./start/dropping-packets.md)
 - [Working With Aya](./aya/index.md)
+  - [Program Lifecycle](./aya/lifecycle.md)
   - [Reading Values From A Context](./aya/context.md)
   - [Using aya-gen](./aya/aya-gen.md)
   - [Using aya-log](./aya/aya-log.md)
