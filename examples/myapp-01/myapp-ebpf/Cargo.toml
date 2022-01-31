@@ -11,10 +11,6 @@ myapp-common = { path = "../myapp-common" }
 name = "myapp"
 path = "src/main.rs"
 
-[profile.dev]
-panic = "abort"
-overflow-checks = false
-
 [profile.release]
 panic = "abort"
 
