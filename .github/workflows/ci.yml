@@ -43,8 +43,9 @@ jobs:
 
       - name: Check Examples
         run: |
-          for example in "myapp-01" "myapp-02" "myapp-03"; do
+          for example in "aya-gen" "myapp-01" "myapp-02" "myapp-03"; do
             pushd "examples/${example}"
+            echo "Example: ${example}."
             cargo xtask build-ebpf
             cargo build
             popd

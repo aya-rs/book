@@ -1,7 +1,7 @@
 use aya::{include_bytes_aligned, Bpf};
 use aya::{programs::Lsm, Btf};
 use std::{
-    convert::{TryFrom, TryInto},
+    convert::TryInto,
     sync::atomic::{AtomicBool, Ordering},
     sync::Arc,
     thread,
@@ -19,21 +19,18 @@ fn main() {
 struct Opt {}
 
 fn try_main() -> Result<(), anyhow::Error> {
-    let opt = Opt::from_args();
-    // This will include youe eBPF object file as raw bytes at compile-time and load it at
+    // command-line options a currently unused
+    let _opt = Opt::from_args();
+
+    // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
-    #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/myapp"
-    ))?;
-    #[cfg(not(debug_assertions))]
     let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/myapp"
     ))?;
     let btf = Btf::from_sys_fs()?;
-    let program: &mut Lsm = bpf.program_mut("task_alloc")?.try_into()?;
+    let program: &mut Lsm = bpf.program_mut("task_alloc").unwrap().try_into()?;
     program.load("task_alloc", &btf)?;
     program.attach()?;
 

@@ -33,24 +33,25 @@ impl std::fmt::Display for Architecture {
 pub struct Options {
     #[structopt(default_value = "bpfel-unknown-none", long)]
     target: Architecture,
-    #[structopt(long)]
-    release: bool,
+    /// Build profile for eBPF programs
+    #[structopt(default_value = "release", long)]
+    pub profile: String,
 }
 
 pub fn build(opts: Options) -> Result<(), anyhow::Error> {
     let dir = PathBuf::from("myapp-ebpf");
     let target = format!("--target={}", opts.target);
-    let mut args = vec![
+    let args = vec![
         "+nightly",
         "build",
         "--verbose",
         target.as_str(),
         "-Z",
         "build-std=core",
+        "--profile",
+        opts.profile.as_str(),
     ];
-    if opts.release {
-        args.push("--release")
-    }
+
     let status = Command::new("cargo")
         .current_dir(&dir)
         .args(&args)
