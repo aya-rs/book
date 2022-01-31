@@ -403,11 +403,6 @@ async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
-    #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
-        &quot;../../target/bpfel-unknown-none/debug/myapp&quot;
-    ))?;
-    #[cfg(not(debug_assertions))]
     let mut bpf = Bpf::load(include_bytes_aligned!(
         &quot;../../target/bpfel-unknown-none/release/myapp&quot;
     ))?;
@@ -464,11 +459,6 @@ use tokio::signal;
 </span><span class="boring">    // runtime. This approach is recommended for most real-world use cases. If you would
 </span><span class="boring">    // like to specify the eBPF program at runtime rather than at compile-time, you can
 </span><span class="boring">    // reach for `Bpf::load_file` instead.
-</span><span class="boring">    #[cfg(debug_assertions)]
-</span><span class="boring">    let mut bpf = Bpf::load(include_bytes_aligned!(
-</span><span class="boring">        &quot;../../target/bpfel-unknown-none/debug/myapp&quot;
-</span><span class="boring">    ))?;
-</span><span class="boring">    #[cfg(not(debug_assertions))]
 </span><span class="boring">    let mut bpf = Bpf::load(include_bytes_aligned!(
 </span><span class="boring">        &quot;../../target/bpfel-unknown-none/release/myapp&quot;
 </span><span class="boring">    ))?;
@@ -519,11 +509,6 @@ async fn main() -&gt; Result&lt;(), anyhow::Error&gt; {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
-    #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
-        &quot;../../target/bpfel-unknown-none/debug/myapp&quot;
-    ))?;
-    #[cfg(not(debug_assertions))]
     let mut bpf = Bpf::load(include_bytes_aligned!(
         &quot;../../target/bpfel-unknown-none/release/myapp&quot;
     ))?;
