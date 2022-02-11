@@ -5,7 +5,6 @@ use anyhow::Context;
 use aya::programs::{Xdp, XdpFlags};
 use log::info;
 use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
-use std::convert::TryInto;
 use structopt::StructOpt;
 use tokio::signal;
 // ANCHOR_END: use

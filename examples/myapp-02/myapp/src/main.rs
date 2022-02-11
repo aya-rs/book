@@ -7,7 +7,6 @@ use aya::{
 };
 use bytes::BytesMut;
 use std::{
-    convert::{TryFrom, TryInto},
     env, fs, net,
 };
 use tokio::{signal, task};

@@ -36,10 +36,10 @@ This book caters towards people with either some eBPF or some Rust background. F
 
 * You are comfortable using the Rust Programming Language, and have written,
   run, and debugged Rust applications on a desktop environment. You should also
-  be familiar with the idioms of the [2018 edition] as this book targets
-  Rust 2018.
+  be familiar with the idioms of the [2021 edition] as this book targets
+  Rust 2021.
 
-[2018 edition]: https://doc.rust-lang.org/edition-guide/
+[2021 edition]: https://doc.rust-lang.org/edition-guide/
 
 * You are familiar with the core concepts of eBPF
 
