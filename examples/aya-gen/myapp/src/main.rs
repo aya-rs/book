@@ -1,7 +1,6 @@
 use aya::{include_bytes_aligned, Bpf};
 use aya::{programs::Lsm, Btf};
 use std::{
-    convert::TryInto,
     sync::atomic::{AtomicBool, Ordering},
     sync::Arc,
     thread,

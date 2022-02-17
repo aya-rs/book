@@ -7,7 +7,7 @@ use aya::{
     Bpf,
 };
 use bytes::BytesMut;
-use std::{convert::{TryFrom, TryInto}, env, fs, net::{self, Ipv4Addr}};
+use std::{env, fs, net::{self, Ipv4Addr}};
 use tokio::{signal, task};
 
 use myapp_common::PacketLog;
