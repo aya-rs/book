@@ -177,8 +177,8 @@ up a development environment.</p>
 <ul>
 <li>You are comfortable using the Rust Programming Language, and have written,
 run, and debugged Rust applications on a desktop environment. You should also
-be familiar with the idioms of the <a href="https://doc.rust-lang.org/edition-guide/">2018 edition</a> as this book targets
-Rust 2018.</li>
+be familiar with the idioms of the <a href="https://doc.rust-lang.org/edition-guide/">2021 edition</a> as this book targets
+Rust 2021.</li>
 </ul>
 <ul>
 <li>You are familiar with the core concepts of eBPF</li>
@@ -375,7 +375,6 @@ use anyhow::Context;
 use aya::programs::{Xdp, XdpFlags};
 use log::info;
 use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
-use std::convert::TryInto;
 use structopt::StructOpt;
 use tokio::signal;
 
@@ -431,7 +430,6 @@ use anyhow::Context;
 use aya::programs::{Xdp, XdpFlags};
 use log::info;
 use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
-use std::convert::TryInto;
 use structopt::StructOpt;
 use tokio::signal;
 <span class="boring">
@@ -481,7 +479,6 @@ use tokio::signal;
 </span><span class="boring">use aya::programs::{Xdp, XdpFlags};
 </span><span class="boring">use log::info;
 </span><span class="boring">use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
-</span><span class="boring">use std::convert::TryInto;
 </span><span class="boring">use structopt::StructOpt;
 </span><span class="boring">use tokio::signal;
 </span><span class="boring">
@@ -691,7 +688,6 @@ static mut EVENTS: PerfEventArray&lt;PacketLog&gt; = PerfEventArray::&lt;PacketL
 </span><span class="boring">};
 </span><span class="boring">use bytes::BytesMut;
 </span><span class="boring">use std::{
-</span><span class="boring">    convert::{TryFrom, TryInto},
 </span><span class="boring">    env, fs, net,
 </span><span class="boring">};
 </span><span class="boring">use tokio::{signal, task};
@@ -1090,7 +1086,6 @@ tokio = { version = &quot;1.9.0&quot;, features = [&quot;full&quot;] }
 </span><span class="boring">};
 </span><span class="boring">use bytes::BytesMut;
 </span><span class="boring">use std::{
-</span><span class="boring">    convert::{TryFrom, TryInto},
 </span><span class="boring">    env, fs, net,
 </span><span class="boring">};
 </span><span class="boring">use tokio::{signal, task};
@@ -1437,7 +1432,6 @@ We'll use the <code>IPv4Addr</code> type to represent our IP address as it's hum
 </span><span class="boring">};
 </span><span class="boring">use bytes::BytesMut;
 </span><span class="boring">use std::{
-</span><span class="boring">    convert::{TryFrom, TryInto},
 </span><span class="boring">    env, fs, net,
 </span><span class="boring">};
 </span><span class="boring">use tokio::{signal, task};
