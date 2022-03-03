@@ -18,3 +18,4 @@
   - [Classifiers](./programs/classifiers.md)
   - [Cgroups](./programs/cgroups.md)
   - [XDP](./programs/xdp.md)
+  - [LSM](./programs/lsm.md)

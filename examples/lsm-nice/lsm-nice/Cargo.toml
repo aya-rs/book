@@ -1,0 +1,19 @@
+[package]
+name = "lsm-nice"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+aya = { git = "https://github.com/aya-rs/aya", branch="main" }
+lsm-nice-common = { path = "../lsm-nice-common", features=["user"] }
+anyhow = "1.0.42"
+
+log = "0.4"
+simplelog = "0.11"
+structopt = { version = "0.3" }
+tokio = { version = "1.5.0", features = ["macros", "rt", "rt-multi-thread", "net", "signal"] }
+
+[[bin]]
+name = "lsm-nice"
+path = "src/main.rs"
