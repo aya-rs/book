@@ -230,7 +230,7 @@ rustup toolchain install nightly --component rust-src
 </code></pre>
 <p>Once you have the Rust toolchains installed, you must also install the <code>bpf-linker</code> - for linking our eBPF program - and <code>cargo-generate</code> - for generating the project skeleton.</p>
 <pre><code class="language-console">cargo install bpf-linker
-cargo install --git http://github.com/cargo-generate/cargo-generate cargo-generate
+cargo install --git https://github.com/cargo-generate/cargo-generate cargo-generate
 </code></pre>
 <p>If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:</p>
 <pre><code class="language-console">cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
@@ -776,7 +776,7 @@ pub fn generate() -&gt; Result&lt;(), anyhow::Error&gt; {
 <p>This will generate a file called <code>myapp-ebpf/src/bindings.rs</code>. If you've chosen an application name other than <code>myapp</code> you'll need to adjust the path appropriately.</p>
 <p>Add a new dependencies to <code>xtask/Cargo.toml</code>:</p>
 <pre><code class="language-toml">[dependencies]
-aya-gen = { git = &quot;http://github.com/aya-rs/aya&quot;, branch = &quot;main&quot; }
+aya-gen = { git = &quot;https://github.com/aya-rs/aya&quot;, branch = &quot;main&quot; }
 </code></pre>
 <p>Finally, we must add the command to the enum in <code>xtask/src/main.rs</code>:</p>
 <pre><code class="language-rust ignore"><span class="boring">mod build_ebpf;

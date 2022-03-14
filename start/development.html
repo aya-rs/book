@@ -151,7 +151,7 @@ rustup toolchain install nightly --component rust-src
 </code></pre>
 <p>Once you have the Rust toolchains installed, you must also install the <code>bpf-linker</code> - for linking our eBPF program - and <code>cargo-generate</code> - for generating the project skeleton.</p>
 <pre><code class="language-console">cargo install bpf-linker
-cargo install --git http://github.com/cargo-generate/cargo-generate cargo-generate
+cargo install --git https://github.com/cargo-generate/cargo-generate cargo-generate
 </code></pre>
 <p>If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:</p>
 <pre><code class="language-console">cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
