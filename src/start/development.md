@@ -14,7 +14,7 @@ Once you have the Rust toolchains installed, you must also install the `bpf-link
 
 ```console
 cargo install bpf-linker
-cargo install --git http://github.com/cargo-generate/cargo-generate cargo-generate
+cargo install --git https://github.com/cargo-generate/cargo-generate cargo-generate
 ```
 
 If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:
