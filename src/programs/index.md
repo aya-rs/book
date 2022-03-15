@@ -1,3 +1,4 @@
 # Program Types
 
-This page is a work in progress, please feel free to open a Pull Request!
+This section contains information about concrete types of eBPF programs which
+can be written and loaded using Aya.
