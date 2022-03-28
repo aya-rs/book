@@ -14,12 +14,12 @@ Once you have the Rust toolchains installed, you must also install the `bpf-link
 
 ```console
 cargo install bpf-linker
-cargo install --git https://github.com/cargo-generate/cargo-generate cargo-generate
+cargo install cargo-generate
 ```
 
 If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:
 ```console
-cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
+cargo install --git https://github.com/aya-rs/bpf-linker --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
 ```
 
 ## Starting A New Project
@@ -40,4 +40,5 @@ or
 cargo generate --name tcfw -d program_type=classifier -d direction=Ingress https://github.com/aya-rs/aya-template
 ```
 
-See https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml for the full list of available options.
+See [the cargo-generate.toml file (in the aya-template repository)](https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml)
+for the full list of available options.
