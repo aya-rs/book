@@ -230,10 +230,10 @@ rustup toolchain install nightly --component rust-src
 </code></pre>
 <p>Once you have the Rust toolchains installed, you must also install the <code>bpf-linker</code> - for linking our eBPF program - and <code>cargo-generate</code> - for generating the project skeleton.</p>
 <pre><code class="language-console">cargo install bpf-linker
-cargo install --git https://github.com/cargo-generate/cargo-generate cargo-generate
+cargo install cargo-generate
 </code></pre>
 <p>If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:</p>
-<pre><code class="language-console">cargo install --git https://github.com/aya-rs/bpf-linker  --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
+<pre><code class="language-console">cargo install --git https://github.com/aya-rs/bpf-linker --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
 </code></pre>
 <h2 id="starting-a-new-project"><a class="header" href="#starting-a-new-project">Starting A New Project</a></h2>
 <p>To start a new project, you can use <code>cargo-generate</code>:</p>
@@ -246,7 +246,8 @@ cargo install --git https://github.com/cargo-generate/cargo-generate cargo-gener
 <p>or</p>
 <pre><code class="language-console">cargo generate --name tcfw -d program_type=classifier -d direction=Ingress https://github.com/aya-rs/aya-template
 </code></pre>
-<p>See https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml for the full list of available options.</p>
+<p>See <a href="https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml">the cargo-generate.toml file (in the aya-template repository)</a>
+for the full list of available options.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-xdp"><a class="header" href="#hello-xdp">Hello XDP!</a></h1>
 <h2 id="example-project"><a class="header" href="#example-project">Example Project</a></h2>
 <p>While there are myriad trace points to attach to and program types to write we should start somewhere simple.</p>
