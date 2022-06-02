@@ -153,7 +153,7 @@ rustup toolchain install nightly --component rust-src
 <pre><code class="language-console">cargo install bpf-linker
 cargo install cargo-generate
 </code></pre>
-<p>If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:</p>
+<p>If you have LLVM installed (the newest LLVM version is required, currently LLVM 14) and want to use it instead of rust-llvm, you can use the system-llvm feature::</p>
 <pre><code class="language-console">cargo install --git https://github.com/aya-rs/bpf-linker --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
 </code></pre>
 <h2 id="starting-a-new-project"><a class="header" href="#starting-a-new-project">Starting A New Project</a></h2>
