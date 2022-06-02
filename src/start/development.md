@@ -17,7 +17,7 @@ cargo install bpf-linker
 cargo install cargo-generate
 ```
 
-If you have LLVM installed and want to use it instead of rust-llvm, you can use the system-llvm feature:
+If you have LLVM installed (the newest LLVM version is required, currently LLVM 14) and want to use it instead of rust-llvm, you can use the system-llvm feature::
 ```console
 cargo install --git https://github.com/aya-rs/bpf-linker --tag v0.9.3 --no-default-features --features system-llvm -- bpf-linker
 ```
