@@ -96,7 +96,7 @@ Therefore we need to generate a binding to `task_struct` with aya-gen.
 > [this section](../aya/aya-gen.md).
 
 ```bash
-aya-gen btf-types task_struct > lsm-nice-ebpf/src/vmlinux.rs
+aya-gen generate task_struct > lsm-nice-ebpf/src/vmlinux.rs
 ```
 
 Now it's time to modify the `lsm-nice-ebpf` project and write an actual program
