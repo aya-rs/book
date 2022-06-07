@@ -169,7 +169,7 @@ FLAGS:
     -V, --version    Prints version information
 
 SUBCOMMANDS:
-    btf-types
+    generate
     help         Prints this message or the help of the given subcommand(s)
 </code></pre>
 <p>Let's assume that we want to generate Rust definition of
@@ -177,12 +177,12 @@ SUBCOMMANDS:
 Let's also assume that your project is called <code>myapp</code>. Your userspace part is
 in <code>myapp</code> subdirectory, your eBPF part is in <code>myapp-ebpf</code>. We need to generate
 the bindings for the eBPF part, which can be done with:</p>
-<pre><code class="language-bash">aya-gen btf-types task_struct &gt; myapp-ebpf/src/vmlinux.rs
+<pre><code class="language-bash">aya-gen generate task_struct &gt; myapp-ebpf/src/vmlinux.rs
 </code></pre>
 <blockquote>
 <p>💡 <strong>HINT: Generating for multiple types</strong></p>
 <p>You can also specify multiple types to generate, for example:</p>
-<pre><code class="language-bash">aya-gen btf-types task_struct dentry &gt; vmlinux.rs
+<pre><code class="language-bash">aya-gen generate task_struct dentry &gt; vmlinux.rs
 </code></pre>
 <p>But in the following example, we will focus only on <code>task_struct</code>.</p>
 </blockquote>

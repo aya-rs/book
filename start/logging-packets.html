@@ -326,20 +326,20 @@ This is where <code>aya-gen</code> comes in to play. It can easily generate bind
 <p>Once the bindings are generated and checked in to our repository they shouldn't need to be regenerated again unless we need to add a new struct.</p>
 <p>Lets use <code>xtask</code> to automate this so we can easily reproduce this file in future.</p>
 <p>We'll add the following content to <code>xtask/src/codegen.rs</code></p>
-<pre><code class="language-rust ignore">use aya_gen::btf_types;
+<pre><code class="language-rust ignore">use aya_gen::generate::InputFile;
 use std::{
     fs::File,
     io::Write,
-    path::{Path, PathBuf},
+    path::PathBuf,
 };
 
 pub fn generate() -&gt; Result&lt;(), anyhow::Error&gt; {
     let dir = PathBuf::from(&quot;myapp-ebpf/src&quot;);
     let names: Vec&lt;&amp;str&gt; = vec![&quot;ethhdr&quot;, &quot;iphdr&quot;];
-    let bindings = btf_types::generate(Path::new(&quot;/sys/kernel/btf/vmlinux&quot;), &amp;names)?;
+    let bindings = aya_gen::generate(InputFile::Btf(PathBuf::from(&quot;/sys/kernel/btf/vmlinux&quot;)), &amp;names, &amp;[])?;
     // Write the bindings to the $OUT_DIR/bindings.rs file.
     let mut out = File::create(dir.join(&quot;bindings.rs&quot;))?;
-    write!(out, &quot;{}&quot;, bindings)?;
+    write!(out, &quot;{:?}&quot;, bindings)?;
     Ok(())
 }
 </code></pre>

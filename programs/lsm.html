@@ -226,7 +226,7 @@ Therefore we need to generate a binding to <code>task_struct</code> with aya-gen
 <p>If you are not familiar with aya-gen, please refer to
 <a href="../aya/aya-gen.html">this section</a>.</p>
 </blockquote>
-<pre><code class="language-bash">aya-gen btf-types task_struct &gt; lsm-nice-ebpf/src/vmlinux.rs
+<pre><code class="language-bash">aya-gen generate task_struct &gt; lsm-nice-ebpf/src/vmlinux.rs
 </code></pre>
 <p>Now it's time to modify the <code>lsm-nice-ebpf</code> project and write an actual program
 there. The full program code should look like:</p>

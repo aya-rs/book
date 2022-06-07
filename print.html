@@ -757,20 +757,20 @@ This is where <code>aya-gen</code> comes in to play. It can easily generate bind
 <p>Once the bindings are generated and checked in to our repository they shouldn't need to be regenerated again unless we need to add a new struct.</p>
 <p>Lets use <code>xtask</code> to automate this so we can easily reproduce this file in future.</p>
 <p>We'll add the following content to <code>xtask/src/codegen.rs</code></p>
-<pre><code class="language-rust ignore">use aya_gen::btf_types;
+<pre><code class="language-rust ignore">use aya_gen::generate::InputFile;
 use std::{
     fs::File,
     io::Write,
-    path::{Path, PathBuf},
+    path::PathBuf,
 };
 
 pub fn generate() -&gt; Result&lt;(), anyhow::Error&gt; {
     let dir = PathBuf::from(&quot;myapp-ebpf/src&quot;);
     let names: Vec&lt;&amp;str&gt; = vec![&quot;ethhdr&quot;, &quot;iphdr&quot;];
-    let bindings = btf_types::generate(Path::new(&quot;/sys/kernel/btf/vmlinux&quot;), &amp;names)?;
+    let bindings = aya_gen::generate(InputFile::Btf(PathBuf::from(&quot;/sys/kernel/btf/vmlinux&quot;)), &amp;names, &amp;[])?;
     // Write the bindings to the $OUT_DIR/bindings.rs file.
     let mut out = File::create(dir.join(&quot;bindings.rs&quot;))?;
-    write!(out, &quot;{}&quot;, bindings)?;
+    write!(out, &quot;{:?}&quot;, bindings)?;
     Ok(())
 }
 </code></pre>
@@ -1540,7 +1540,7 @@ FLAGS:
     -V, --version    Prints version information
 
 SUBCOMMANDS:
-    btf-types
+    generate
     help         Prints this message or the help of the given subcommand(s)
 </code></pre>
 <p>Let's assume that we want to generate Rust definition of
@@ -1548,12 +1548,12 @@ SUBCOMMANDS:
 Let's also assume that your project is called <code>myapp</code>. Your userspace part is
 in <code>myapp</code> subdirectory, your eBPF part is in <code>myapp-ebpf</code>. We need to generate
 the bindings for the eBPF part, which can be done with:</p>
-<pre><code class="language-bash">aya-gen btf-types task_struct &gt; myapp-ebpf/src/vmlinux.rs
+<pre><code class="language-bash">aya-gen generate task_struct &gt; myapp-ebpf/src/vmlinux.rs
 </code></pre>
 <blockquote>
 <p>💡 <strong>HINT: Generating for multiple types</strong></p>
 <p>You can also specify multiple types to generate, for example:</p>
-<pre><code class="language-bash">aya-gen btf-types task_struct dentry &gt; vmlinux.rs
+<pre><code class="language-bash">aya-gen generate task_struct dentry &gt; vmlinux.rs
 </code></pre>
 <p>But in the following example, we will focus only on <code>task_struct</code>.</p>
 </blockquote>
@@ -1718,7 +1718,7 @@ Therefore we need to generate a binding to <code>task_struct</code> with aya-gen
 <p>If you are not familiar with aya-gen, please refer to
 <a href="programs/../aya/aya-gen.html">this section</a>.</p>
 </blockquote>
-<pre><code class="language-bash">aya-gen btf-types task_struct &gt; lsm-nice-ebpf/src/vmlinux.rs
+<pre><code class="language-bash">aya-gen generate task_struct &gt; lsm-nice-ebpf/src/vmlinux.rs
 </code></pre>
 <p>Now it's time to modify the <code>lsm-nice-ebpf</code> project and write an actual program
 there. The full program code should look like:</p>
