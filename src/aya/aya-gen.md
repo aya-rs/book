@@ -34,7 +34,7 @@ FLAGS:
     -V, --version    Prints version information
 
 SUBCOMMANDS:
-    btf-types
+    generate
     help         Prints this message or the help of the given subcommand(s)
 ```
 
@@ -45,7 +45,7 @@ in `myapp` subdirectory, your eBPF part is in `myapp-ebpf`. We need to generate
 the bindings for the eBPF part, which can be done with:
 
 ```bash
-aya-gen btf-types task_struct > myapp-ebpf/src/vmlinux.rs
+aya-gen generate task_struct > myapp-ebpf/src/vmlinux.rs
 ```
 
 > 💡 **HINT: Generating for multiple types**
@@ -53,7 +53,7 @@ aya-gen btf-types task_struct > myapp-ebpf/src/vmlinux.rs
 > You can also specify multiple types to generate, for example:
 >
 > ```bash
-> aya-gen btf-types task_struct dentry > vmlinux.rs
+> aya-gen generate task_struct dentry > vmlinux.rs
 > ```
 >
 > But in the following example, we will focus only on `task_struct`.
