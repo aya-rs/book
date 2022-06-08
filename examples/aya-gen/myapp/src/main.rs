@@ -1,8 +1,9 @@
-use aya::{include_bytes_aligned, Bpf};
-use aya::{programs::Lsm, Btf};
+use aya::{include_bytes_aligned, programs::Lsm, Bpf, Btf};
 use std::{
-    sync::atomic::{AtomicBool, Ordering},
-    sync::Arc,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
     thread,
     time::Duration,
 };
@@ -29,7 +30,8 @@ fn try_main() -> Result<(), anyhow::Error> {
         "../../target/bpfel-unknown-none/release/myapp"
     ))?;
     let btf = Btf::from_sys_fs()?;
-    let program: &mut Lsm = bpf.program_mut("task_alloc").unwrap().try_into()?;
+    let program: &mut Lsm =
+        bpf.program_mut("task_alloc").unwrap().try_into()?;
     program.load("task_alloc", &btf)?;
     program.attach()?;
 

@@ -1,18 +1,19 @@
 use anyhow::Context;
 use aya::{
-    maps::HashMap,
-    maps::perf::{AsyncPerfEventArray},
+    maps::{perf::AsyncPerfEventArray, HashMap},
     programs::{Xdp, XdpFlags},
     util::online_cpus,
     Bpf,
 };
 use bytes::BytesMut;
-use std::{env, fs, net::{self, Ipv4Addr}};
+use std::{
+    env, fs,
+    net::{self, Ipv4Addr},
+};
 use tokio::{signal, task};
 
 use myapp_common::PacketLog;
 
-// ANCHOR: main
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     let path = match env::args().nth(1) {
@@ -32,15 +33,17 @@ async fn main() -> Result<(), anyhow::Error> {
     probe.attach(&iface, XdpFlags::default())
         .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
-    // ANCHOR: block_address
-    let mut blocklist: HashMap<_, u32, u32> = HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
-    let block_addr : u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
-    blocklist.insert(block_addr, 0, 0)?;
-    // ANCHOR_END: block_address
+    // (1)
+    let mut blocklist: HashMap<_, u32, u32> =
+        HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
 
-    // ANCHOR: map
+    // (2)
+    let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
+
+    // (3)
+    blocklist.insert(block_addr, 0, 0)?;
+
     let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut("EVENTS")?)?;
-    // ANCHOR_END: map
 
     for cpu_id in online_cpus()? {
         let mut buf = perf_array.open(cpu_id, None)?;
@@ -65,4 +68,3 @@ async fn main() -> Result<(), anyhow::Error> {
     signal::ctrl_c().await.expect("failed to listen for event");
     Ok::<_, anyhow::Error>(())
 }
-// ANCHOR_END: main

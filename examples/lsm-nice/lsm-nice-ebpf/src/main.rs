@@ -1,10 +1,9 @@
-// ANCHOR: all
 #![no_std]
 #![no_main]
 
 use aya_bpf::{cty::c_int, macros::lsm, programs::LsmContext};
 
-// ANCHOR: vmlinux
+// (1)
 #[allow(non_upper_case_globals)]
 #[allow(non_snake_case)]
 #[allow(non_camel_case_types)]
@@ -12,13 +11,11 @@ use aya_bpf::{cty::c_int, macros::lsm, programs::LsmContext};
 mod vmlinux;
 
 use vmlinux::task_struct;
-// ANCHOR_END: vmlinux
 
-// ANCHOR: global
+// (2)
 /// PID of the process for which setting a negative nice value is denied.
 #[no_mangle]
 static PID: i32 = 0;
-// ANCHOR_END: global
 
 #[lsm(name = "task_setnice")]
 pub fn task_setnice(ctx: LsmContext) -> i32 {
@@ -28,7 +25,7 @@ pub fn task_setnice(ctx: LsmContext) -> i32 {
     }
 }
 
-// ANCHOR: program
+// (3)
 unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
     let p: *const task_struct = ctx.arg(0);
     let nice: c_int = ctx.arg(1);
@@ -48,10 +45,8 @@ unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
     // Otherwise allow it.
     Ok(0)
 }
-// ANCHOR_END: program
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     unsafe { core::hint::unreachable_unchecked() }
 }
-// ANCHOR_END: all

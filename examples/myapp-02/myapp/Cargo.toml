@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya = { git = "https://github.com/aya-rs/aya", branch="main", features=["async_tokio"] }
+aya = { version = "0.11", features=["async_tokio"] }
 myapp-common = { path = "../myapp-common", features=["userspace"] }
 anyhow = "1.0.42"
 bytes = "1"

@@ -49,7 +49,10 @@ where
     pub fn get(&self, bit_offset: usize, bit_width: u8) -> u64 {
         debug_assert!(bit_width <= 64);
         debug_assert!(bit_offset / 8 < self.storage.as_ref().len());
-        debug_assert!((bit_offset + (bit_width as usize)) / 8 <= self.storage.as_ref().len());
+        debug_assert!(
+            (bit_offset + (bit_width as usize)) / 8
+                <= self.storage.as_ref().len()
+        );
         let mut val = 0;
         for i in 0..(bit_width as usize) {
             if self.get_bit(i + bit_offset) {
@@ -67,7 +70,10 @@ where
     pub fn set(&mut self, bit_offset: usize, bit_width: u8, val: u64) {
         debug_assert!(bit_width <= 64);
         debug_assert!(bit_offset / 8 < self.storage.as_ref().len());
-        debug_assert!((bit_offset + (bit_width as usize)) / 8 <= self.storage.as_ref().len());
+        debug_assert!(
+            (bit_offset + (bit_width as usize)) / 8
+                <= self.storage.as_ref().len()
+        );
         for i in 0..(bit_width as usize) {
             let mask = 1 << i;
             let val_bit_is_set = val & mask == mask;
@@ -111,7 +117,9 @@ pub struct iphdr {
 impl iphdr {
     #[inline]
     pub fn ihl(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ihl(&mut self, val: __u8) {
@@ -122,7 +130,9 @@ impl iphdr {
     }
     #[inline]
     pub fn version(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_version(&mut self, val: __u8) {
@@ -132,8 +142,12 @@ impl iphdr {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(ihl: __u8, version: __u8) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        ihl: __u8,
+        version: __u8,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 4u8, {
             let ihl: u8 = unsafe { ::core::mem::transmute(ihl) };
             ihl as u64
