@@ -1,22 +1,23 @@
-// ANCHOR: all
-// ANCHOR: use
-use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
-use aya::programs::{Xdp, XdpFlags};
+use aya::{
+    include_bytes_aligned,
+    programs::{Xdp, XdpFlags},
+    Bpf,
+};
 use log::info;
-use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
+use simplelog::{
+    ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode,
+};
 use structopt::StructOpt;
-use tokio::signal;
-// ANCHOR_END: use
+use tokio::signal; // (1)
 
 #[derive(Debug, StructOpt)]
 struct Opt {
     #[structopt(short, long, default_value = "eth0")]
-    iface: String,
+    iface: String, // (2)
 }
 
-// ANCHOR: tokiomain
-#[tokio::main]
+#[tokio::main] // (3)
 async fn main() -> Result<(), anyhow::Error> {
     let opt = Opt::from_args();
 
@@ -34,11 +35,15 @@ async fn main() -> Result<(), anyhow::Error> {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
-    let mut bpf = Bpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/myapp"
-    ))?;
+    // (4)
+    let bytes =
+        include_bytes_aligned!("../../target/bpfel-unknown-none/release/myapp");
+    // (5)
+    let mut bpf = Bpf::load(bytes)?;
+    // (6)
     let program: &mut Xdp = bpf.program_mut("myapp").unwrap().try_into()?;
-    program.load()?;
+    program.load()?; // (7)
+                     // (8)
     program.attach(&opt.iface, XdpFlags::default())
         .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
@@ -48,5 +53,3 @@ async fn main() -> Result<(), anyhow::Error> {
 
     Ok(())
 }
-// ANCHOR_END: tokiomain
-

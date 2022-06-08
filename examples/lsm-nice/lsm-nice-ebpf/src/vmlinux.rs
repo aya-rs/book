@@ -49,7 +49,10 @@ where
     pub fn get(&self, bit_offset: usize, bit_width: u8) -> u64 {
         debug_assert!(bit_width <= 64);
         debug_assert!(bit_offset / 8 < self.storage.as_ref().len());
-        debug_assert!((bit_offset + (bit_width as usize)) / 8 <= self.storage.as_ref().len());
+        debug_assert!(
+            (bit_offset + (bit_width as usize)) / 8
+                <= self.storage.as_ref().len()
+        );
         let mut val = 0;
         for i in 0..(bit_width as usize) {
             if self.get_bit(i + bit_offset) {
@@ -67,7 +70,10 @@ where
     pub fn set(&mut self, bit_offset: usize, bit_width: u8, val: u64) {
         debug_assert!(bit_width <= 64);
         debug_assert!(bit_offset / 8 < self.storage.as_ref().len());
-        debug_assert!((bit_offset + (bit_width as usize)) / 8 <= self.storage.as_ref().len());
+        debug_assert!(
+            (bit_offset + (bit_width as usize)) / 8
+                <= self.storage.as_ref().len()
+        );
         for i in 0..(bit_width as usize) {
             let mask = 1 << i;
             let val_bit_is_set = val & mask == mask;
@@ -227,7 +233,8 @@ pub struct hlist_node {
 #[derive(Debug, Copy, Clone)]
 pub struct callback_head {
     pub next: *mut callback_head,
-    pub func: ::core::option::Option<unsafe extern "C" fn(arg1: *mut callback_head)>,
+    pub func:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut callback_head)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -249,7 +256,8 @@ pub struct file_system_type {
             arg4: *mut ::aya_bpf::cty::c_void,
         ) -> *mut dentry,
     >,
-    pub kill_sb: ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block)>,
+    pub kill_sb:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block)>,
     pub owner: *mut module,
     pub next: *mut file_system_type,
     pub fs_supers: hlist_head,
@@ -345,7 +353,11 @@ pub type fl_owner_t = *mut ::aya_bpf::cty::c_void;
 pub struct file_operations {
     pub owner: *mut module,
     pub llseek: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: loff_t, arg3: ::aya_bpf::cty::c_int) -> loff_t,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: loff_t,
+            arg3: ::aya_bpf::cty::c_int,
+        ) -> loff_t,
     >,
     pub read: ::core::option::Option<
         unsafe extern "C" fn(
@@ -370,16 +382,28 @@ pub struct file_operations {
         unsafe extern "C" fn(arg1: *mut kiocb, arg2: *mut iov_iter) -> ssize_t,
     >,
     pub iopoll: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kiocb, arg2: bool_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut kiocb,
+            arg2: bool_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub iterate: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: *mut dir_context) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: *mut dir_context,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub iterate_shared: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: *mut dir_context) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: *mut dir_context,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub poll: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: *mut poll_table_struct) -> __poll_t,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: *mut poll_table_struct,
+        ) -> __poll_t,
     >,
     pub unlocked_ioctl: ::core::option::Option<
         unsafe extern "C" fn(
@@ -396,17 +420,29 @@ pub struct file_operations {
         ) -> ::aya_bpf::cty::c_long,
     >,
     pub mmap: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: *mut vm_area_struct) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: *mut vm_area_struct,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub mmap_supported_flags: ::aya_bpf::cty::c_ulong,
     pub open: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut file) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut file,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub flush: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: fl_owner_t) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: fl_owner_t,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub release: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut file) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut file,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub fsync: ::core::option::Option<
         unsafe extern "C" fn(
@@ -450,7 +486,9 @@ pub struct file_operations {
         ) -> ::aya_bpf::cty::c_ulong,
     >,
     pub check_flags: ::core::option::Option<
-        unsafe extern "C" fn(arg1: ::aya_bpf::cty::c_int) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: ::aya_bpf::cty::c_int,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub flock: ::core::option::Option<
         unsafe extern "C" fn(
@@ -493,8 +531,9 @@ pub struct file_operations {
             arg4: loff_t,
         ) -> ::aya_bpf::cty::c_long,
     >,
-    pub show_fdinfo:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut file)>,
+    pub show_fdinfo: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut file),
+    >,
     pub copy_file_range: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut file,
@@ -555,7 +594,9 @@ pub struct old_timespec32 {
 pub struct restart_block {
     pub arch_data: ::aya_bpf::cty::c_ulong,
     pub fn_: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut restart_block) -> ::aya_bpf::cty::c_long,
+        unsafe extern "C" fn(
+            arg1: *mut restart_block,
+        ) -> ::aya_bpf::cty::c_long,
     >,
     pub __bindgen_anon_1: restart_block__bindgen_ty_1,
 }
@@ -581,7 +622,8 @@ pub struct restart_block__bindgen_ty_1__bindgen_ty_1 {
 pub struct restart_block__bindgen_ty_1__bindgen_ty_2 {
     pub clockid: clockid_t,
     pub type_: timespec_type::Type,
-    pub __bindgen_anon_1: restart_block__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1,
+    pub __bindgen_anon_1:
+        restart_block__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1,
     pub expires: u64_,
 }
 #[repr(C)]
@@ -719,7 +761,8 @@ pub struct sched_entity {
 impl sched_entity {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -751,8 +794,9 @@ pub mod hrtimer_restart {
 pub struct hrtimer {
     pub node: timerqueue_node,
     pub _softexpires: ktime_t,
-    pub function:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut hrtimer) -> hrtimer_restart::Type>,
+    pub function: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut hrtimer) -> hrtimer_restart::Type,
+    >,
     pub base: *mut hrtimer_clock_base,
     pub state: u8_,
     pub is_rel: u8_,
@@ -780,7 +824,9 @@ pub struct sched_dl_entity {
 impl sched_dl_entity {
     #[inline]
     pub fn dl_throttled(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dl_throttled(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -791,7 +837,9 @@ impl sched_dl_entity {
     }
     #[inline]
     pub fn dl_yielded(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dl_yielded(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -802,7 +850,9 @@ impl sched_dl_entity {
     }
     #[inline]
     pub fn dl_non_contending(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dl_non_contending(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -813,7 +863,9 @@ impl sched_dl_entity {
     }
     #[inline]
     pub fn dl_overrun(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dl_overrun(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -829,9 +881,11 @@ impl sched_dl_entity {
         dl_non_contending: ::aya_bpf::cty::c_uint,
         dl_overrun: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let dl_throttled: u32 = unsafe { ::core::mem::transmute(dl_throttled) };
+            let dl_throttled: u32 =
+                unsafe { ::core::mem::transmute(dl_throttled) };
             dl_throttled as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -839,7 +893,8 @@ impl sched_dl_entity {
             dl_yielded as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let dl_non_contending: u32 = unsafe { ::core::mem::transmute(dl_non_contending) };
+            let dl_non_contending: u32 =
+                unsafe { ::core::mem::transmute(dl_non_contending) };
             dl_non_contending as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
@@ -860,7 +915,9 @@ pub struct uclamp_se {
 impl uclamp_se {
     #[inline]
     pub fn value(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 11u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 11u8) as u32)
+        }
     }
     #[inline]
     pub fn set_value(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -871,7 +928,9 @@ impl uclamp_se {
     }
     #[inline]
     pub fn bucket_id(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(11usize, 3u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(11usize, 3u8) as u32)
+        }
     }
     #[inline]
     pub fn set_bucket_id(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -882,7 +941,9 @@ impl uclamp_se {
     }
     #[inline]
     pub fn active(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_active(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -893,7 +954,9 @@ impl uclamp_se {
     }
     #[inline]
     pub fn user_defined(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_user_defined(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -909,7 +972,8 @@ impl uclamp_se {
         active: ::aya_bpf::cty::c_uint,
         user_defined: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 11u8, {
             let value: u32 = unsafe { ::core::mem::transmute(value) };
             value as u64
@@ -923,7 +987,8 @@ impl uclamp_se {
             active as u64
         });
         __bindgen_bitfield_unit.set(15usize, 1u8, {
-            let user_defined: u32 = unsafe { ::core::mem::transmute(user_defined) };
+            let user_defined: u32 =
+                unsafe { ::core::mem::transmute(user_defined) };
             user_defined as u64
         });
         __bindgen_bitfield_unit
@@ -1152,7 +1217,9 @@ pub struct desc_struct {
 impl desc_struct {
     #[inline]
     pub fn base1(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u16)
+        }
     }
     #[inline]
     pub fn set_base1(&mut self, val: u16_) {
@@ -1163,7 +1230,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn type_(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 4u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 4u8) as u16)
+        }
     }
     #[inline]
     pub fn set_type(&mut self, val: u16_) {
@@ -1174,7 +1243,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn s(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_s(&mut self, val: u16_) {
@@ -1185,7 +1256,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn dpl(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(13usize, 2u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(13usize, 2u8) as u16)
+        }
     }
     #[inline]
     pub fn set_dpl(&mut self, val: u16_) {
@@ -1196,7 +1269,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn p(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_p(&mut self, val: u16_) {
@@ -1207,7 +1282,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn limit1(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(16usize, 4u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(16usize, 4u8) as u16)
+        }
     }
     #[inline]
     pub fn set_limit1(&mut self, val: u16_) {
@@ -1218,7 +1295,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn avl(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(20usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(20usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_avl(&mut self, val: u16_) {
@@ -1229,7 +1308,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn l(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(21usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(21usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_l(&mut self, val: u16_) {
@@ -1240,7 +1321,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn d(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(22usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(22usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_d(&mut self, val: u16_) {
@@ -1251,7 +1334,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn g(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(23usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(23usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_g(&mut self, val: u16_) {
@@ -1262,7 +1347,9 @@ impl desc_struct {
     }
     #[inline]
     pub fn base2(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(24usize, 8u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(24usize, 8u8) as u16)
+        }
     }
     #[inline]
     pub fn set_base2(&mut self, val: u16_) {
@@ -1285,7 +1372,8 @@ impl desc_struct {
         g: u16_,
         base2: u16_,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let base1: u16 = unsafe { ::core::mem::transmute(base1) };
             base1 as u64
@@ -1465,7 +1553,9 @@ pub struct thread_struct {
 impl thread_struct {
     #[inline]
     pub fn iopl_warn(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_iopl_warn(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1476,7 +1566,9 @@ impl thread_struct {
     }
     #[inline]
     pub fn sig_on_uaccess_err(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_sig_on_uaccess_err(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1490,13 +1582,15 @@ impl thread_struct {
         iopl_warn: ::aya_bpf::cty::c_uint,
         sig_on_uaccess_err: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let iopl_warn: u32 = unsafe { ::core::mem::transmute(iopl_warn) };
             iopl_warn as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let sig_on_uaccess_err: u32 = unsafe { ::core::mem::transmute(sig_on_uaccess_err) };
+            let sig_on_uaccess_err: u32 =
+                unsafe { ::core::mem::transmute(sig_on_uaccess_err) };
             sig_on_uaccess_err as u64
         });
         __bindgen_bitfield_unit
@@ -1755,7 +1849,9 @@ pub union task_struct__bindgen_ty_1 {
 impl task_struct {
     #[inline]
     pub fn sched_reset_on_fork(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_sched_reset_on_fork(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1766,10 +1862,15 @@ impl task_struct {
     }
     #[inline]
     pub fn sched_contributes_to_load(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
-    pub fn set_sched_contributes_to_load(&mut self, val: ::aya_bpf::cty::c_uint) {
+    pub fn set_sched_contributes_to_load(
+        &mut self,
+        val: ::aya_bpf::cty::c_uint,
+    ) {
         unsafe {
             let val: u32 = ::core::mem::transmute(val);
             self._bitfield_2.set(1usize, 1u8, val as u64)
@@ -1777,7 +1878,9 @@ impl task_struct {
     }
     #[inline]
     pub fn sched_migrated(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_sched_migrated(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1788,7 +1891,9 @@ impl task_struct {
     }
     #[inline]
     pub fn sched_psi_wake_requeue(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_sched_psi_wake_requeue(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1799,7 +1904,9 @@ impl task_struct {
     }
     #[inline]
     pub fn sched_remote_wakeup(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(32usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(32usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_sched_remote_wakeup(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1810,7 +1917,9 @@ impl task_struct {
     }
     #[inline]
     pub fn in_execve(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(33usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(33usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_in_execve(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1821,7 +1930,9 @@ impl task_struct {
     }
     #[inline]
     pub fn in_iowait(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(34usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(34usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_in_iowait(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1832,7 +1943,9 @@ impl task_struct {
     }
     #[inline]
     pub fn restore_sigmask(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(35usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(35usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_restore_sigmask(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1843,7 +1956,9 @@ impl task_struct {
     }
     #[inline]
     pub fn in_user_fault(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(36usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(36usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_in_user_fault(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1854,7 +1969,9 @@ impl task_struct {
     }
     #[inline]
     pub fn no_cgroup_migration(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(37usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(37usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_no_cgroup_migration(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1865,7 +1982,9 @@ impl task_struct {
     }
     #[inline]
     pub fn frozen(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(38usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(38usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_frozen(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1876,7 +1995,9 @@ impl task_struct {
     }
     #[inline]
     pub fn use_memdelay(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(39usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(39usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_use_memdelay(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1887,7 +2008,9 @@ impl task_struct {
     }
     #[inline]
     pub fn in_memstall(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(40usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(40usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_in_memstall(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1898,7 +2021,9 @@ impl task_struct {
     }
     #[inline]
     pub fn in_eventfd_signal(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(41usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(41usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_in_eventfd_signal(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -1924,9 +2049,11 @@ impl task_struct {
         in_memstall: ::aya_bpf::cty::c_uint,
         in_eventfd_signal: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 6usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 6usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 6usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let sched_reset_on_fork: u32 = unsafe { ::core::mem::transmute(sched_reset_on_fork) };
+            let sched_reset_on_fork: u32 =
+                unsafe { ::core::mem::transmute(sched_reset_on_fork) };
             sched_reset_on_fork as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -1935,7 +2062,8 @@ impl task_struct {
             sched_contributes_to_load as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let sched_migrated: u32 = unsafe { ::core::mem::transmute(sched_migrated) };
+            let sched_migrated: u32 =
+                unsafe { ::core::mem::transmute(sched_migrated) };
             sched_migrated as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
@@ -1944,7 +2072,8 @@ impl task_struct {
             sched_psi_wake_requeue as u64
         });
         __bindgen_bitfield_unit.set(32usize, 1u8, {
-            let sched_remote_wakeup: u32 = unsafe { ::core::mem::transmute(sched_remote_wakeup) };
+            let sched_remote_wakeup: u32 =
+                unsafe { ::core::mem::transmute(sched_remote_wakeup) };
             sched_remote_wakeup as u64
         });
         __bindgen_bitfield_unit.set(33usize, 1u8, {
@@ -1956,15 +2085,18 @@ impl task_struct {
             in_iowait as u64
         });
         __bindgen_bitfield_unit.set(35usize, 1u8, {
-            let restore_sigmask: u32 = unsafe { ::core::mem::transmute(restore_sigmask) };
+            let restore_sigmask: u32 =
+                unsafe { ::core::mem::transmute(restore_sigmask) };
             restore_sigmask as u64
         });
         __bindgen_bitfield_unit.set(36usize, 1u8, {
-            let in_user_fault: u32 = unsafe { ::core::mem::transmute(in_user_fault) };
+            let in_user_fault: u32 =
+                unsafe { ::core::mem::transmute(in_user_fault) };
             in_user_fault as u64
         });
         __bindgen_bitfield_unit.set(37usize, 1u8, {
-            let no_cgroup_migration: u32 = unsafe { ::core::mem::transmute(no_cgroup_migration) };
+            let no_cgroup_migration: u32 =
+                unsafe { ::core::mem::transmute(no_cgroup_migration) };
             no_cgroup_migration as u64
         });
         __bindgen_bitfield_unit.set(38usize, 1u8, {
@@ -1972,22 +2104,27 @@ impl task_struct {
             frozen as u64
         });
         __bindgen_bitfield_unit.set(39usize, 1u8, {
-            let use_memdelay: u32 = unsafe { ::core::mem::transmute(use_memdelay) };
+            let use_memdelay: u32 =
+                unsafe { ::core::mem::transmute(use_memdelay) };
             use_memdelay as u64
         });
         __bindgen_bitfield_unit.set(40usize, 1u8, {
-            let in_memstall: u32 = unsafe { ::core::mem::transmute(in_memstall) };
+            let in_memstall: u32 =
+                unsafe { ::core::mem::transmute(in_memstall) };
             in_memstall as u64
         });
         __bindgen_bitfield_unit.set(41usize, 1u8, {
-            let in_eventfd_signal: u32 = unsafe { ::core::mem::transmute(in_eventfd_signal) };
+            let in_eventfd_signal: u32 =
+                unsafe { ::core::mem::transmute(in_eventfd_signal) };
             in_eventfd_signal as u64
         });
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn mce_ripv(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(0usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(0usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mce_ripv(&mut self, val: __u64) {
@@ -1998,7 +2135,9 @@ impl task_struct {
     }
     #[inline]
     pub fn mce_whole_page(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(1usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(1usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mce_whole_page(&mut self, val: __u64) {
@@ -2009,7 +2148,9 @@ impl task_struct {
     }
     #[inline]
     pub fn __mce_reserved(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(2usize, 62u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(2usize, 62u8) as u64)
+        }
     }
     #[inline]
     pub fn set___mce_reserved(&mut self, val: __u64) {
@@ -2024,17 +2165,20 @@ impl task_struct {
         mce_whole_page: __u64,
         __mce_reserved: __u64,
     ) -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let mce_ripv: u64 = unsafe { ::core::mem::transmute(mce_ripv) };
             mce_ripv as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let mce_whole_page: u64 = unsafe { ::core::mem::transmute(mce_whole_page) };
+            let mce_whole_page: u64 =
+                unsafe { ::core::mem::transmute(mce_whole_page) };
             mce_whole_page as u64
         });
         __bindgen_bitfield_unit.set(2usize, 62u8, {
-            let __mce_reserved: u64 = unsafe { ::core::mem::transmute(__mce_reserved) };
+            let __mce_reserved: u64 =
+                unsafe { ::core::mem::transmute(__mce_reserved) };
             __mce_reserved as u64
         });
         __bindgen_bitfield_unit
@@ -2159,7 +2303,8 @@ pub struct page__bindgen_ty_1__bindgen_ty_3 {
 #[derive(Copy, Clone)]
 pub union page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_1 {
     pub slab_list: list_head,
-    pub __bindgen_anon_1: page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_1__bindgen_ty_1,
+    pub __bindgen_anon_1:
+        page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_1__bindgen_ty_1,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -2173,7 +2318,8 @@ pub struct page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_1__bindgen_ty_1 {
 pub union page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2 {
     pub s_mem: *mut ::aya_bpf::cty::c_void,
     pub counters: ::aya_bpf::cty::c_ulong,
-    pub __bindgen_anon_1: page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2__bindgen_ty_1,
+    pub __bindgen_anon_1:
+        page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2__bindgen_ty_1,
 }
 #[repr(C)]
 #[repr(align(4))]
@@ -2185,7 +2331,9 @@ pub struct page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2__bindgen_ty_1 {
 impl page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2__bindgen_ty_1 {
     #[inline]
     pub fn inuse(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 16u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 16u8) as u32)
+        }
     }
     #[inline]
     pub fn set_inuse(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -2196,7 +2344,9 @@ impl page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2__bindgen_ty_1 {
     }
     #[inline]
     pub fn objects(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(16usize, 15u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(16usize, 15u8) as u32)
+        }
     }
     #[inline]
     pub fn set_objects(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -2207,7 +2357,9 @@ impl page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2__bindgen_ty_1 {
     }
     #[inline]
     pub fn frozen(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(31usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(31usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_frozen(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -2222,7 +2374,8 @@ impl page__bindgen_ty_1__bindgen_ty_3__bindgen_ty_2__bindgen_ty_1 {
         objects: ::aya_bpf::cty::c_uint,
         frozen: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 16u8, {
             let inuse: u32 = unsafe { ::core::mem::transmute(inuse) };
             inuse as u64
@@ -2317,7 +2470,8 @@ pub struct mm_context_t {
 pub struct uprobes_state {
     pub xol_area: *mut xol_area,
 }
-pub type work_func_t = ::core::option::Option<unsafe extern "C" fn(arg1: *mut work_struct)>;
+pub type work_func_t =
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut work_struct)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct work_struct {
@@ -2716,8 +2870,10 @@ pub mod page_entry_size {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct vm_operations_struct {
-    pub open: ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_area_struct)>,
-    pub close: ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_area_struct)>,
+    pub open:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_area_struct)>,
+    pub close:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_area_struct)>,
     pub may_split: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut vm_area_struct,
@@ -2725,7 +2881,9 @@ pub struct vm_operations_struct {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub mremap: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut vm_area_struct) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut vm_area_struct,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub mprotect: ::core::option::Option<
         unsafe extern "C" fn(
@@ -2735,9 +2893,14 @@ pub struct vm_operations_struct {
             arg4: ::aya_bpf::cty::c_ulong,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub fault: ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t>,
+    pub fault: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t,
+    >,
     pub huge_fault: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut vm_fault, arg2: page_entry_size::Type) -> vm_fault_t,
+        unsafe extern "C" fn(
+            arg1: *mut vm_fault,
+            arg2: page_entry_size::Type,
+        ) -> vm_fault_t,
     >,
     pub map_pages: ::core::option::Option<
         unsafe extern "C" fn(
@@ -2747,12 +2910,16 @@ pub struct vm_operations_struct {
         ) -> vm_fault_t,
     >,
     pub pagesize: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut vm_area_struct) -> ::aya_bpf::cty::c_ulong,
+        unsafe extern "C" fn(
+            arg1: *mut vm_area_struct,
+        ) -> ::aya_bpf::cty::c_ulong,
     >,
-    pub page_mkwrite:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t>,
-    pub pfn_mkwrite:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t>,
+    pub page_mkwrite: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t,
+    >,
+    pub pfn_mkwrite: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t,
+    >,
     pub access: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut vm_area_struct,
@@ -2763,7 +2930,9 @@ pub struct vm_operations_struct {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub name: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut vm_area_struct) -> *const ::aya_bpf::cty::c_char,
+        unsafe extern "C" fn(
+            arg1: *mut vm_area_struct,
+        ) -> *const ::aya_bpf::cty::c_char,
     >,
     pub set_policy: ::core::option::Option<
         unsafe extern "C" fn(
@@ -2778,7 +2947,10 @@ pub struct vm_operations_struct {
         ) -> *mut mempolicy,
     >,
     pub find_special_page: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut vm_area_struct, arg2: ::aya_bpf::cty::c_ulong) -> *mut page,
+        unsafe extern "C" fn(
+            arg1: *mut vm_area_struct,
+            arg2: ::aya_bpf::cty::c_ulong,
+        ) -> *mut page,
     >,
 }
 #[repr(C)]
@@ -2836,7 +3008,8 @@ pub union vm_fault__bindgen_ty_2 {
     pub orig_pmd: pmd_t,
 }
 pub type isolate_mode_t = ::aya_bpf::cty::c_uint;
-pub type percpu_ref_func_t = ::core::option::Option<unsafe extern "C" fn(arg1: *mut percpu_ref)>;
+pub type percpu_ref_func_t =
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut percpu_ref)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct percpu_ref_data {
@@ -2851,7 +3024,9 @@ pub struct percpu_ref_data {
 impl percpu_ref_data {
     #[inline]
     pub fn force_atomic(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_force_atomic(&mut self, val: bool_) {
@@ -2862,7 +3037,9 @@ impl percpu_ref_data {
     }
     #[inline]
     pub fn allow_reinit(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_allow_reinit(&mut self, val: bool_) {
@@ -2876,13 +3053,16 @@ impl percpu_ref_data {
         force_atomic: bool_,
         allow_reinit: bool_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let force_atomic: u8 = unsafe { ::core::mem::transmute(force_atomic) };
+            let force_atomic: u8 =
+                unsafe { ::core::mem::transmute(force_atomic) };
             force_atomic as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let allow_reinit: u8 = unsafe { ::core::mem::transmute(allow_reinit) };
+            let allow_reinit: u8 =
+                unsafe { ::core::mem::transmute(allow_reinit) };
             allow_reinit as u64
         });
         __bindgen_bitfield_unit
@@ -2928,11 +3108,15 @@ pub struct rlimit {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct dev_pagemap_ops {
-    pub page_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut page)>,
-    pub kill: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dev_pagemap)>,
-    pub cleanup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dev_pagemap)>,
-    pub migrate_to_ram:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t>,
+    pub page_free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut page)>,
+    pub kill:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dev_pagemap)>,
+    pub cleanup:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dev_pagemap)>,
+    pub migrate_to_ram: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut vm_fault) -> vm_fault_t,
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -2991,7 +3175,9 @@ pub struct hrtimer_cpu_base {
 impl hrtimer_cpu_base {
     #[inline]
     pub fn hres_active(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_hres_active(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -3002,7 +3188,9 @@ impl hrtimer_cpu_base {
     }
     #[inline]
     pub fn in_hrtirq(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_in_hrtirq(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -3013,7 +3201,9 @@ impl hrtimer_cpu_base {
     }
     #[inline]
     pub fn hang_detected(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_hang_detected(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -3024,7 +3214,9 @@ impl hrtimer_cpu_base {
     }
     #[inline]
     pub fn softirq_activated(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_softirq_activated(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -3040,9 +3232,11 @@ impl hrtimer_cpu_base {
         hang_detected: ::aya_bpf::cty::c_uint,
         softirq_activated: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let hres_active: u32 = unsafe { ::core::mem::transmute(hres_active) };
+            let hres_active: u32 =
+                unsafe { ::core::mem::transmute(hres_active) };
             hres_active as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -3050,17 +3244,20 @@ impl hrtimer_cpu_base {
             in_hrtirq as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let hang_detected: u32 = unsafe { ::core::mem::transmute(hang_detected) };
+            let hang_detected: u32 =
+                unsafe { ::core::mem::transmute(hang_detected) };
             hang_detected as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let softirq_activated: u32 = unsafe { ::core::mem::transmute(softirq_activated) };
+            let softirq_activated: u32 =
+                unsafe { ::core::mem::transmute(softirq_activated) };
             softirq_activated as u64
         });
         __bindgen_bitfield_unit
     }
 }
-pub type __signalfn_t = ::core::option::Option<unsafe extern "C" fn(arg1: ::aya_bpf::cty::c_int)>;
+pub type __signalfn_t =
+    ::core::option::Option<unsafe extern "C" fn(arg1: ::aya_bpf::cty::c_int)>;
 pub type __sighandler_t = __signalfn_t;
 pub type __restorefn_t = ::core::option::Option<unsafe extern "C" fn()>;
 pub type __sigrestore_t = __restorefn_t;
@@ -3283,7 +3480,9 @@ pub struct signal_struct {
 impl signal_struct {
     #[inline]
     pub fn is_child_subreaper(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_child_subreaper(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -3294,7 +3493,9 @@ impl signal_struct {
     }
     #[inline]
     pub fn has_child_subreaper(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_has_child_subreaper(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -3308,13 +3509,16 @@ impl signal_struct {
         is_child_subreaper: ::aya_bpf::cty::c_uint,
         has_child_subreaper: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let is_child_subreaper: u32 = unsafe { ::core::mem::transmute(is_child_subreaper) };
+            let is_child_subreaper: u32 =
+                unsafe { ::core::mem::transmute(is_child_subreaper) };
             is_child_subreaper as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let has_child_subreaper: u32 = unsafe { ::core::mem::transmute(has_child_subreaper) };
+            let has_child_subreaper: u32 =
+                unsafe { ::core::mem::transmute(has_child_subreaper) };
             has_child_subreaper as u64
         });
         __bindgen_bitfield_unit
@@ -3339,7 +3543,8 @@ pub union rseq__bindgen_ty_1 {
 impl rseq {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -3348,24 +3553,42 @@ impl rseq {
 pub struct sched_class {
     pub uclamp_enabled: ::aya_bpf::cty::c_int,
     pub enqueue_task: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct, arg3: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut rq,
+            arg2: *mut task_struct,
+            arg3: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub dequeue_task: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct, arg3: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut rq,
+            arg2: *mut task_struct,
+            arg3: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub yield_task: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq)>,
     pub yield_to_task: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct) -> bool_,
     >,
     pub check_preempt_curr: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct, arg3: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut rq,
+            arg2: *mut task_struct,
+            arg3: ::aya_bpf::cty::c_int,
+        ),
     >,
-    pub pick_next_task:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq) -> *mut task_struct>,
-    pub put_prev_task:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct)>,
+    pub pick_next_task: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq) -> *mut task_struct,
+    >,
+    pub put_prev_task: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct),
+    >,
     pub set_next_task: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct, arg3: bool_),
+        unsafe extern "C" fn(
+            arg1: *mut rq,
+            arg2: *mut task_struct,
+            arg3: bool_,
+        ),
     >,
     pub balance: ::core::option::Option<
         unsafe extern "C" fn(
@@ -3381,14 +3604,24 @@ pub struct sched_class {
             arg3: ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub pick_task: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq) -> *mut task_struct>,
-    pub migrate_task_rq: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut task_struct, arg2: ::aya_bpf::cty::c_int),
+    pub pick_task: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq) -> *mut task_struct,
     >,
-    pub task_woken:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct)>,
+    pub migrate_task_rq: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut task_struct,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
+    >,
+    pub task_woken: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct),
+    >,
     pub set_cpus_allowed: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut task_struct, arg2: *const cpumask, arg3: u32_),
+        unsafe extern "C" fn(
+            arg1: *mut task_struct,
+            arg2: *const cpumask,
+            arg3: u32_,
+        ),
     >,
     pub rq_online: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq)>,
     pub rq_offline: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq)>,
@@ -3396,23 +3629,42 @@ pub struct sched_class {
         unsafe extern "C" fn(arg1: *mut task_struct, arg2: *mut rq) -> *mut rq,
     >,
     pub task_tick: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct, arg3: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut rq,
+            arg2: *mut task_struct,
+            arg3: ::aya_bpf::cty::c_int,
+        ),
     >,
-    pub task_fork: ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
-    pub task_dead: ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
-    pub switched_from:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct)>,
-    pub switched_to:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct)>,
+    pub task_fork:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
+    pub task_dead:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
+    pub switched_from: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct),
+    >,
+    pub switched_to: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct),
+    >,
     pub prio_changed: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct, arg3: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut rq,
+            arg2: *mut task_struct,
+            arg3: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub get_rr_interval: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq, arg2: *mut task_struct) -> ::aya_bpf::cty::c_uint,
+        unsafe extern "C" fn(
+            arg1: *mut rq,
+            arg2: *mut task_struct,
+        ) -> ::aya_bpf::cty::c_uint,
     >,
-    pub update_curr: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq)>,
+    pub update_curr:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq)>,
     pub task_change_group: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut task_struct, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut task_struct,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
 }
 #[repr(C)]
@@ -3733,7 +3985,8 @@ pub union inode__bindgen_ty_2 {
 #[derive(Copy, Clone)]
 pub union inode__bindgen_ty_3 {
     pub i_fop: *const file_operations,
-    pub free_inode: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
+    pub free_inode:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -3759,7 +4012,10 @@ pub struct dentry_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub d_hash: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const dentry, arg2: *mut qstr) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *const dentry,
+            arg2: *mut qstr,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub d_compare: ::core::option::Option<
         unsafe extern "C" fn(
@@ -3769,13 +4025,19 @@ pub struct dentry_operations {
             arg4: *const qstr,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub d_delete:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const dentry) -> ::aya_bpf::cty::c_int>,
-    pub d_init:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry) -> ::aya_bpf::cty::c_int>,
-    pub d_release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry)>,
-    pub d_prune: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry)>,
-    pub d_iput: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry, arg2: *mut inode)>,
+    pub d_delete: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const dentry) -> ::aya_bpf::cty::c_int,
+    >,
+    pub d_init: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dentry) -> ::aya_bpf::cty::c_int,
+    >,
+    pub d_release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry)>,
+    pub d_prune:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry)>,
+    pub d_iput: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dentry, arg2: *mut inode),
+    >,
     pub d_dname: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut dentry,
@@ -3783,12 +4045,20 @@ pub struct dentry_operations {
             arg3: ::aya_bpf::cty::c_int,
         ) -> *mut ::aya_bpf::cty::c_char,
     >,
-    pub d_automount: ::core::option::Option<unsafe extern "C" fn(arg1: *mut path) -> *mut vfsmount>,
+    pub d_automount: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut path) -> *mut vfsmount,
+    >,
     pub d_manage: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const path, arg2: bool_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *const path,
+            arg2: bool_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub d_real: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dentry, arg2: *const inode) -> *mut dentry,
+        unsafe extern "C" fn(
+            arg1: *mut dentry,
+            arg2: *const inode,
+        ) -> *mut dentry,
     >,
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 24usize]>,
@@ -3796,7 +4066,8 @@ pub struct dentry_operations {
 impl dentry_operations {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -3946,12 +4217,14 @@ pub struct super_block {
 impl super_block {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -4010,7 +4283,8 @@ pub struct list_lru_node {
 impl list_lru_node {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -4041,13 +4315,18 @@ pub struct key_type {
     pub def_datalen: size_t,
     pub flags: ::aya_bpf::cty::c_uint,
     pub vet_description: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const ::aya_bpf::cty::c_char) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *const ::aya_bpf::cty::c_char,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub preparse: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut key_preparsed_payload) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut key_preparsed_payload,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub free_preparse:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut key_preparsed_payload)>,
+    pub free_preparse: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut key_preparsed_payload),
+    >,
     pub instantiate: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut key,
@@ -4061,13 +4340,17 @@ pub struct key_type {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub match_preparse: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut key_match_data) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut key_match_data,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub match_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut key_match_data)>,
+    pub match_free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut key_match_data)>,
     pub revoke: ::core::option::Option<unsafe extern "C" fn(arg1: *mut key)>,
     pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut key)>,
-    pub describe:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const key, arg2: *mut seq_file)>,
+    pub describe: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const key, arg2: *mut seq_file),
+    >,
     pub read: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *const key,
@@ -4077,7 +4360,9 @@ pub struct key_type {
     >,
     pub request_key: request_key_actor_t,
     pub lookup_restriction: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const ::aya_bpf::cty::c_char) -> *mut key_restriction,
+        unsafe extern "C" fn(
+            arg1: *const ::aya_bpf::cty::c_char,
+        ) -> *mut key_restriction,
     >,
     pub asym_query: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4148,7 +4433,9 @@ pub struct group_info {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct delayed_call {
-    pub fn_: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub fn_: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub arg: *mut ::aya_bpf::cty::c_void,
 }
 #[repr(C)]
@@ -4298,47 +4585,71 @@ pub struct quota_format_ops {
             arg2: ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub read_dqblk:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int>,
-    pub commit_dqblk:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int>,
-    pub release_dqblk:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int>,
+    pub read_dqblk: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int,
+    >,
+    pub commit_dqblk: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int,
+    >,
+    pub release_dqblk: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int,
+    >,
     pub get_next_id: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut super_block, arg2: *mut kqid) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut super_block,
+            arg2: *mut kqid,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct dquot_operations {
-    pub write_dquot:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int>,
-    pub alloc_dquot: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut super_block, arg2: ::aya_bpf::cty::c_int) -> *mut dquot,
+    pub write_dquot: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int,
     >,
-    pub destroy_dquot: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot)>,
-    pub acquire_dquot:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int>,
-    pub release_dquot:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int>,
-    pub mark_dirty:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int>,
+    pub alloc_dquot: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut super_block,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> *mut dquot,
+    >,
+    pub destroy_dquot:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dquot)>,
+    pub acquire_dquot: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int,
+    >,
+    pub release_dquot: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int,
+    >,
+    pub mark_dirty: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dquot) -> ::aya_bpf::cty::c_int,
+    >,
     pub write_info: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut super_block,
             arg2: ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_reserved_space:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> *mut qsize_t>,
+    pub get_reserved_space: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut inode) -> *mut qsize_t,
+    >,
     pub get_projid: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut kprojid_t) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut kprojid_t,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_inode_usage: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut qsize_t) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut qsize_t,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_next_id: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut super_block, arg2: *mut kqid) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut super_block,
+            arg2: *mut kqid,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -4457,7 +4768,10 @@ pub struct quotactl_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_state: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut super_block, arg2: *mut qc_state) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut super_block,
+            arg2: *mut qc_state,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub rm_xquota: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4476,7 +4790,10 @@ pub struct address_space_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub readpage: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: *mut page) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: *mut page,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub writepages: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4484,8 +4801,9 @@ pub struct address_space_operations {
             arg2: *mut writeback_control,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub set_page_dirty:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut page) -> ::aya_bpf::cty::c_int>,
+    pub set_page_dirty: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut page) -> ::aya_bpf::cty::c_int,
+    >,
     pub readpages: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut file,
@@ -4494,7 +4812,9 @@ pub struct address_space_operations {
             arg4: ::aya_bpf::cty::c_uint,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub readahead: ::core::option::Option<unsafe extern "C" fn(arg1: *mut readahead_control)>,
+    pub readahead: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut readahead_control),
+    >,
     pub write_begin: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut file,
@@ -4518,7 +4838,10 @@ pub struct address_space_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub bmap: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut address_space, arg2: sector_t) -> sector_t,
+        unsafe extern "C" fn(
+            arg1: *mut address_space,
+            arg2: sector_t,
+        ) -> sector_t,
     >,
     pub invalidatepage: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4528,7 +4851,10 @@ pub struct address_space_operations {
         ),
     >,
     pub releasepage: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut page, arg2: gfp_t) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut page,
+            arg2: gfp_t,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub freepage: ::core::option::Option<unsafe extern "C" fn(arg1: *mut page)>,
     pub direct_IO: ::core::option::Option<
@@ -4545,9 +4871,11 @@ pub struct address_space_operations {
     pub isolate_page: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut page, arg2: isolate_mode_t) -> bool_,
     >,
-    pub putback_page: ::core::option::Option<unsafe extern "C" fn(arg1: *mut page)>,
-    pub launder_page:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut page) -> ::aya_bpf::cty::c_int>,
+    pub putback_page:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut page)>,
+    pub launder_page: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut page) -> ::aya_bpf::cty::c_int,
+    >,
     pub is_partially_uptodate: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut page,
@@ -4556,10 +4884,17 @@ pub struct address_space_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub is_dirty_writeback: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut page, arg2: *mut bool_, arg3: *mut bool_),
+        unsafe extern "C" fn(
+            arg1: *mut page,
+            arg2: *mut bool_,
+            arg3: *mut bool_,
+        ),
     >,
     pub error_remove_page: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut address_space, arg2: *mut page) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut address_space,
+            arg2: *mut page,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub swap_activate: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4568,7 +4903,8 @@ pub struct address_space_operations {
             arg3: *mut sector_t,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub swap_deactivate: ::core::option::Option<unsafe extern "C" fn(arg1: *mut file)>,
+    pub swap_deactivate:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut file)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -4625,7 +4961,10 @@ pub struct inode_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub unlink: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut dentry) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut dentry,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub symlink: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4644,7 +4983,10 @@ pub struct inode_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub rmdir: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut dentry) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut dentry,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub mknod: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4736,7 +5078,10 @@ pub struct inode_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub fileattr_get: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dentry, arg2: *mut fileattr) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut dentry,
+            arg2: *mut fileattr,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 8usize]>,
@@ -4744,7 +5089,8 @@ pub struct inode_operations {
 impl inode_operations {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -4759,9 +5105,11 @@ pub struct file_lock_context {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct file_lock_operations {
-    pub fl_copy_lock:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut file_lock, arg2: *mut file_lock)>,
-    pub fl_release_private: ::core::option::Option<unsafe extern "C" fn(arg1: *mut file_lock)>,
+    pub fl_copy_lock: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut file_lock, arg2: *mut file_lock),
+    >,
+    pub fl_release_private:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut file_lock)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -4821,16 +5169,22 @@ pub struct file_lock__bindgen_ty_1__bindgen_ty_1 {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct lock_manager_operations {
-    pub lm_get_owner: ::core::option::Option<unsafe extern "C" fn(arg1: fl_owner_t) -> fl_owner_t>,
-    pub lm_put_owner: ::core::option::Option<unsafe extern "C" fn(arg1: fl_owner_t)>,
-    pub lm_notify: ::core::option::Option<unsafe extern "C" fn(arg1: *mut file_lock)>,
+    pub lm_get_owner: ::core::option::Option<
+        unsafe extern "C" fn(arg1: fl_owner_t) -> fl_owner_t,
+    >,
+    pub lm_put_owner:
+        ::core::option::Option<unsafe extern "C" fn(arg1: fl_owner_t)>,
+    pub lm_notify:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut file_lock)>,
     pub lm_grant: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut file_lock,
             arg2: ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub lm_break: ::core::option::Option<unsafe extern "C" fn(arg1: *mut file_lock) -> bool_>,
+    pub lm_break: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut file_lock) -> bool_,
+    >,
     pub lm_change: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut file_lock,
@@ -4839,10 +5193,14 @@ pub struct lock_manager_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub lm_setup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file_lock, arg2: *mut *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut file_lock,
+            arg2: *mut *mut ::aya_bpf::cty::c_void,
+        ),
     >,
-    pub lm_breaker_owns_lease:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut file_lock) -> bool_>,
+    pub lm_breaker_owns_lease: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut file_lock) -> bool_,
+    >,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -4857,22 +5215,29 @@ pub struct fasync_struct {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct super_operations {
-    pub alloc_inode:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block) -> *mut inode>,
-    pub destroy_inode: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
-    pub free_inode: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
-    pub dirty_inode:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode, arg2: ::aya_bpf::cty::c_int)>,
+    pub alloc_inode: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut super_block) -> *mut inode,
+    >,
+    pub destroy_inode:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
+    pub free_inode:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
+    pub dirty_inode: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut inode, arg2: ::aya_bpf::cty::c_int),
+    >,
     pub write_inode: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut inode,
             arg2: *mut writeback_control,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub drop_inode:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> ::aya_bpf::cty::c_int>,
-    pub evict_inode: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
-    pub put_super: ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block)>,
+    pub drop_inode: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut inode) -> ::aya_bpf::cty::c_int,
+    >,
+    pub evict_inode:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
+    pub put_super:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block)>,
     pub sync_fs: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut super_block,
@@ -4892,7 +5257,10 @@ pub struct super_operations {
         unsafe extern "C" fn(arg1: *mut super_block) -> ::aya_bpf::cty::c_int,
     >,
     pub statfs: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dentry, arg2: *mut kstatfs) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut dentry,
+            arg2: *mut kstatfs,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub remount_fs: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4901,18 +5269,31 @@ pub struct super_operations {
             arg3: *mut ::aya_bpf::cty::c_char,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub umount_begin: ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block)>,
+    pub umount_begin:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block)>,
     pub show_options: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut dentry) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut dentry,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub show_devname: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut dentry) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut dentry,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub show_path: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut dentry) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut dentry,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub show_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut dentry) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut dentry,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub quota_read: ::core::option::Option<
         unsafe extern "C" fn(
@@ -4932,8 +5313,9 @@ pub struct super_operations {
             arg5: loff_t,
         ) -> ssize_t,
     >,
-    pub get_dquots:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> *mut *mut dquot>,
+    pub get_dquots: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut inode) -> *mut *mut dquot,
+    >,
     pub nr_cached_objects: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut super_block,
@@ -4986,9 +5368,12 @@ pub struct export_operations {
             arg3: *mut dentry,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_parent: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry) -> *mut dentry>,
-    pub commit_metadata:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> ::aya_bpf::cty::c_int>,
+    pub get_parent: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dentry) -> *mut dentry,
+    >,
+    pub commit_metadata: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut inode) -> ::aya_bpf::cty::c_int,
+    >,
     pub get_uuid: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut super_block,
@@ -5015,7 +5400,8 @@ pub struct export_operations {
             arg4: *mut iattr,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub fetch_iversion: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> u64_>,
+    pub fetch_iversion:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> u64_>,
     pub flags: ::aya_bpf::cty::c_ulong,
 }
 #[repr(C)]
@@ -5024,7 +5410,9 @@ pub struct xattr_handler {
     pub name: *const ::aya_bpf::cty::c_char,
     pub prefix: *const ::aya_bpf::cty::c_char,
     pub flags: ::aya_bpf::cty::c_int,
-    pub list: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry) -> bool_>,
+    pub list: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dentry) -> bool_,
+    >,
     pub get: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *const xattr_handler,
@@ -5071,10 +5459,12 @@ pub struct fscrypt_operations {
     pub get_dummy_policy: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut super_block) -> *const fscrypt_policy,
     >,
-    pub empty_dir: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> bool_>,
+    pub empty_dir:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode) -> bool_>,
     pub max_namelen: ::aya_bpf::cty::c_uint,
-    pub has_stable_inodes:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut super_block) -> bool_>,
+    pub has_stable_inodes: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut super_block) -> bool_,
+    >,
     pub get_ino_and_lblk_bits: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut super_block,
@@ -5086,14 +5476,18 @@ pub struct fscrypt_operations {
         unsafe extern "C" fn(arg1: *mut super_block) -> ::aya_bpf::cty::c_int,
     >,
     pub get_devices: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut super_block, arg2: *mut *mut request_queue),
+        unsafe extern "C" fn(
+            arg1: *mut super_block,
+            arg2: *mut *mut request_queue,
+        ),
     >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct fsverity_operations {
-    pub begin_enable_verity:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut file) -> ::aya_bpf::cty::c_int>,
+    pub begin_enable_verity: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut file) -> ::aya_bpf::cty::c_int,
+    >,
     pub end_enable_verity: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut file,
@@ -5239,7 +5633,9 @@ pub struct orc_entry {
 impl orc_entry {
     #[inline]
     pub fn sp_reg(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u32)
+        }
     }
     #[inline]
     pub fn set_sp_reg(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -5250,7 +5646,9 @@ impl orc_entry {
     }
     #[inline]
     pub fn bp_reg(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u32)
+        }
     }
     #[inline]
     pub fn set_bp_reg(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -5261,7 +5659,9 @@ impl orc_entry {
     }
     #[inline]
     pub fn type_(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 2u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 2u8) as u32)
+        }
     }
     #[inline]
     pub fn set_type(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -5272,7 +5672,9 @@ impl orc_entry {
     }
     #[inline]
     pub fn end(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_end(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -5288,7 +5690,8 @@ impl orc_entry {
         type_: ::aya_bpf::cty::c_uint,
         end: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 4u8, {
             let sp_reg: u32 = unsafe { ::core::mem::transmute(sp_reg) };
             sp_reg as u64
@@ -5332,7 +5735,8 @@ pub struct tracepoint {
     pub static_call_key: *mut static_call_key,
     pub static_call_tramp: *mut ::aya_bpf::cty::c_void,
     pub iterator: *mut ::aya_bpf::cty::c_void,
-    pub regfunc: ::core::option::Option<unsafe extern "C" fn() -> ::aya_bpf::cty::c_int>,
+    pub regfunc:
+        ::core::option::Option<unsafe extern "C" fn() -> ::aya_bpf::cty::c_int>,
     pub unregfunc: ::core::option::Option<unsafe extern "C" fn()>,
     pub funcs: *mut tracepoint_func,
 }
@@ -5350,7 +5754,8 @@ pub struct bpf_raw_event_map {
 impl bpf_raw_event_map {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -5358,10 +5763,16 @@ impl bpf_raw_event_map {
 #[derive(Debug, Copy, Clone)]
 pub struct seq_operations {
     pub start: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut loff_t) -> *mut ::aya_bpf::cty::c_void,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut loff_t,
+        ) -> *mut ::aya_bpf::cty::c_void,
     >,
     pub stop: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub next: ::core::option::Option<
         unsafe extern "C" fn(
@@ -5454,7 +5865,9 @@ pub union perf_event_attr__bindgen_ty_4 {
 impl perf_event_attr {
     #[inline]
     pub fn disabled(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_disabled(&mut self, val: __u64) {
@@ -5465,7 +5878,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn inherit(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_inherit(&mut self, val: __u64) {
@@ -5476,7 +5891,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn pinned(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_pinned(&mut self, val: __u64) {
@@ -5487,7 +5904,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclusive(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclusive(&mut self, val: __u64) {
@@ -5498,7 +5917,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_user(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_user(&mut self, val: __u64) {
@@ -5509,7 +5930,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_kernel(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_kernel(&mut self, val: __u64) {
@@ -5520,7 +5943,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_hv(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_hv(&mut self, val: __u64) {
@@ -5531,7 +5956,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_idle(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_idle(&mut self, val: __u64) {
@@ -5542,7 +5969,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn mmap(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mmap(&mut self, val: __u64) {
@@ -5553,7 +5982,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn comm(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_comm(&mut self, val: __u64) {
@@ -5564,7 +5995,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn freq(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_freq(&mut self, val: __u64) {
@@ -5575,7 +6008,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn inherit_stat(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_inherit_stat(&mut self, val: __u64) {
@@ -5586,7 +6021,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn enable_on_exec(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_enable_on_exec(&mut self, val: __u64) {
@@ -5597,7 +6034,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn task(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(13usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(13usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_task(&mut self, val: __u64) {
@@ -5608,7 +6047,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn watermark(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_watermark(&mut self, val: __u64) {
@@ -5619,7 +6060,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn precise_ip(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(15usize, 2u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(15usize, 2u8) as u64)
+        }
     }
     #[inline]
     pub fn set_precise_ip(&mut self, val: __u64) {
@@ -5630,7 +6073,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn mmap_data(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(17usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(17usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mmap_data(&mut self, val: __u64) {
@@ -5641,7 +6086,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn sample_id_all(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(18usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(18usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_sample_id_all(&mut self, val: __u64) {
@@ -5652,7 +6099,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_host(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(19usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(19usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_host(&mut self, val: __u64) {
@@ -5663,7 +6112,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_guest(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(20usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(20usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_guest(&mut self, val: __u64) {
@@ -5674,7 +6125,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_callchain_kernel(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(21usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(21usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_callchain_kernel(&mut self, val: __u64) {
@@ -5685,7 +6138,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn exclude_callchain_user(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(22usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(22usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_exclude_callchain_user(&mut self, val: __u64) {
@@ -5696,7 +6151,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn mmap2(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(23usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(23usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mmap2(&mut self, val: __u64) {
@@ -5707,7 +6164,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn comm_exec(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(24usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(24usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_comm_exec(&mut self, val: __u64) {
@@ -5718,7 +6177,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn use_clockid(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(25usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(25usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_use_clockid(&mut self, val: __u64) {
@@ -5729,7 +6190,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn context_switch(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(26usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(26usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_context_switch(&mut self, val: __u64) {
@@ -5740,7 +6203,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn write_backward(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(27usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(27usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_write_backward(&mut self, val: __u64) {
@@ -5751,7 +6216,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn namespaces(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(28usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(28usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_namespaces(&mut self, val: __u64) {
@@ -5762,7 +6229,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn ksymbol(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(29usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(29usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_ksymbol(&mut self, val: __u64) {
@@ -5773,7 +6242,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn bpf_event(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(30usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(30usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_bpf_event(&mut self, val: __u64) {
@@ -5784,7 +6255,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn aux_output(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(31usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(31usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_aux_output(&mut self, val: __u64) {
@@ -5795,7 +6268,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn cgroup(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(32usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(32usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cgroup(&mut self, val: __u64) {
@@ -5806,7 +6281,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn text_poke(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(33usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(33usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_text_poke(&mut self, val: __u64) {
@@ -5817,7 +6294,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn build_id(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(34usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(34usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_build_id(&mut self, val: __u64) {
@@ -5828,7 +6307,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn inherit_thread(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(35usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(35usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_inherit_thread(&mut self, val: __u64) {
@@ -5839,7 +6320,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn remove_on_exec(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(36usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(36usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_remove_on_exec(&mut self, val: __u64) {
@@ -5850,7 +6333,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn sigtrap(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(37usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(37usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_sigtrap(&mut self, val: __u64) {
@@ -5861,7 +6346,9 @@ impl perf_event_attr {
     }
     #[inline]
     pub fn __reserved_1(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(38usize, 26u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(38usize, 26u8) as u64)
+        }
     }
     #[inline]
     pub fn set___reserved_1(&mut self, val: __u64) {
@@ -5911,7 +6398,8 @@ impl perf_event_attr {
         sigtrap: __u64,
         __reserved_1: __u64,
     ) -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let disabled: u64 = unsafe { ::core::mem::transmute(disabled) };
             disabled as u64
@@ -5929,11 +6417,13 @@ impl perf_event_attr {
             exclusive as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let exclude_user: u64 = unsafe { ::core::mem::transmute(exclude_user) };
+            let exclude_user: u64 =
+                unsafe { ::core::mem::transmute(exclude_user) };
             exclude_user as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let exclude_kernel: u64 = unsafe { ::core::mem::transmute(exclude_kernel) };
+            let exclude_kernel: u64 =
+                unsafe { ::core::mem::transmute(exclude_kernel) };
             exclude_kernel as u64
         });
         __bindgen_bitfield_unit.set(6usize, 1u8, {
@@ -5941,7 +6431,8 @@ impl perf_event_attr {
             exclude_hv as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
-            let exclude_idle: u64 = unsafe { ::core::mem::transmute(exclude_idle) };
+            let exclude_idle: u64 =
+                unsafe { ::core::mem::transmute(exclude_idle) };
             exclude_idle as u64
         });
         __bindgen_bitfield_unit.set(8usize, 1u8, {
@@ -5957,11 +6448,13 @@ impl perf_event_attr {
             freq as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
-            let inherit_stat: u64 = unsafe { ::core::mem::transmute(inherit_stat) };
+            let inherit_stat: u64 =
+                unsafe { ::core::mem::transmute(inherit_stat) };
             inherit_stat as u64
         });
         __bindgen_bitfield_unit.set(12usize, 1u8, {
-            let enable_on_exec: u64 = unsafe { ::core::mem::transmute(enable_on_exec) };
+            let enable_on_exec: u64 =
+                unsafe { ::core::mem::transmute(enable_on_exec) };
             enable_on_exec as u64
         });
         __bindgen_bitfield_unit.set(13usize, 1u8, {
@@ -5981,15 +6474,18 @@ impl perf_event_attr {
             mmap_data as u64
         });
         __bindgen_bitfield_unit.set(18usize, 1u8, {
-            let sample_id_all: u64 = unsafe { ::core::mem::transmute(sample_id_all) };
+            let sample_id_all: u64 =
+                unsafe { ::core::mem::transmute(sample_id_all) };
             sample_id_all as u64
         });
         __bindgen_bitfield_unit.set(19usize, 1u8, {
-            let exclude_host: u64 = unsafe { ::core::mem::transmute(exclude_host) };
+            let exclude_host: u64 =
+                unsafe { ::core::mem::transmute(exclude_host) };
             exclude_host as u64
         });
         __bindgen_bitfield_unit.set(20usize, 1u8, {
-            let exclude_guest: u64 = unsafe { ::core::mem::transmute(exclude_guest) };
+            let exclude_guest: u64 =
+                unsafe { ::core::mem::transmute(exclude_guest) };
             exclude_guest as u64
         });
         __bindgen_bitfield_unit.set(21usize, 1u8, {
@@ -6011,15 +6507,18 @@ impl perf_event_attr {
             comm_exec as u64
         });
         __bindgen_bitfield_unit.set(25usize, 1u8, {
-            let use_clockid: u64 = unsafe { ::core::mem::transmute(use_clockid) };
+            let use_clockid: u64 =
+                unsafe { ::core::mem::transmute(use_clockid) };
             use_clockid as u64
         });
         __bindgen_bitfield_unit.set(26usize, 1u8, {
-            let context_switch: u64 = unsafe { ::core::mem::transmute(context_switch) };
+            let context_switch: u64 =
+                unsafe { ::core::mem::transmute(context_switch) };
             context_switch as u64
         });
         __bindgen_bitfield_unit.set(27usize, 1u8, {
-            let write_backward: u64 = unsafe { ::core::mem::transmute(write_backward) };
+            let write_backward: u64 =
+                unsafe { ::core::mem::transmute(write_backward) };
             write_backward as u64
         });
         __bindgen_bitfield_unit.set(28usize, 1u8, {
@@ -6051,11 +6550,13 @@ impl perf_event_attr {
             build_id as u64
         });
         __bindgen_bitfield_unit.set(35usize, 1u8, {
-            let inherit_thread: u64 = unsafe { ::core::mem::transmute(inherit_thread) };
+            let inherit_thread: u64 =
+                unsafe { ::core::mem::transmute(inherit_thread) };
             inherit_thread as u64
         });
         __bindgen_bitfield_unit.set(36usize, 1u8, {
-            let remove_on_exec: u64 = unsafe { ::core::mem::transmute(remove_on_exec) };
+            let remove_on_exec: u64 =
+                unsafe { ::core::mem::transmute(remove_on_exec) };
             remove_on_exec as u64
         });
         __bindgen_bitfield_unit.set(37usize, 1u8, {
@@ -6063,7 +6564,8 @@ impl perf_event_attr {
             sigtrap as u64
         });
         __bindgen_bitfield_unit.set(38usize, 26u8, {
-            let __reserved_1: u64 = unsafe { ::core::mem::transmute(__reserved_1) };
+            let __reserved_1: u64 =
+                unsafe { ::core::mem::transmute(__reserved_1) };
             __reserved_1 as u64
         });
         __bindgen_bitfield_unit
@@ -6188,7 +6690,11 @@ pub struct perf_addr_filters_head {
     pub nr_file_filters: ::aya_bpf::cty::c_uint,
 }
 pub type perf_overflow_handler_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *mut perf_event, arg2: *mut perf_sample_data, arg3: *mut pt_regs),
+    unsafe extern "C" fn(
+        arg1: *mut perf_event,
+        arg2: *mut perf_sample_data,
+        arg3: *mut pt_regs,
+    ),
 >;
 pub type ftrace_func_t = ::core::option::Option<
     unsafe extern "C" fn(
@@ -6278,7 +6784,8 @@ pub struct perf_event {
     pub addr_filter_ranges: *mut perf_addr_filter_range,
     pub addr_filters_gen: ::aya_bpf::cty::c_ulong,
     pub aux_event: *mut perf_event,
-    pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event)>,
+    pub destroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event)>,
     pub callback_head: callback_head,
     pub ns: *mut pid_namespace,
     pub id: u64_,
@@ -6398,8 +6905,9 @@ pub struct pollfd {
     pub events: ::aya_bpf::cty::c_short,
     pub revents: ::aya_bpf::cty::c_short,
 }
-pub type smp_call_func_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>;
+pub type smp_call_func_t = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+>;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct __call_single_data {
@@ -6429,7 +6937,8 @@ pub type wait_queue_entry_t = wait_queue_entry;
 pub struct timer_list {
     pub entry: hlist_node,
     pub expires: ::aya_bpf::cty::c_ulong,
-    pub function: ::core::option::Option<unsafe extern "C" fn(arg1: *mut timer_list)>,
+    pub function:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut timer_list)>,
     pub flags: u32_,
 }
 #[repr(C)]
@@ -6482,7 +6991,8 @@ pub struct srcu_data {
 impl srcu_data {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -6558,10 +7068,13 @@ pub struct linux_binfmt {
     pub load_binary: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut linux_binprm) -> ::aya_bpf::cty::c_int,
     >,
-    pub load_shlib:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut file) -> ::aya_bpf::cty::c_int>,
+    pub load_shlib: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut file) -> ::aya_bpf::cty::c_int,
+    >,
     pub core_dump: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut coredump_params) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut coredump_params,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub min_coredump: ::aya_bpf::cty::c_ulong,
 }
@@ -6640,7 +7153,8 @@ pub struct zone {
 impl zone {
     #[inline]
     pub fn new_bitfield_3() -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -6710,7 +7224,8 @@ pub struct pglist_data {
 impl pglist_data {
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -6908,9 +7423,13 @@ pub union kernfs_node__bindgen_ty_1 {
 #[derive(Debug, Copy, Clone)]
 pub struct kernfs_ops {
     pub open: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kernfs_open_file) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut kernfs_open_file,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut kernfs_open_file)>,
+    pub release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut kernfs_open_file),
+    >,
     pub seq_show: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut seq_file,
@@ -6918,7 +7437,10 @@ pub struct kernfs_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub seq_start: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut loff_t) -> *mut ::aya_bpf::cty::c_void,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut loff_t,
+        ) -> *mut ::aya_bpf::cty::c_void,
     >,
     pub seq_next: ::core::option::Option<
         unsafe extern "C" fn(
@@ -6928,7 +7450,10 @@ pub struct kernfs_ops {
         ) -> *mut ::aya_bpf::cty::c_void,
     >,
     pub seq_stop: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub read: ::core::option::Option<
         unsafe extern "C" fn(
@@ -6949,7 +7474,10 @@ pub struct kernfs_ops {
         ) -> ssize_t,
     >,
     pub poll: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kernfs_open_file, arg2: *mut poll_table_struct) -> __poll_t,
+        unsafe extern "C" fn(
+            arg1: *mut kernfs_open_file,
+            arg2: *mut poll_table_struct,
+        ) -> __poll_t,
     >,
     pub mmap: ::core::option::Option<
         unsafe extern "C" fn(
@@ -6962,7 +7490,10 @@ pub struct kernfs_ops {
 #[derive(Debug, Copy, Clone)]
 pub struct kernfs_syscall_ops {
     pub show_options: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut kernfs_root) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut kernfs_root,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub mkdir: ::core::option::Option<
         unsafe extern "C" fn(
@@ -7025,7 +7556,9 @@ pub struct kernfs_open_file {
 impl kernfs_open_file {
     #[inline]
     pub fn mmapped(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_mmapped(&mut self, val: bool_) {
@@ -7036,7 +7569,9 @@ impl kernfs_open_file {
     }
     #[inline]
     pub fn released(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_released(&mut self, val: bool_) {
@@ -7046,8 +7581,12 @@ impl kernfs_open_file {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(mmapped: bool_, released: bool_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        mmapped: bool_,
+        released: bool_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let mmapped: u8 = unsafe { ::core::mem::transmute(mmapped) };
             mmapped as u64
@@ -7082,14 +7621,20 @@ pub mod kobj_ns_type {
 #[derive(Debug, Copy, Clone)]
 pub struct kobj_ns_type_operations {
     pub type_: kobj_ns_type::Type,
-    pub current_may_mount: ::core::option::Option<unsafe extern "C" fn() -> bool_>,
-    pub grab_current_ns:
-        ::core::option::Option<unsafe extern "C" fn() -> *mut ::aya_bpf::cty::c_void>,
+    pub current_may_mount:
+        ::core::option::Option<unsafe extern "C" fn() -> bool_>,
+    pub grab_current_ns: ::core::option::Option<
+        unsafe extern "C" fn() -> *mut ::aya_bpf::cty::c_void,
+    >,
     pub netlink_ns: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut sock) -> *const ::aya_bpf::cty::c_void,
     >,
-    pub initial_ns: ::core::option::Option<unsafe extern "C" fn() -> *const ::aya_bpf::cty::c_void>,
-    pub drop_ns: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub initial_ns: ::core::option::Option<
+        unsafe extern "C" fn() -> *const ::aya_bpf::cty::c_void,
+    >,
+    pub drop_ns: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -7140,7 +7685,9 @@ pub struct kobject {
 impl kobject {
     #[inline]
     pub fn state_initialized(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_state_initialized(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -7151,7 +7698,9 @@ impl kobject {
     }
     #[inline]
     pub fn state_in_sysfs(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_state_in_sysfs(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -7162,7 +7711,9 @@ impl kobject {
     }
     #[inline]
     pub fn state_add_uevent_sent(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_state_add_uevent_sent(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -7173,10 +7724,15 @@ impl kobject {
     }
     #[inline]
     pub fn state_remove_uevent_sent(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
-    pub fn set_state_remove_uevent_sent(&mut self, val: ::aya_bpf::cty::c_uint) {
+    pub fn set_state_remove_uevent_sent(
+        &mut self,
+        val: ::aya_bpf::cty::c_uint,
+    ) {
         unsafe {
             let val: u32 = ::core::mem::transmute(val);
             self._bitfield_1.set(3usize, 1u8, val as u64)
@@ -7184,7 +7740,9 @@ impl kobject {
     }
     #[inline]
     pub fn uevent_suppress(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_uevent_suppress(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -7201,13 +7759,16 @@ impl kobject {
         state_remove_uevent_sent: ::aya_bpf::cty::c_uint,
         uevent_suppress: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let state_initialized: u32 = unsafe { ::core::mem::transmute(state_initialized) };
+            let state_initialized: u32 =
+                unsafe { ::core::mem::transmute(state_initialized) };
             state_initialized as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let state_in_sysfs: u32 = unsafe { ::core::mem::transmute(state_in_sysfs) };
+            let state_in_sysfs: u32 =
+                unsafe { ::core::mem::transmute(state_in_sysfs) };
             state_in_sysfs as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
@@ -7221,7 +7782,8 @@ impl kobject {
             state_remove_uevent_sent as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let uevent_suppress: u32 = unsafe { ::core::mem::transmute(uevent_suppress) };
+            let uevent_suppress: u32 =
+                unsafe { ::core::mem::transmute(uevent_suppress) };
             uevent_suppress as u64
         });
         __bindgen_bitfield_unit
@@ -7233,7 +7795,8 @@ pub struct bin_attribute {
     pub attr: attribute,
     pub size: size_t,
     pub private: *mut ::aya_bpf::cty::c_void,
-    pub f_mapping: ::core::option::Option<unsafe extern "C" fn() -> *mut address_space>,
+    pub f_mapping:
+        ::core::option::Option<unsafe extern "C" fn() -> *mut address_space>,
     pub read: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut file,
@@ -7293,18 +7856,27 @@ pub struct kset {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct kobj_type {
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut kobject)>,
+    pub release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut kobject)>,
     pub sysfs_ops: *const sysfs_ops,
     pub default_attrs: *mut *mut attribute,
     pub default_groups: *mut *const attribute_group,
     pub child_ns_type: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kobject) -> *const kobj_ns_type_operations,
+        unsafe extern "C" fn(
+            arg1: *mut kobject,
+        ) -> *const kobj_ns_type_operations,
     >,
     pub namespace: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kobject) -> *const ::aya_bpf::cty::c_void,
+        unsafe extern "C" fn(
+            arg1: *mut kobject,
+        ) -> *const ::aya_bpf::cty::c_void,
     >,
     pub get_ownership: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kobject, arg2: *mut kuid_t, arg3: *mut kgid_t),
+        unsafe extern "C" fn(
+            arg1: *mut kobject,
+            arg2: *mut kuid_t,
+            arg3: *mut kgid_t,
+        ),
     >,
 }
 #[repr(C)]
@@ -7320,10 +7892,16 @@ pub struct kobj_uevent_env {
 #[derive(Debug, Copy, Clone)]
 pub struct kset_uevent_ops {
     pub filter: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kset, arg2: *mut kobject) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut kset,
+            arg2: *mut kobject,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub name: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kset, arg2: *mut kobject) -> *const ::aya_bpf::cty::c_char,
+        unsafe extern "C" fn(
+            arg1: *mut kset,
+            arg2: *mut kobject,
+        ) -> *const ::aya_bpf::cty::c_char,
     >,
     pub uevent: ::core::option::Option<
         unsafe extern "C" fn(
@@ -7349,7 +7927,9 @@ pub struct kernel_param_ops {
             arg2: *const kernel_param,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub free: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -7462,7 +8042,8 @@ pub struct module {
     pub async_probe_requested: bool_,
     pub num_exentries: ::aya_bpf::cty::c_uint,
     pub extable: *mut exception_table_entry,
-    pub init: ::core::option::Option<unsafe extern "C" fn() -> ::aya_bpf::cty::c_int>,
+    pub init:
+        ::core::option::Option<unsafe extern "C" fn() -> ::aya_bpf::cty::c_int>,
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 40usize]>,
     pub core_layout: module_layout,
@@ -7519,7 +8100,8 @@ pub struct module {
 impl module {
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -7549,10 +8131,14 @@ pub struct module_attribute {
         ) -> ssize_t,
     >,
     pub setup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut module, arg2: *const ::aya_bpf::cty::c_char),
+        unsafe extern "C" fn(
+            arg1: *mut module,
+            arg2: *const ::aya_bpf::cty::c_char,
+        ),
     >,
-    pub test:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut module) -> ::aya_bpf::cty::c_int>,
+    pub test: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut module) -> ::aya_bpf::cty::c_int,
+    >,
     pub free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut module)>,
 }
 #[repr(C)]
@@ -7791,12 +8377,14 @@ pub union mem_cgroup__bindgen_ty_1 {
 impl mem_cgroup {
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_3() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -8154,7 +8742,10 @@ pub type mempool_alloc_t = ::core::option::Option<
     ) -> *mut ::aya_bpf::cty::c_void,
 >;
 pub type mempool_free_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void, arg2: *mut ::aya_bpf::cty::c_void),
+    unsafe extern "C" fn(
+        arg1: *mut ::aya_bpf::cty::c_void,
+        arg2: *mut ::aya_bpf::cty::c_void,
+    ),
 >;
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -8407,7 +8998,8 @@ pub struct taskstats {
 impl taskstats {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -8445,7 +9037,9 @@ pub struct writeback_control {
 impl writeback_control {
     #[inline]
     pub fn for_kupdate(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_for_kupdate(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8456,7 +9050,9 @@ impl writeback_control {
     }
     #[inline]
     pub fn for_background(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_for_background(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8467,7 +9063,9 @@ impl writeback_control {
     }
     #[inline]
     pub fn tagged_writepages(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_tagged_writepages(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8478,7 +9076,9 @@ impl writeback_control {
     }
     #[inline]
     pub fn for_reclaim(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_for_reclaim(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8489,7 +9089,9 @@ impl writeback_control {
     }
     #[inline]
     pub fn range_cyclic(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_range_cyclic(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8500,7 +9102,9 @@ impl writeback_control {
     }
     #[inline]
     pub fn for_sync(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_for_sync(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8511,7 +9115,9 @@ impl writeback_control {
     }
     #[inline]
     pub fn no_cgroup_owner(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_no_cgroup_owner(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8522,7 +9128,9 @@ impl writeback_control {
     }
     #[inline]
     pub fn punt_to_cgroup(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_punt_to_cgroup(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8542,25 +9150,31 @@ impl writeback_control {
         no_cgroup_owner: ::aya_bpf::cty::c_uint,
         punt_to_cgroup: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let for_kupdate: u32 = unsafe { ::core::mem::transmute(for_kupdate) };
+            let for_kupdate: u32 =
+                unsafe { ::core::mem::transmute(for_kupdate) };
             for_kupdate as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let for_background: u32 = unsafe { ::core::mem::transmute(for_background) };
+            let for_background: u32 =
+                unsafe { ::core::mem::transmute(for_background) };
             for_background as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let tagged_writepages: u32 = unsafe { ::core::mem::transmute(tagged_writepages) };
+            let tagged_writepages: u32 =
+                unsafe { ::core::mem::transmute(tagged_writepages) };
             tagged_writepages as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let for_reclaim: u32 = unsafe { ::core::mem::transmute(for_reclaim) };
+            let for_reclaim: u32 =
+                unsafe { ::core::mem::transmute(for_reclaim) };
             for_reclaim as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let range_cyclic: u32 = unsafe { ::core::mem::transmute(range_cyclic) };
+            let range_cyclic: u32 =
+                unsafe { ::core::mem::transmute(range_cyclic) };
             range_cyclic as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
@@ -8568,11 +9182,13 @@ impl writeback_control {
             for_sync as u64
         });
         __bindgen_bitfield_unit.set(6usize, 1u8, {
-            let no_cgroup_owner: u32 = unsafe { ::core::mem::transmute(no_cgroup_owner) };
+            let no_cgroup_owner: u32 =
+                unsafe { ::core::mem::transmute(no_cgroup_owner) };
             no_cgroup_owner as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
-            let punt_to_cgroup: u32 = unsafe { ::core::mem::transmute(punt_to_cgroup) };
+            let punt_to_cgroup: u32 =
+                unsafe { ::core::mem::transmute(punt_to_cgroup) };
             punt_to_cgroup as u64
         });
         __bindgen_bitfield_unit
@@ -8630,7 +9246,9 @@ pub struct swap_cluster_info {
 impl swap_cluster_info {
     #[inline]
     pub fn data(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 24u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 24u8) as u32)
+        }
     }
     #[inline]
     pub fn set_data(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8641,7 +9259,9 @@ impl swap_cluster_info {
     }
     #[inline]
     pub fn flags(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(24usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(24usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_flags(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8655,7 +9275,8 @@ impl swap_cluster_info {
         data: ::aya_bpf::cty::c_uint,
         flags: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 24u8, {
             let data: u32 = unsafe { ::core::mem::transmute(data) };
             data as u64
@@ -8776,14 +9397,17 @@ pub struct dev_pm_info {
     pub suspended_time: u64_,
     pub accounting_timestamp: u64_,
     pub subsys_data: *mut pm_subsys_data,
-    pub set_latency_tolerance:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device, arg2: s32)>,
+    pub set_latency_tolerance: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device, arg2: s32),
+    >,
     pub qos: *mut dev_pm_qos,
 }
 impl dev_pm_info {
     #[inline]
     pub fn can_wakeup(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_can_wakeup(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8794,7 +9418,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn async_suspend(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_async_suspend(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8805,7 +9431,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn in_dpm_list(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_in_dpm_list(&mut self, val: bool_) {
@@ -8816,7 +9444,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn is_prepared(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_prepared(&mut self, val: bool_) {
@@ -8827,7 +9457,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn is_suspended(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_suspended(&mut self, val: bool_) {
@@ -8838,7 +9470,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn is_noirq_suspended(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_noirq_suspended(&mut self, val: bool_) {
@@ -8849,7 +9483,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn is_late_suspended(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_late_suspended(&mut self, val: bool_) {
@@ -8860,7 +9496,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn no_pm(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_no_pm(&mut self, val: bool_) {
@@ -8871,7 +9509,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn early_init(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_early_init(&mut self, val: bool_) {
@@ -8882,7 +9522,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn direct_complete(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_direct_complete(&mut self, val: bool_) {
@@ -8904,33 +9546,40 @@ impl dev_pm_info {
         early_init: bool_,
         direct_complete: bool_,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let can_wakeup: u32 = unsafe { ::core::mem::transmute(can_wakeup) };
             can_wakeup as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let async_suspend: u32 = unsafe { ::core::mem::transmute(async_suspend) };
+            let async_suspend: u32 =
+                unsafe { ::core::mem::transmute(async_suspend) };
             async_suspend as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let in_dpm_list: u8 = unsafe { ::core::mem::transmute(in_dpm_list) };
+            let in_dpm_list: u8 =
+                unsafe { ::core::mem::transmute(in_dpm_list) };
             in_dpm_list as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let is_prepared: u8 = unsafe { ::core::mem::transmute(is_prepared) };
+            let is_prepared: u8 =
+                unsafe { ::core::mem::transmute(is_prepared) };
             is_prepared as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let is_suspended: u8 = unsafe { ::core::mem::transmute(is_suspended) };
+            let is_suspended: u8 =
+                unsafe { ::core::mem::transmute(is_suspended) };
             is_suspended as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let is_noirq_suspended: u8 = unsafe { ::core::mem::transmute(is_noirq_suspended) };
+            let is_noirq_suspended: u8 =
+                unsafe { ::core::mem::transmute(is_noirq_suspended) };
             is_noirq_suspended as u64
         });
         __bindgen_bitfield_unit.set(6usize, 1u8, {
-            let is_late_suspended: u8 = unsafe { ::core::mem::transmute(is_late_suspended) };
+            let is_late_suspended: u8 =
+                unsafe { ::core::mem::transmute(is_late_suspended) };
             is_late_suspended as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
@@ -8942,14 +9591,17 @@ impl dev_pm_info {
             early_init as u64
         });
         __bindgen_bitfield_unit.set(9usize, 1u8, {
-            let direct_complete: u8 = unsafe { ::core::mem::transmute(direct_complete) };
+            let direct_complete: u8 =
+                unsafe { ::core::mem::transmute(direct_complete) };
             direct_complete as u64
         });
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn wakeup_path(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_wakeup_path(&mut self, val: bool_) {
@@ -8960,7 +9612,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn syscore(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_syscore(&mut self, val: bool_) {
@@ -8971,7 +9625,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn no_pm_callbacks(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_no_pm_callbacks(&mut self, val: bool_) {
@@ -8982,7 +9638,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn must_resume(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_must_resume(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -8993,7 +9651,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn may_skip_resume(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_may_skip_resume(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9010,9 +9670,11 @@ impl dev_pm_info {
         must_resume: ::aya_bpf::cty::c_uint,
         may_skip_resume: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let wakeup_path: u8 = unsafe { ::core::mem::transmute(wakeup_path) };
+            let wakeup_path: u8 =
+                unsafe { ::core::mem::transmute(wakeup_path) };
             wakeup_path as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -9020,22 +9682,27 @@ impl dev_pm_info {
             syscore as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let no_pm_callbacks: u8 = unsafe { ::core::mem::transmute(no_pm_callbacks) };
+            let no_pm_callbacks: u8 =
+                unsafe { ::core::mem::transmute(no_pm_callbacks) };
             no_pm_callbacks as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let must_resume: u32 = unsafe { ::core::mem::transmute(must_resume) };
+            let must_resume: u32 =
+                unsafe { ::core::mem::transmute(must_resume) };
             must_resume as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let may_skip_resume: u32 = unsafe { ::core::mem::transmute(may_skip_resume) };
+            let may_skip_resume: u32 =
+                unsafe { ::core::mem::transmute(may_skip_resume) };
             may_skip_resume as u64
         });
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn disable_depth(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(0usize, 3u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(0usize, 3u8) as u32)
+        }
     }
     #[inline]
     pub fn set_disable_depth(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9046,7 +9713,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn idle_notification(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_idle_notification(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9057,7 +9726,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn request_pending(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_request_pending(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9068,7 +9739,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn deferred_resume(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(5usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(5usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_deferred_resume(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9079,7 +9752,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn needs_force_resume(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(6usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(6usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_needs_force_resume(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9090,7 +9765,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn runtime_auto(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(7usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(7usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_runtime_auto(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9101,7 +9778,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn ignore_children(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(8usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(8usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ignore_children(&mut self, val: bool_) {
@@ -9112,7 +9791,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn no_callbacks(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(9usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(9usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_no_callbacks(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9123,7 +9804,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn irq_safe(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(10usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(10usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_irq_safe(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9134,7 +9817,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn use_autosuspend(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(11usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(11usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_use_autosuspend(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9145,7 +9830,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn timer_autosuspends(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(12usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(12usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_timer_autosuspends(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9156,7 +9843,9 @@ impl dev_pm_info {
     }
     #[inline]
     pub fn memalloc_noio(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(13usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(13usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_memalloc_noio(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9180,37 +9869,46 @@ impl dev_pm_info {
         timer_autosuspends: ::aya_bpf::cty::c_uint,
         memalloc_noio: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 3u8, {
-            let disable_depth: u32 = unsafe { ::core::mem::transmute(disable_depth) };
+            let disable_depth: u32 =
+                unsafe { ::core::mem::transmute(disable_depth) };
             disable_depth as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let idle_notification: u32 = unsafe { ::core::mem::transmute(idle_notification) };
+            let idle_notification: u32 =
+                unsafe { ::core::mem::transmute(idle_notification) };
             idle_notification as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let request_pending: u32 = unsafe { ::core::mem::transmute(request_pending) };
+            let request_pending: u32 =
+                unsafe { ::core::mem::transmute(request_pending) };
             request_pending as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let deferred_resume: u32 = unsafe { ::core::mem::transmute(deferred_resume) };
+            let deferred_resume: u32 =
+                unsafe { ::core::mem::transmute(deferred_resume) };
             deferred_resume as u64
         });
         __bindgen_bitfield_unit.set(6usize, 1u8, {
-            let needs_force_resume: u32 = unsafe { ::core::mem::transmute(needs_force_resume) };
+            let needs_force_resume: u32 =
+                unsafe { ::core::mem::transmute(needs_force_resume) };
             needs_force_resume as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
-            let runtime_auto: u32 = unsafe { ::core::mem::transmute(runtime_auto) };
+            let runtime_auto: u32 =
+                unsafe { ::core::mem::transmute(runtime_auto) };
             runtime_auto as u64
         });
         __bindgen_bitfield_unit.set(8usize, 1u8, {
-            let ignore_children: u8 = unsafe { ::core::mem::transmute(ignore_children) };
+            let ignore_children: u8 =
+                unsafe { ::core::mem::transmute(ignore_children) };
             ignore_children as u64
         });
         __bindgen_bitfield_unit.set(9usize, 1u8, {
-            let no_callbacks: u32 = unsafe { ::core::mem::transmute(no_callbacks) };
+            let no_callbacks: u32 =
+                unsafe { ::core::mem::transmute(no_callbacks) };
             no_callbacks as u64
         });
         __bindgen_bitfield_unit.set(10usize, 1u8, {
@@ -9218,15 +9916,18 @@ impl dev_pm_info {
             irq_safe as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
-            let use_autosuspend: u32 = unsafe { ::core::mem::transmute(use_autosuspend) };
+            let use_autosuspend: u32 =
+                unsafe { ::core::mem::transmute(use_autosuspend) };
             use_autosuspend as u64
         });
         __bindgen_bitfield_unit.set(12usize, 1u8, {
-            let timer_autosuspends: u32 = unsafe { ::core::mem::transmute(timer_autosuspends) };
+            let timer_autosuspends: u32 =
+                unsafe { ::core::mem::transmute(timer_autosuspends) };
             timer_autosuspends as u64
         });
         __bindgen_bitfield_unit.set(13usize, 1u8, {
-            let memalloc_noio: u32 = unsafe { ::core::mem::transmute(memalloc_noio) };
+            let memalloc_noio: u32 =
+                unsafe { ::core::mem::transmute(memalloc_noio) };
             memalloc_noio as u64
         });
         __bindgen_bitfield_unit
@@ -9282,7 +9983,8 @@ pub struct device {
     pub devres_head: list_head,
     pub class: *mut class,
     pub groups: *mut *const attribute_group,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
     pub iommu_group: *mut iommu_group,
     pub iommu: *mut dev_iommu,
     pub removable: device_removable::Type,
@@ -9293,7 +9995,9 @@ pub struct device {
 impl device {
     #[inline]
     pub fn offline_disabled(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_offline_disabled(&mut self, val: bool_) {
@@ -9304,7 +10008,9 @@ impl device {
     }
     #[inline]
     pub fn offline(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_offline(&mut self, val: bool_) {
@@ -9315,7 +10021,9 @@ impl device {
     }
     #[inline]
     pub fn of_node_reused(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_of_node_reused(&mut self, val: bool_) {
@@ -9326,7 +10034,9 @@ impl device {
     }
     #[inline]
     pub fn state_synced(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_state_synced(&mut self, val: bool_) {
@@ -9337,7 +10047,9 @@ impl device {
     }
     #[inline]
     pub fn can_match(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_can_match(&mut self, val: bool_) {
@@ -9354,9 +10066,11 @@ impl device {
         state_synced: bool_,
         can_match: bool_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let offline_disabled: u8 = unsafe { ::core::mem::transmute(offline_disabled) };
+            let offline_disabled: u8 =
+                unsafe { ::core::mem::transmute(offline_disabled) };
             offline_disabled as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -9364,11 +10078,13 @@ impl device {
             offline as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let of_node_reused: u8 = unsafe { ::core::mem::transmute(of_node_reused) };
+            let of_node_reused: u8 =
+                unsafe { ::core::mem::transmute(of_node_reused) };
             of_node_reused as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let state_synced: u8 = unsafe { ::core::mem::transmute(state_synced) };
+            let state_synced: u8 =
+                unsafe { ::core::mem::transmute(state_synced) };
             state_synced as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
@@ -9452,7 +10168,9 @@ pub struct fs_context {
 impl fs_context {
     #[inline]
     pub fn purpose(&self) -> fs_context_purpose::Type {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_purpose(&mut self, val: fs_context_purpose::Type) {
@@ -9463,7 +10181,9 @@ impl fs_context {
     }
     #[inline]
     pub fn phase(&self) -> fs_context_phase::Type {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_phase(&mut self, val: fs_context_phase::Type) {
@@ -9474,7 +10194,9 @@ impl fs_context {
     }
     #[inline]
     pub fn need_free(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(16usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(16usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_need_free(&mut self, val: bool_) {
@@ -9485,7 +10207,9 @@ impl fs_context {
     }
     #[inline]
     pub fn global(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(17usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(17usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_global(&mut self, val: bool_) {
@@ -9496,7 +10220,9 @@ impl fs_context {
     }
     #[inline]
     pub fn oldapi(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(18usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(18usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_oldapi(&mut self, val: bool_) {
@@ -9513,7 +10239,8 @@ impl fs_context {
         global: bool_,
         oldapi: bool_,
     ) -> __BindgenBitfieldUnit<[u8; 3usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let purpose: u32 = unsafe { ::core::mem::transmute(purpose) };
             purpose as u64
@@ -9555,7 +10282,8 @@ pub struct bvec_iter {
     pub bi_idx: ::aya_bpf::cty::c_uint,
     pub bi_bvec_done: ::aya_bpf::cty::c_uint,
 }
-pub type bio_end_io_t = ::core::option::Option<unsafe extern "C" fn(arg1: *mut bio)>;
+pub type bio_end_io_t =
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut bio)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct bio_issue {
@@ -9629,7 +10357,9 @@ pub struct linux_binprm {
 impl linux_binprm {
     #[inline]
     pub fn have_execfd(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_have_execfd(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9640,7 +10370,9 @@ impl linux_binprm {
     }
     #[inline]
     pub fn execfd_creds(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_execfd_creds(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9651,7 +10383,9 @@ impl linux_binprm {
     }
     #[inline]
     pub fn secureexec(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_secureexec(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9662,7 +10396,9 @@ impl linux_binprm {
     }
     #[inline]
     pub fn point_of_no_return(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_point_of_no_return(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -9678,13 +10414,16 @@ impl linux_binprm {
         secureexec: ::aya_bpf::cty::c_uint,
         point_of_no_return: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let have_execfd: u32 = unsafe { ::core::mem::transmute(have_execfd) };
+            let have_execfd: u32 =
+                unsafe { ::core::mem::transmute(have_execfd) };
             have_execfd as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let execfd_creds: u32 = unsafe { ::core::mem::transmute(execfd_creds) };
+            let execfd_creds: u32 =
+                unsafe { ::core::mem::transmute(execfd_creds) };
             execfd_creds as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
@@ -9692,7 +10431,8 @@ impl linux_binprm {
             secureexec as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let point_of_no_return: u32 = unsafe { ::core::mem::transmute(point_of_no_return) };
+            let point_of_no_return: u32 =
+                unsafe { ::core::mem::transmute(point_of_no_return) };
             point_of_no_return as u64
         });
         __bindgen_bitfield_unit
@@ -9728,51 +10468,74 @@ pub struct em_perf_domain {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct dev_pm_ops {
-    pub prepare:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub complete: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub suspend:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub resume:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub freeze:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub thaw:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub poweroff:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub restore:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub suspend_late:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub resume_early:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub freeze_late:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub thaw_early:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub poweroff_late:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub restore_early:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub suspend_noirq:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub resume_noirq:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub freeze_noirq:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub thaw_noirq:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub poweroff_noirq:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub restore_noirq:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub runtime_suspend:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub runtime_resume:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub runtime_idle:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
+    pub prepare: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub complete:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub suspend: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub resume: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub freeze: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub thaw: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub poweroff: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub restore: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub suspend_late: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub resume_early: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub freeze_late: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub thaw_early: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub poweroff_late: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub restore_early: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub suspend_noirq: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub resume_noirq: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub freeze_noirq: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub thaw_noirq: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub poweroff_noirq: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub restore_noirq: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub runtime_suspend: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub runtime_resume: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub runtime_idle: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -9812,7 +10575,9 @@ pub struct wakeup_source {
 impl wakeup_source {
     #[inline]
     pub fn active(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_active(&mut self, val: bool_) {
@@ -9823,7 +10588,9 @@ impl wakeup_source {
     }
     #[inline]
     pub fn autosleep_enabled(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_autosleep_enabled(&mut self, val: bool_) {
@@ -9837,13 +10604,15 @@ impl wakeup_source {
         active: bool_,
         autosleep_enabled: bool_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let active: u8 = unsafe { ::core::mem::transmute(active) };
             active as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let autosleep_enabled: u8 = unsafe { ::core::mem::transmute(autosleep_enabled) };
+            let autosleep_enabled: u8 =
+                unsafe { ::core::mem::transmute(autosleep_enabled) };
             autosleep_enabled as u64
         });
         __bindgen_bitfield_unit
@@ -9853,13 +10622,18 @@ impl wakeup_source {
 #[derive(Debug, Copy, Clone)]
 pub struct dev_pm_domain {
     pub ops: dev_pm_ops,
-    pub start:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub detach: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device, arg2: bool_)>,
-    pub activate:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
+    pub start: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub detach: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device, arg2: bool_),
+    >,
+    pub activate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
     pub sync: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub dismiss: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub dismiss:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -9871,7 +10645,10 @@ pub struct bus_type {
     pub dev_groups: *mut *const attribute_group,
     pub drv_groups: *mut *const attribute_group,
     pub match_: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: *mut device_driver) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: *mut device_driver,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub uevent: ::core::option::Option<
         unsafe extern "C" fn(
@@ -9879,24 +10656,35 @@ pub struct bus_type {
             arg2: *mut kobj_uevent_env,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub probe:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub sync_state: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub remove: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub shutdown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub online:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub offline:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub suspend: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: pm_message_t) -> ::aya_bpf::cty::c_int,
+    pub probe: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
     >,
-    pub resume:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub num_vf:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub dma_configure:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
+    pub sync_state:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub remove: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub shutdown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub online: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub offline: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub suspend: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: pm_message_t,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub resume: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub num_vf: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub dma_configure: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
     pub pm: *const dev_pm_ops,
     pub iommu_ops: *const iommu_ops,
     pub p: *mut subsys_private,
@@ -9920,21 +10708,30 @@ pub struct device_driver {
     pub probe_type: probe_type::Type,
     pub of_match_table: *const of_device_id,
     pub acpi_match_table: *const acpi_device_id,
-    pub probe:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub sync_state: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub remove:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
-    pub shutdown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub suspend: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: pm_message_t) -> ::aya_bpf::cty::c_int,
+    pub probe: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
     >,
-    pub resume:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
+    pub sync_state:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub remove: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
+    pub shutdown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub suspend: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: pm_message_t,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub resume: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
     pub groups: *mut *const attribute_group,
     pub dev_groups: *mut *const attribute_group,
     pub pm: *const dev_pm_ops,
-    pub coredump: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub coredump:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
     pub p: *mut driver_private,
 }
 pub mod iommu_cap {
@@ -9953,16 +10750,23 @@ pub mod iommu_dev_features {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct iommu_ops {
-    pub capable: ::core::option::Option<unsafe extern "C" fn(arg1: iommu_cap::Type) -> bool_>,
+    pub capable: ::core::option::Option<
+        unsafe extern "C" fn(arg1: iommu_cap::Type) -> bool_,
+    >,
     pub domain_alloc: ::core::option::Option<
         unsafe extern "C" fn(arg1: ::aya_bpf::cty::c_uint) -> *mut iommu_domain,
     >,
-    pub domain_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_domain)>,
+    pub domain_free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_domain)>,
     pub attach_dev: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut iommu_domain,
+            arg2: *mut device,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub detach_dev:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device)>,
+    pub detach_dev: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device),
+    >,
     pub map: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut iommu_domain,
@@ -10002,22 +10806,37 @@ pub struct iommu_ops {
             arg5: *mut iommu_iotlb_gather,
         ) -> size_t,
     >,
-    pub flush_iotlb_all: ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_domain)>,
+    pub flush_iotlb_all:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_domain)>,
     pub iotlb_sync_map: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: ::aya_bpf::cty::c_ulong, arg3: size_t),
+        unsafe extern "C" fn(
+            arg1: *mut iommu_domain,
+            arg2: ::aya_bpf::cty::c_ulong,
+            arg3: size_t,
+        ),
     >,
     pub iotlb_sync: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut iommu_iotlb_gather),
+        unsafe extern "C" fn(
+            arg1: *mut iommu_domain,
+            arg2: *mut iommu_iotlb_gather,
+        ),
     >,
     pub iova_to_phys: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: dma_addr_t) -> phys_addr_t,
+        unsafe extern "C" fn(
+            arg1: *mut iommu_domain,
+            arg2: dma_addr_t,
+        ) -> phys_addr_t,
     >,
-    pub probe_device:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> *mut iommu_device>,
-    pub release_device: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub probe_finalize: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub device_group:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> *mut iommu_group>,
+    pub probe_device: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> *mut iommu_device,
+    >,
+    pub release_device:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub probe_finalize:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub device_group: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> *mut iommu_group,
+    >,
     pub enable_nesting: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut iommu_domain) -> ::aya_bpf::cty::c_int,
     >,
@@ -10027,10 +10846,12 @@ pub struct iommu_ops {
             arg2: ::aya_bpf::cty::c_ulong,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_resv_regions:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device, arg2: *mut list_head)>,
-    pub put_resv_regions:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device, arg2: *mut list_head)>,
+    pub get_resv_regions: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device, arg2: *mut list_head),
+    >,
+    pub put_resv_regions: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device, arg2: *mut list_head),
+    >,
     pub apply_resv_region: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut device,
@@ -10045,13 +10866,22 @@ pub struct iommu_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub is_attach_deferred: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut iommu_domain,
+            arg2: *mut device,
+        ) -> bool_,
     >,
     pub dev_has_feat: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: iommu_dev_features::Type) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: iommu_dev_features::Type,
+        ) -> bool_,
     >,
     pub dev_feat_enabled: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: iommu_dev_features::Type) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: iommu_dev_features::Type,
+        ) -> bool_,
     >,
     pub dev_enable_feat: ::core::option::Option<
         unsafe extern "C" fn(
@@ -10066,12 +10896,19 @@ pub struct iommu_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub aux_attach_dev: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut iommu_domain,
+            arg2: *mut device,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub aux_detach_dev:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device)>,
+    pub aux_detach_dev: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device),
+    >,
     pub aux_get_pasid: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut iommu_domain, arg2: *mut device) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut iommu_domain,
+            arg2: *mut device,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub sva_bind: ::core::option::Option<
         unsafe extern "C" fn(
@@ -10080,8 +10917,11 @@ pub struct iommu_ops {
             arg3: *mut ::aya_bpf::cty::c_void,
         ) -> *mut iommu_sva,
     >,
-    pub sva_unbind: ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_sva)>,
-    pub sva_get_pasid: ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_sva) -> u32_>,
+    pub sva_unbind:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut iommu_sva)>,
+    pub sva_get_pasid: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut iommu_sva) -> u32_,
+    >,
     pub page_response: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut device,
@@ -10104,10 +10944,14 @@ pub struct iommu_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub sva_unbind_gpasid: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: u32_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: u32_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub def_domain_type:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
+    pub def_domain_type: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
     pub pgsize_bitmap: ::aya_bpf::cty::c_ulong,
     pub owner: *mut module,
 }
@@ -10130,7 +10974,8 @@ pub struct device_type {
             arg4: *mut kgid_t,
         ) -> *mut ::aya_bpf::cty::c_char,
     >,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
     pub pm: *const dev_pm_ops,
 }
 #[repr(C)]
@@ -10148,18 +10993,30 @@ pub struct class {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub devnode: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: *mut umode_t) -> *mut ::aya_bpf::cty::c_char,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: *mut umode_t,
+        ) -> *mut ::aya_bpf::cty::c_char,
     >,
-    pub class_release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut class)>,
-    pub dev_release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
-    pub shutdown_pre:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int>,
+    pub class_release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut class)>,
+    pub dev_release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device)>,
+    pub shutdown_pre: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_int,
+    >,
     pub ns_type: *const kobj_ns_type_operations,
     pub namespace: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device) -> *const ::aya_bpf::cty::c_void,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+        ) -> *const ::aya_bpf::cty::c_void,
     >,
     pub get_ownership: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: *mut kuid_t, arg3: *mut kgid_t),
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: *mut kuid_t,
+            arg3: *mut kgid_t,
+        ),
     >,
     pub pm: *const dev_pm_ops,
     pub p: *mut subsys_private,
@@ -10367,12 +11224,19 @@ pub struct dma_map_ops {
         ),
     >,
     pub dma_supported: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: u64_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: u64_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_required_mask: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> u64_>,
-    pub max_mapping_size: ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> size_t>,
-    pub get_merge_boundary:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_ulong>,
+    pub get_required_mask:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut device) -> u64_>,
+    pub max_mapping_size: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> size_t,
+    >,
+    pub get_merge_boundary: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut device) -> ::aya_bpf::cty::c_ulong,
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -10418,7 +11282,9 @@ pub struct ring_buffer_event {
 impl ring_buffer_event {
     #[inline]
     pub fn type_len(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 5u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 5u8) as u32)
+        }
     }
     #[inline]
     pub fn set_type_len(&mut self, val: u32_) {
@@ -10429,7 +11295,9 @@ impl ring_buffer_event {
     }
     #[inline]
     pub fn time_delta(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 27u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 27u8) as u32)
+        }
     }
     #[inline]
     pub fn set_time_delta(&mut self, val: u32_) {
@@ -10439,8 +11307,12 @@ impl ring_buffer_event {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(type_len: u32_, time_delta: u32_) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+    pub fn new_bitfield_1(
+        type_len: u32_,
+        time_delta: u32_,
+    ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 5u8, {
             let type_len: u32 = unsafe { ::core::mem::transmute(type_len) };
             type_len as u64
@@ -10483,7 +11355,9 @@ pub struct perf_mem_data_src__bindgen_ty_1 {
 impl perf_mem_data_src__bindgen_ty_1 {
     #[inline]
     pub fn mem_op(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 5u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 5u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_op(&mut self, val: __u64) {
@@ -10494,7 +11368,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_lvl(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 14u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 14u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_lvl(&mut self, val: __u64) {
@@ -10505,7 +11381,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_snoop(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(19usize, 5u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(19usize, 5u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_snoop(&mut self, val: __u64) {
@@ -10516,7 +11394,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_lock(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(24usize, 2u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(24usize, 2u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_lock(&mut self, val: __u64) {
@@ -10527,7 +11407,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_dtlb(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(26usize, 7u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(26usize, 7u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_dtlb(&mut self, val: __u64) {
@@ -10538,7 +11420,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_lvl_num(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(33usize, 4u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(33usize, 4u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_lvl_num(&mut self, val: __u64) {
@@ -10549,7 +11433,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_remote(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(37usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(37usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_remote(&mut self, val: __u64) {
@@ -10560,7 +11446,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_snoopx(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(38usize, 2u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(38usize, 2u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_snoopx(&mut self, val: __u64) {
@@ -10571,7 +11459,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_blk(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(40usize, 3u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(40usize, 3u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_blk(&mut self, val: __u64) {
@@ -10582,7 +11472,9 @@ impl perf_mem_data_src__bindgen_ty_1 {
     }
     #[inline]
     pub fn mem_rsvd(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(43usize, 21u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(43usize, 21u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mem_rsvd(&mut self, val: __u64) {
@@ -10604,7 +11496,8 @@ impl perf_mem_data_src__bindgen_ty_1 {
         mem_blk: __u64,
         mem_rsvd: __u64,
     ) -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 5u8, {
             let mem_op: u64 = unsafe { ::core::mem::transmute(mem_op) };
             mem_op as u64
@@ -10626,7 +11519,8 @@ impl perf_mem_data_src__bindgen_ty_1 {
             mem_dtlb as u64
         });
         __bindgen_bitfield_unit.set(33usize, 4u8, {
-            let mem_lvl_num: u64 = unsafe { ::core::mem::transmute(mem_lvl_num) };
+            let mem_lvl_num: u64 =
+                unsafe { ::core::mem::transmute(mem_lvl_num) };
             mem_lvl_num as u64
         });
         __bindgen_bitfield_unit.set(37usize, 1u8, {
@@ -10659,7 +11553,9 @@ pub struct perf_branch_entry {
 impl perf_branch_entry {
     #[inline]
     pub fn mispred(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_mispred(&mut self, val: __u64) {
@@ -10670,7 +11566,9 @@ impl perf_branch_entry {
     }
     #[inline]
     pub fn predicted(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_predicted(&mut self, val: __u64) {
@@ -10681,7 +11579,9 @@ impl perf_branch_entry {
     }
     #[inline]
     pub fn in_tx(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_in_tx(&mut self, val: __u64) {
@@ -10692,7 +11592,9 @@ impl perf_branch_entry {
     }
     #[inline]
     pub fn abort(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_abort(&mut self, val: __u64) {
@@ -10703,7 +11605,9 @@ impl perf_branch_entry {
     }
     #[inline]
     pub fn cycles(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 16u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 16u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cycles(&mut self, val: __u64) {
@@ -10714,7 +11618,9 @@ impl perf_branch_entry {
     }
     #[inline]
     pub fn type_(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(20usize, 4u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(20usize, 4u8) as u64)
+        }
     }
     #[inline]
     pub fn set_type(&mut self, val: __u64) {
@@ -10725,7 +11631,9 @@ impl perf_branch_entry {
     }
     #[inline]
     pub fn reserved(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(24usize, 40u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(24usize, 40u8) as u64)
+        }
     }
     #[inline]
     pub fn set_reserved(&mut self, val: __u64) {
@@ -10744,7 +11652,8 @@ impl perf_branch_entry {
         type_: __u64,
         reserved: __u64,
     ) -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let mispred: u64 = unsafe { ::core::mem::transmute(mispred) };
             mispred as u64
@@ -10829,15 +11738,22 @@ pub struct proc_ns_operations {
     pub name: *const ::aya_bpf::cty::c_char,
     pub real_ns_name: *const ::aya_bpf::cty::c_char,
     pub type_: ::aya_bpf::cty::c_int,
-    pub get: ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct) -> *mut ns_common>,
+    pub get: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut task_struct) -> *mut ns_common,
+    >,
     pub put: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ns_common)>,
     pub install: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nsset, arg2: *mut ns_common) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut nsset,
+            arg2: *mut ns_common,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub owner:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ns_common) -> *mut user_namespace>,
-    pub get_parent:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ns_common) -> *mut ns_common>,
+    pub owner: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ns_common) -> *mut user_namespace,
+    >,
+    pub get_parent: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ns_common) -> *mut ns_common,
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -10856,15 +11772,19 @@ pub struct pmu {
     pub task_ctx_nr: ::aya_bpf::cty::c_int,
     pub hrtimer_interval_ms: ::aya_bpf::cty::c_int,
     pub nr_addr_filters: ::aya_bpf::cty::c_uint,
-    pub pmu_enable: ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu)>,
-    pub pmu_disable: ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu)>,
+    pub pmu_enable:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu)>,
+    pub pmu_disable:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu)>,
     pub event_init: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut perf_event) -> ::aya_bpf::cty::c_int,
     >,
-    pub event_mapped:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event, arg2: *mut mm_struct)>,
-    pub event_unmapped:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event, arg2: *mut mm_struct)>,
+    pub event_mapped: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut perf_event, arg2: *mut mm_struct),
+    >,
+    pub event_unmapped: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut perf_event, arg2: *mut mm_struct),
+    >,
     pub add: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut perf_event,
@@ -10872,28 +11792,45 @@ pub struct pmu {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub del: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut perf_event, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut perf_event,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub start: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut perf_event, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut perf_event,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub stop: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut perf_event, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut perf_event,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
-    pub read: ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event)>,
-    pub start_txn:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu, arg2: ::aya_bpf::cty::c_uint)>,
-    pub commit_txn:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu) -> ::aya_bpf::cty::c_int>,
-    pub cancel_txn: ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu)>,
+    pub read:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event)>,
+    pub start_txn: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut pmu, arg2: ::aya_bpf::cty::c_uint),
+    >,
+    pub commit_txn: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut pmu) -> ::aya_bpf::cty::c_int,
+    >,
+    pub cancel_txn:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut pmu)>,
     pub event_idx: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut perf_event) -> ::aya_bpf::cty::c_int,
     >,
-    pub sched_task:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event_context, arg2: bool_)>,
+    pub sched_task: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut perf_event_context, arg2: bool_),
+    >,
     pub task_ctx_cache: *mut kmem_cache,
     pub swap_task_ctx: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut perf_event_context, arg2: *mut perf_event_context),
+        unsafe extern "C" fn(
+            arg1: *mut perf_event_context,
+            arg2: *mut perf_event_context,
+        ),
     >,
     pub setup_aux: ::core::option::Option<
         unsafe extern "C" fn(
@@ -10903,7 +11840,9 @@ pub struct pmu {
             arg4: bool_,
         ) -> *mut ::aya_bpf::cty::c_void,
     >,
-    pub free_aux: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub free_aux: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub snapshot_aux: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut perf_event,
@@ -10911,9 +11850,11 @@ pub struct pmu {
             arg3: ::aya_bpf::cty::c_ulong,
         ) -> ::aya_bpf::cty::c_long,
     >,
-    pub addr_filters_validate:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut list_head) -> ::aya_bpf::cty::c_int>,
-    pub addr_filters_sync: ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event)>,
+    pub addr_filters_validate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut list_head) -> ::aya_bpf::cty::c_int,
+    >,
+    pub addr_filters_sync:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut perf_event)>,
     pub aux_output_match: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut perf_event) -> ::aya_bpf::cty::c_int,
     >,
@@ -10921,7 +11862,10 @@ pub struct pmu {
         unsafe extern "C" fn(arg1: *mut perf_event) -> ::aya_bpf::cty::c_int,
     >,
     pub check_period: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut perf_event, arg2: u64_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut perf_event,
+            arg2: u64_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -11011,7 +11955,8 @@ pub struct psi_group_cpu {
 impl psi_group_cpu {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -11019,17 +11964,32 @@ impl psi_group_cpu {
 #[derive(Copy, Clone)]
 pub struct cgroup_subsys {
     pub css_alloc: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state) -> *mut cgroup_subsys_state,
+        unsafe extern "C" fn(
+            arg1: *mut cgroup_subsys_state,
+        ) -> *mut cgroup_subsys_state,
     >,
     pub css_online: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut cgroup_subsys_state,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub css_offline: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_subsys_state)>,
-    pub css_released: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_subsys_state)>,
-    pub css_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_subsys_state)>,
-    pub css_reset: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_subsys_state)>,
+    pub css_offline: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state),
+    >,
+    pub css_released: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state),
+    >,
+    pub css_free: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state),
+    >,
+    pub css_reset: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state),
+    >,
     pub css_rstat_flush: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut cgroup_subsys_state,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub css_extra_stat_show: ::core::option::Option<
         unsafe extern "C" fn(
@@ -11038,20 +11998,33 @@ pub struct cgroup_subsys {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub can_attach: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cgroup_taskset) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut cgroup_taskset,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub cancel_attach: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_taskset)>,
-    pub attach: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_taskset)>,
+    pub cancel_attach:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_taskset)>,
+    pub attach:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_taskset)>,
     pub post_attach: ::core::option::Option<unsafe extern "C" fn()>,
     pub can_fork: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut task_struct, arg2: *mut css_set) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut task_struct,
+            arg2: *mut css_set,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub cancel_fork:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct, arg2: *mut css_set)>,
-    pub fork: ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
-    pub exit: ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
-    pub bind: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cgroup_subsys_state)>,
+    pub cancel_fork: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut task_struct, arg2: *mut css_set),
+    >,
+    pub fork:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
+    pub exit:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
+    pub release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut task_struct)>,
+    pub bind: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state),
+    >,
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
     pub id: ::aya_bpf::cty::c_int,
@@ -11067,7 +12040,9 @@ pub struct cgroup_subsys {
 impl cgroup_subsys {
     #[inline]
     pub fn early_init(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_early_init(&mut self, val: bool_) {
@@ -11078,7 +12053,9 @@ impl cgroup_subsys {
     }
     #[inline]
     pub fn implicit_on_dfl(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_implicit_on_dfl(&mut self, val: bool_) {
@@ -11089,7 +12066,9 @@ impl cgroup_subsys {
     }
     #[inline]
     pub fn threaded(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_threaded(&mut self, val: bool_) {
@@ -11104,13 +12083,15 @@ impl cgroup_subsys {
         implicit_on_dfl: bool_,
         threaded: bool_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let early_init: u8 = unsafe { ::core::mem::transmute(early_init) };
             early_init as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let implicit_on_dfl: u8 = unsafe { ::core::mem::transmute(implicit_on_dfl) };
+            let implicit_on_dfl: u8 =
+                unsafe { ::core::mem::transmute(implicit_on_dfl) };
             implicit_on_dfl as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
@@ -11154,14 +12135,24 @@ pub struct cftype {
     pub node: list_head,
     pub kf_ops: *mut kernfs_ops,
     pub open: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kernfs_open_file) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut kernfs_open_file,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut kernfs_open_file)>,
+    pub release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut kernfs_open_file),
+    >,
     pub read_u64: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state, arg2: *mut cftype) -> u64_,
+        unsafe extern "C" fn(
+            arg1: *mut cgroup_subsys_state,
+            arg2: *mut cftype,
+        ) -> u64_,
     >,
     pub read_s64: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cgroup_subsys_state, arg2: *mut cftype) -> s64,
+        unsafe extern "C" fn(
+            arg1: *mut cgroup_subsys_state,
+            arg2: *mut cftype,
+        ) -> s64,
     >,
     pub seq_show: ::core::option::Option<
         unsafe extern "C" fn(
@@ -11170,7 +12161,10 @@ pub struct cftype {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub seq_start: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut loff_t) -> *mut ::aya_bpf::cty::c_void,
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut loff_t,
+        ) -> *mut ::aya_bpf::cty::c_void,
     >,
     pub seq_next: ::core::option::Option<
         unsafe extern "C" fn(
@@ -11180,7 +12174,10 @@ pub struct cftype {
         ) -> *mut ::aya_bpf::cty::c_void,
     >,
     pub seq_stop: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut seq_file,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub write_u64: ::core::option::Option<
         unsafe extern "C" fn(
@@ -11205,7 +12202,10 @@ pub struct cftype {
         ) -> ssize_t,
     >,
     pub poll: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut kernfs_open_file, arg2: *mut poll_table_struct) -> __poll_t,
+        unsafe extern "C" fn(
+            arg1: *mut kernfs_open_file,
+            arg2: *mut poll_table_struct,
+        ) -> __poll_t,
     >,
 }
 #[repr(C)]
@@ -11427,7 +12427,9 @@ pub struct trace_event_fields {
 pub union trace_event_fields__bindgen_ty_1 {
     pub __bindgen_anon_1: trace_event_fields__bindgen_ty_1__bindgen_ty_1,
     pub define_fields: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut trace_event_call) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut trace_event_call,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -11453,11 +12455,14 @@ pub struct trace_event_class {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub fields_array: *mut trace_event_fields,
-    pub get_fields:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_event_call) -> *mut list_head>,
+    pub get_fields: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut trace_event_call) -> *mut list_head,
+    >,
     pub fields: list_head,
     pub raw_init: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut trace_event_call) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut trace_event_call,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -11485,9 +12490,11 @@ pub struct fwnode_operations {
     pub get: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut fwnode_handle) -> *mut fwnode_handle,
     >,
-    pub put: ::core::option::Option<unsafe extern "C" fn(arg1: *mut fwnode_handle)>,
-    pub device_is_available:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const fwnode_handle) -> bool_>,
+    pub put:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut fwnode_handle)>,
+    pub device_is_available: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const fwnode_handle) -> bool_,
+    >,
     pub device_get_match_data: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *const fwnode_handle,
@@ -11518,10 +12525,14 @@ pub struct fwnode_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_name: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const fwnode_handle) -> *const ::aya_bpf::cty::c_char,
+        unsafe extern "C" fn(
+            arg1: *const fwnode_handle,
+        ) -> *const ::aya_bpf::cty::c_char,
     >,
     pub get_name_prefix: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const fwnode_handle) -> *const ::aya_bpf::cty::c_char,
+        unsafe extern "C" fn(
+            arg1: *const fwnode_handle,
+        ) -> *const ::aya_bpf::cty::c_char,
     >,
     pub get_parent: ::core::option::Option<
         unsafe extern "C" fn(arg1: *const fwnode_handle) -> *mut fwnode_handle,
@@ -11624,7 +12635,10 @@ pub struct irq_domain_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub unmap: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut irq_domain, arg2: ::aya_bpf::cty::c_uint),
+        unsafe extern "C" fn(
+            arg1: *mut irq_domain,
+            arg2: ::aya_bpf::cty::c_uint,
+        ),
     >,
     pub xlate: ::core::option::Option<
         unsafe extern "C" fn(
@@ -11658,8 +12672,9 @@ pub struct irq_domain_ops {
             arg3: bool_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub deactivate:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_domain, arg2: *mut irq_data)>,
+    pub deactivate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_domain, arg2: *mut irq_data),
+    >,
     pub translate: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut irq_domain,
@@ -11756,11 +12771,14 @@ pub struct blkcg_gq {
     pub callback_head: callback_head,
 }
 pub type blk_qc_t = ::aya_bpf::cty::c_uint;
-pub type integrity_processing_fn =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_integrity_iter) -> blk_status_t>;
-pub type integrity_prepare_fn = ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>;
-pub type integrity_complete_fn =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut request, arg2: ::aya_bpf::cty::c_uint)>;
+pub type integrity_processing_fn = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut blk_integrity_iter) -> blk_status_t,
+>;
+pub type integrity_prepare_fn =
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>;
+pub type integrity_complete_fn = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut request, arg2: ::aya_bpf::cty::c_uint),
+>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct blk_integrity_profile {
@@ -11780,11 +12798,18 @@ pub type report_zones_cb = ::core::option::Option<
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct block_device_operations {
-    pub submit_bio: ::core::option::Option<unsafe extern "C" fn(arg1: *mut bio) -> blk_qc_t>,
-    pub open: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut block_device, arg2: fmode_t) -> ::aya_bpf::cty::c_int,
+    pub submit_bio: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bio) -> blk_qc_t,
     >,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut gendisk, arg2: fmode_t)>,
+    pub open: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut block_device,
+            arg2: fmode_t,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut gendisk, arg2: fmode_t),
+    >,
     pub rw_page: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut block_device,
@@ -11815,7 +12840,8 @@ pub struct block_device_operations {
             arg2: ::aya_bpf::cty::c_uint,
         ) -> ::aya_bpf::cty::c_uint,
     >,
-    pub unlock_native_capacity: ::core::option::Option<unsafe extern "C" fn(arg1: *mut gendisk)>,
+    pub unlock_native_capacity:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut gendisk)>,
     pub getgeo: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut block_device,
@@ -11823,10 +12849,16 @@ pub struct block_device_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub set_read_only: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut block_device, arg2: bool_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut block_device,
+            arg2: bool_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub swap_slot_free_notify: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut block_device, arg2: ::aya_bpf::cty::c_ulong),
+        unsafe extern "C" fn(
+            arg1: *mut block_device,
+            arg2: ::aya_bpf::cty::c_ulong,
+        ),
     >,
     pub report_zones: ::core::option::Option<
         unsafe extern "C" fn(
@@ -11838,12 +12870,18 @@ pub struct block_device_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub devnode: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut gendisk, arg2: *mut umode_t) -> *mut ::aya_bpf::cty::c_char,
+        unsafe extern "C" fn(
+            arg1: *mut gendisk,
+            arg2: *mut umode_t,
+        ) -> *mut ::aya_bpf::cty::c_char,
     >,
     pub owner: *mut module,
     pub pr_ops: *const pr_ops,
     pub alternative_gpt_sector: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut gendisk, arg2: *mut sector_t) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut gendisk,
+            arg2: *mut sector_t,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -11884,12 +12922,14 @@ pub struct sbq_wait_state {
 impl sbq_wait_state {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
-pub type rq_end_io_fn =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut request, arg2: blk_status_t)>;
+pub type rq_end_io_fn = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut request, arg2: blk_status_t),
+>;
 pub type req_flags_t = __u32;
 pub mod mq_rq_state {
     pub type Type = ::aya_bpf::cty::c_uint;
@@ -11991,7 +13031,8 @@ pub struct elevator_mq_ops {
             arg2: *mut elevator_type,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub exit_sched: ::core::option::Option<unsafe extern "C" fn(arg1: *mut elevator_queue)>,
+    pub exit_sched:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut elevator_queue)>,
     pub init_hctx: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut blk_mq_hw_ctx,
@@ -11999,11 +13040,19 @@ pub struct elevator_mq_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub exit_hctx: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx, arg2: ::aya_bpf::cty::c_uint),
+        unsafe extern "C" fn(
+            arg1: *mut blk_mq_hw_ctx,
+            arg2: ::aya_bpf::cty::c_uint,
+        ),
     >,
-    pub depth_updated: ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx)>,
+    pub depth_updated:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx)>,
     pub allow_merge: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut request_queue, arg2: *mut request, arg3: *mut bio) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut request_queue,
+            arg2: *mut request,
+            arg3: *mut bio,
+        ) -> bool_,
     >,
     pub bio_merge: ::core::option::Option<
         unsafe extern "C" fn(
@@ -12020,33 +13069,63 @@ pub struct elevator_mq_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub request_merged: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut request_queue, arg2: *mut request, arg3: elv_merge::Type),
+        unsafe extern "C" fn(
+            arg1: *mut request_queue,
+            arg2: *mut request,
+            arg3: elv_merge::Type,
+        ),
     >,
     pub requests_merged: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut request_queue, arg2: *mut request, arg3: *mut request),
+        unsafe extern "C" fn(
+            arg1: *mut request_queue,
+            arg2: *mut request,
+            arg3: *mut request,
+        ),
     >,
     pub limit_depth: ::core::option::Option<
-        unsafe extern "C" fn(arg1: ::aya_bpf::cty::c_uint, arg2: *mut blk_mq_alloc_data),
+        unsafe extern "C" fn(
+            arg1: ::aya_bpf::cty::c_uint,
+            arg2: *mut blk_mq_alloc_data,
+        ),
     >,
-    pub prepare_request: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
-    pub finish_request: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
+    pub prepare_request:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
+    pub finish_request:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
     pub insert_requests: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx, arg2: *mut list_head, arg3: bool_),
+        unsafe extern "C" fn(
+            arg1: *mut blk_mq_hw_ctx,
+            arg2: *mut list_head,
+            arg3: bool_,
+        ),
     >,
-    pub dispatch_request:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx) -> *mut request>,
-    pub has_work: ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx) -> bool_>,
-    pub completed_request:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request, arg2: u64_)>,
-    pub requeue_request: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
+    pub dispatch_request: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx) -> *mut request,
+    >,
+    pub has_work: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx) -> bool_,
+    >,
+    pub completed_request: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut request, arg2: u64_),
+    >,
+    pub requeue_request:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
     pub former_request: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut request_queue, arg2: *mut request) -> *mut request,
+        unsafe extern "C" fn(
+            arg1: *mut request_queue,
+            arg2: *mut request,
+        ) -> *mut request,
     >,
     pub next_request: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut request_queue, arg2: *mut request) -> *mut request,
+        unsafe extern "C" fn(
+            arg1: *mut request_queue,
+            arg2: *mut request,
+        ) -> *mut request,
     >,
-    pub init_icq: ::core::option::Option<unsafe extern "C" fn(arg1: *mut io_cq)>,
-    pub exit_icq: ::core::option::Option<unsafe extern "C" fn(arg1: *mut io_cq)>,
+    pub init_icq:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut io_cq)>,
+    pub exit_icq:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut io_cq)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -12079,7 +13158,9 @@ pub struct elevator_queue {
 impl elevator_queue {
     #[inline]
     pub fn registered(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_registered(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -12092,7 +13173,8 @@ impl elevator_queue {
     pub fn new_bitfield_1(
         registered: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let registered: u32 = unsafe { ::core::mem::transmute(registered) };
             registered as u64
@@ -12153,25 +13235,34 @@ pub struct blk_mq_ops {
             arg2: *const blk_mq_queue_data,
         ) -> blk_status_t,
     >,
-    pub commit_rqs: ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx)>,
+    pub commit_rqs:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx)>,
     pub get_budget: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut request_queue) -> ::aya_bpf::cty::c_int,
     >,
     pub put_budget: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut request_queue, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut request_queue,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub set_rq_budget_token: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut request, arg2: ::aya_bpf::cty::c_int),
     >,
-    pub get_rq_budget_token:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request) -> ::aya_bpf::cty::c_int>,
+    pub get_rq_budget_token: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut request) -> ::aya_bpf::cty::c_int,
+    >,
     pub timeout: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut request, arg2: bool_) -> blk_eh_timer_return::Type,
+        unsafe extern "C" fn(
+            arg1: *mut request,
+            arg2: bool_,
+        ) -> blk_eh_timer_return::Type,
     >,
     pub poll: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx) -> ::aya_bpf::cty::c_int,
     >,
-    pub complete: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
+    pub complete:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
     pub init_hctx: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut blk_mq_hw_ctx,
@@ -12180,7 +13271,10 @@ pub struct blk_mq_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub exit_hctx: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut blk_mq_hw_ctx, arg2: ::aya_bpf::cty::c_uint),
+        unsafe extern "C" fn(
+            arg1: *mut blk_mq_hw_ctx,
+            arg2: ::aya_bpf::cty::c_uint,
+        ),
     >,
     pub init_request: ::core::option::Option<
         unsafe extern "C" fn(
@@ -12197,14 +13291,21 @@ pub struct blk_mq_ops {
             arg3: ::aya_bpf::cty::c_uint,
         ),
     >,
-    pub initialize_rq_fn: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
-    pub cleanup_rq: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
-    pub busy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request_queue) -> bool_>,
-    pub map_queues: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut blk_mq_tag_set) -> ::aya_bpf::cty::c_int,
+    pub initialize_rq_fn:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
+    pub cleanup_rq:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request)>,
+    pub busy: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut request_queue) -> bool_,
     >,
-    pub show_rq:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut request)>,
+    pub map_queues: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut blk_mq_tag_set,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub show_rq: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut request),
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -12261,7 +13362,10 @@ pub struct pr_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub pr_clear: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut block_device, arg2: u64_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut block_device,
+            arg2: u64_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -12407,7 +13511,9 @@ pub union fs_parameter__bindgen_ty_1 {
 impl fs_parameter {
     #[inline]
     pub fn type_(&self) -> fs_value_type::Type {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_type(&mut self, val: fs_value_type::Type) {
@@ -12417,8 +13523,11 @@ impl fs_parameter {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(type_: fs_value_type::Type) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        type_: fs_value_type::Type,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let type_: u32 = unsafe { ::core::mem::transmute(type_) };
             type_ as u64
@@ -12439,9 +13548,13 @@ pub struct fc_log {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct fs_context_operations {
-    pub free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut fs_context)>,
+    pub free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut fs_context)>,
     pub dup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut fs_context, arg2: *mut fs_context) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut fs_context,
+            arg2: *mut fs_context,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub parse_param: ::core::option::Option<
         unsafe extern "C" fn(
@@ -12548,7 +13661,9 @@ pub struct ptr_ring {
 pub struct page_pool {
     pub p: page_pool_params,
     pub release_dw: delayed_work,
-    pub disconnect: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub disconnect: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub defer_start: ::aya_bpf::cty::c_ulong,
     pub defer_warn: ::aya_bpf::cty::c_ulong,
     pub pages_state_hold_cnt: u32_,
@@ -12570,7 +13685,8 @@ pub struct page_pool {
 impl page_pool {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -12691,7 +13807,9 @@ pub union sock_common__bindgen_ty_8 {
 impl sock_common {
     #[inline]
     pub fn skc_reuse(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_skc_reuse(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -12702,7 +13820,9 @@ impl sock_common {
     }
     #[inline]
     pub fn skc_reuseport(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_skc_reuseport(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -12713,7 +13833,9 @@ impl sock_common {
     }
     #[inline]
     pub fn skc_ipv6only(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_skc_ipv6only(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -12724,7 +13846,9 @@ impl sock_common {
     }
     #[inline]
     pub fn skc_net_refcnt(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_skc_net_refcnt(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -12740,21 +13864,25 @@ impl sock_common {
         skc_ipv6only: ::aya_bpf::cty::c_uchar,
         skc_net_refcnt: ::aya_bpf::cty::c_uchar,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 4u8, {
             let skc_reuse: u8 = unsafe { ::core::mem::transmute(skc_reuse) };
             skc_reuse as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let skc_reuseport: u8 = unsafe { ::core::mem::transmute(skc_reuseport) };
+            let skc_reuseport: u8 =
+                unsafe { ::core::mem::transmute(skc_reuseport) };
             skc_reuseport as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let skc_ipv6only: u8 = unsafe { ::core::mem::transmute(skc_ipv6only) };
+            let skc_ipv6only: u8 =
+                unsafe { ::core::mem::transmute(skc_ipv6only) };
             skc_ipv6only as u64
         });
         __bindgen_bitfield_unit.set(6usize, 1u8, {
-            let skc_net_refcnt: u8 = unsafe { ::core::mem::transmute(skc_net_refcnt) };
+            let skc_net_refcnt: u8 =
+                unsafe { ::core::mem::transmute(skc_net_refcnt) };
             skc_net_refcnt as u64
         });
         __bindgen_bitfield_unit
@@ -12864,12 +13992,19 @@ pub struct sock {
     pub sk_security: *mut ::aya_bpf::cty::c_void,
     pub sk_cgrp_data: sock_cgroup_data,
     pub sk_memcg: *mut mem_cgroup,
-    pub sk_state_change: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub sk_data_ready: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub sk_write_space: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub sk_error_report: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sk_state_change:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sk_data_ready:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sk_write_space:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sk_error_report:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub sk_backlog_rcv: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sock, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sock,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub sk_validate_xmit_skb: ::core::option::Option<
         unsafe extern "C" fn(
@@ -12878,7 +14013,8 @@ pub struct sock {
             arg3: *mut sk_buff,
         ) -> *mut sk_buff,
     >,
-    pub sk_destruct: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sk_destruct:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub sk_reuseport_cb: *mut sock_reuseport,
     pub sk_bpf_storage: *mut bpf_local_storage,
     pub sk_rcu: callback_head,
@@ -12906,7 +14042,9 @@ pub union sock__bindgen_ty_3 {
 impl sock {
     #[inline]
     pub fn sk_padding(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_padding(&mut self, val: u8_) {
@@ -12917,7 +14055,9 @@ impl sock {
     }
     #[inline]
     pub fn sk_kern_sock(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_kern_sock(&mut self, val: u8_) {
@@ -12928,7 +14068,9 @@ impl sock {
     }
     #[inline]
     pub fn sk_no_check_tx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_no_check_tx(&mut self, val: u8_) {
@@ -12939,7 +14081,9 @@ impl sock {
     }
     #[inline]
     pub fn sk_no_check_rx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_no_check_rx(&mut self, val: u8_) {
@@ -12950,7 +14094,9 @@ impl sock {
     }
     #[inline]
     pub fn sk_userlocks(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_userlocks(&mut self, val: u8_) {
@@ -12967,32 +14113,39 @@ impl sock {
         sk_no_check_rx: u8_,
         sk_userlocks: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let sk_padding: u8 = unsafe { ::core::mem::transmute(sk_padding) };
             sk_padding as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let sk_kern_sock: u8 = unsafe { ::core::mem::transmute(sk_kern_sock) };
+            let sk_kern_sock: u8 =
+                unsafe { ::core::mem::transmute(sk_kern_sock) };
             sk_kern_sock as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let sk_no_check_tx: u8 = unsafe { ::core::mem::transmute(sk_no_check_tx) };
+            let sk_no_check_tx: u8 =
+                unsafe { ::core::mem::transmute(sk_no_check_tx) };
             sk_no_check_tx as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let sk_no_check_rx: u8 = unsafe { ::core::mem::transmute(sk_no_check_rx) };
+            let sk_no_check_rx: u8 =
+                unsafe { ::core::mem::transmute(sk_no_check_rx) };
             sk_no_check_rx as u64
         });
         __bindgen_bitfield_unit.set(4usize, 4u8, {
-            let sk_userlocks: u8 = unsafe { ::core::mem::transmute(sk_userlocks) };
+            let sk_userlocks: u8 =
+                unsafe { ::core::mem::transmute(sk_userlocks) };
             sk_userlocks as u64
         });
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn sk_txtime_deadline_mode(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_txtime_deadline_mode(&mut self, val: u8_) {
@@ -13003,7 +14156,9 @@ impl sock {
     }
     #[inline]
     pub fn sk_txtime_report_errors(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_txtime_report_errors(&mut self, val: u8_) {
@@ -13014,7 +14169,9 @@ impl sock {
     }
     #[inline]
     pub fn sk_txtime_unused(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(2usize, 6u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(2usize, 6u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sk_txtime_unused(&mut self, val: u8_) {
@@ -13029,7 +14186,8 @@ impl sock {
         sk_txtime_report_errors: u8_,
         sk_txtime_unused: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let sk_txtime_deadline_mode: u8 =
                 unsafe { ::core::mem::transmute(sk_txtime_deadline_mode) };
@@ -13041,7 +14199,8 @@ impl sock {
             sk_txtime_report_errors as u64
         });
         __bindgen_bitfield_unit.set(2usize, 6u8, {
-            let sk_txtime_unused: u8 = unsafe { ::core::mem::transmute(sk_txtime_unused) };
+            let sk_txtime_unused: u8 =
+                unsafe { ::core::mem::transmute(sk_txtime_unused) };
             sk_txtime_unused as u64
         });
         __bindgen_bitfield_unit
@@ -13059,10 +14218,18 @@ pub struct rhashtable_compare_arg {
     pub key: *const ::aya_bpf::cty::c_void,
 }
 pub type rht_hashfn_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *const ::aya_bpf::cty::c_void, arg2: u32_, arg3: u32_) -> u32_,
+    unsafe extern "C" fn(
+        arg1: *const ::aya_bpf::cty::c_void,
+        arg2: u32_,
+        arg3: u32_,
+    ) -> u32_,
 >;
 pub type rht_obj_hashfn_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *const ::aya_bpf::cty::c_void, arg2: u32_, arg3: u32_) -> u32_,
+    unsafe extern "C" fn(
+        arg1: *const ::aya_bpf::cty::c_void,
+        arg2: u32_,
+        arg3: u32_,
+    ) -> u32_,
 >;
 pub type rht_obj_cmpfn_t = ::core::option::Option<
     unsafe extern "C" fn(
@@ -13163,7 +14330,9 @@ pub union msghdr__bindgen_ty_1 {
 impl msghdr {
     #[inline]
     pub fn msg_control_is_user(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_msg_control_is_user(&mut self, val: bool_) {
@@ -13173,10 +14342,14 @@ impl msghdr {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(msg_control_is_user: bool_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        msg_control_is_user: bool_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let msg_control_is_user: u8 = unsafe { ::core::mem::transmute(msg_control_is_user) };
+            let msg_control_is_user: u8 =
+                unsafe { ::core::mem::transmute(msg_control_is_user) };
             msg_control_is_user as u64
         });
         __bindgen_bitfield_unit
@@ -13460,16 +14633,27 @@ pub struct tty_operations {
         ) -> *mut tty_struct,
     >,
     pub install: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tty_driver, arg2: *mut tty_struct) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut tty_driver,
+            arg2: *mut tty_struct,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub remove:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_driver, arg2: *mut tty_struct)>,
+    pub remove: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tty_driver, arg2: *mut tty_struct),
+    >,
     pub open: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut file) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut tty_struct,
+            arg2: *mut file,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub close: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut file)>,
-    pub shutdown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
-    pub cleanup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub close: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut file),
+    >,
+    pub shutdown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub cleanup:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
     pub write: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut tty_struct,
@@ -13483,7 +14667,8 @@ pub struct tty_operations {
             arg2: ::aya_bpf::cty::c_uchar,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub flush_chars: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub flush_chars:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
     pub write_room: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut tty_struct) -> ::aya_bpf::cty::c_uint,
     >,
@@ -13504,26 +14689,40 @@ pub struct tty_operations {
             arg3: ::aya_bpf::cty::c_ulong,
         ) -> ::aya_bpf::cty::c_long,
     >,
-    pub set_termios:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut ktermios)>,
-    pub throttle: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
-    pub unthrottle: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
-    pub stop: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
-    pub start: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
-    pub hangup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub set_termios: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut ktermios),
+    >,
+    pub throttle:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub unthrottle:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub stop:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub start:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub hangup:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
     pub break_ctl: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut tty_struct,
             arg2: ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub flush_buffer: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
-    pub set_ldisc: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub flush_buffer:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub set_ldisc:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
     pub wait_until_sent: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut tty_struct,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub send_xchar: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: ::aya_bpf::cty::c_char),
+        unsafe extern "C" fn(
+            arg1: *mut tty_struct,
+            arg2: ::aya_bpf::cty::c_char,
+        ),
     >,
     pub tiocmget: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut tty_struct) -> ::aya_bpf::cty::c_int,
@@ -13536,7 +14735,10 @@ pub struct tty_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub resize: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut winsize) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut tty_struct,
+            arg2: *mut winsize,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_icount: ::core::option::Option<
         unsafe extern "C" fn(
@@ -13556,8 +14758,9 @@ pub struct tty_operations {
             arg2: *mut serial_struct,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub show_fdinfo:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut seq_file)>,
+    pub show_fdinfo: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut seq_file),
+    >,
     pub proc_show: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut seq_file,
@@ -13619,7 +14822,9 @@ pub struct tty_port {
 impl tty_port {
     #[inline]
     pub fn console(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_console(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -13629,8 +14834,11 @@ impl tty_port {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(console: ::aya_bpf::cty::c_uchar) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        console: ::aya_bpf::cty::c_uchar,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let console: u8 = unsafe { ::core::mem::transmute(console) };
             console as u64
@@ -13647,8 +14855,10 @@ pub struct tty_ldisc_ops {
     pub open: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut tty_struct) -> ::aya_bpf::cty::c_int,
     >,
-    pub close: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
-    pub flush_buffer: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub close:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub flush_buffer:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
     pub read: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut tty_struct,
@@ -13683,8 +14893,9 @@ pub struct tty_ldisc_ops {
             arg4: ::aya_bpf::cty::c_ulong,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub set_termios:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut ktermios)>,
+    pub set_termios: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: *mut ktermios),
+    >,
     pub poll: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut tty_struct,
@@ -13703,9 +14914,13 @@ pub struct tty_ldisc_ops {
             arg4: ::aya_bpf::cty::c_int,
         ),
     >,
-    pub write_wakeup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
+    pub write_wakeup:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_struct)>,
     pub dcd_change: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tty_struct, arg2: ::aya_bpf::cty::c_uint),
+        unsafe extern "C" fn(
+            arg1: *mut tty_struct,
+            arg2: ::aya_bpf::cty::c_uint,
+        ),
     >,
     pub receive_buf2: ::core::option::Option<
         unsafe extern "C" fn(
@@ -13726,16 +14941,22 @@ pub struct tty_ldisc {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct tty_port_operations {
-    pub carrier_raised:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_port) -> ::aya_bpf::cty::c_int>,
+    pub carrier_raised: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tty_port) -> ::aya_bpf::cty::c_int,
+    >,
     pub dtr_rts: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut tty_port, arg2: ::aya_bpf::cty::c_int),
     >,
-    pub shutdown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_port)>,
+    pub shutdown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_port)>,
     pub activate: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tty_port, arg2: *mut tty_struct) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut tty_port,
+            arg2: *mut tty_struct,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub destruct: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_port)>,
+    pub destruct:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_port)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -13748,7 +14969,8 @@ pub struct tty_port_client_operations {
             arg4: size_t,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub write_wakeup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_port)>,
+    pub write_wakeup:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tty_port)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -13972,10 +15194,14 @@ pub struct netns_ipv4 {
 pub struct dst_ops {
     pub family: ::aya_bpf::cty::c_ushort,
     pub gc_thresh: ::aya_bpf::cty::c_uint,
-    pub gc:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dst_ops) -> ::aya_bpf::cty::c_int>,
+    pub gc: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dst_ops) -> ::aya_bpf::cty::c_int,
+    >,
     pub check: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dst_entry, arg2: __u32) -> *mut dst_entry,
+        unsafe extern "C" fn(
+            arg1: *mut dst_entry,
+            arg2: __u32,
+        ) -> *mut dst_entry,
     >,
     pub default_advmss: ::core::option::Option<
         unsafe extern "C" fn(arg1: *const dst_entry) -> ::aya_bpf::cty::c_uint,
@@ -13984,9 +15210,13 @@ pub struct dst_ops {
         unsafe extern "C" fn(arg1: *const dst_entry) -> ::aya_bpf::cty::c_uint,
     >,
     pub cow_metrics: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dst_entry, arg2: ::aya_bpf::cty::c_ulong) -> *mut u32_,
+        unsafe extern "C" fn(
+            arg1: *mut dst_entry,
+            arg2: ::aya_bpf::cty::c_ulong,
+        ) -> *mut u32_,
     >,
-    pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dst_entry)>,
+    pub destroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dst_entry)>,
     pub ifdown: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut dst_entry,
@@ -13994,9 +15224,11 @@ pub struct dst_ops {
             arg3: ::aya_bpf::cty::c_int,
         ),
     >,
-    pub negative_advice:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dst_entry) -> *mut dst_entry>,
-    pub link_failure: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff)>,
+    pub negative_advice: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dst_entry) -> *mut dst_entry,
+    >,
+    pub link_failure:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff)>,
     pub update_pmtu: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut dst_entry,
@@ -14007,7 +15239,11 @@ pub struct dst_ops {
         ),
     >,
     pub redirect: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dst_entry, arg2: *mut sock, arg3: *mut sk_buff),
+        unsafe extern "C" fn(
+            arg1: *mut dst_entry,
+            arg2: *mut sock,
+            arg3: *mut sk_buff,
+        ),
     >,
     pub local_out: ::core::option::Option<
         unsafe extern "C" fn(
@@ -14024,7 +15260,10 @@ pub struct dst_ops {
         ) -> *mut neighbour,
     >,
     pub confirm_neigh: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const dst_entry, arg2: *const ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *const dst_entry,
+            arg2: *const ::aya_bpf::cty::c_void,
+        ),
     >,
     pub kmem_cachep: *mut kmem_cache,
     pub pcpuc_entries: percpu_counter,
@@ -14034,7 +15273,8 @@ pub struct dst_ops {
 impl dst_ops {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -14358,12 +15598,14 @@ pub struct netns_xfrm {
 impl netns_xfrm {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -14520,12 +15762,14 @@ pub struct net {
 impl net {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -14546,7 +15790,9 @@ pub struct bpf_insn {
 impl bpf_insn {
     #[inline]
     pub fn dst_reg(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_dst_reg(&mut self, val: __u8) {
@@ -14557,7 +15803,9 @@ impl bpf_insn {
     }
     #[inline]
     pub fn src_reg(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_src_reg(&mut self, val: __u8) {
@@ -14567,8 +15815,12 @@ impl bpf_insn {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(dst_reg: __u8, src_reg: __u8) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        dst_reg: __u8,
+        src_reg: __u8,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 4u8, {
             let dst_reg: u8 = unsafe { ::core::mem::transmute(dst_reg) };
             dst_reg as u64
@@ -14982,7 +16234,9 @@ pub union sockptr_t__bindgen_ty_1 {
 impl sockptr_t {
     #[inline]
     pub fn is_kernel(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_kernel(&mut self, val: bool_) {
@@ -14992,8 +16246,11 @@ impl sockptr_t {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(is_kernel: bool_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        is_kernel: bool_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let is_kernel: u8 = unsafe { ::core::mem::transmute(is_kernel) };
             is_kernel as u64
@@ -15012,8 +16269,9 @@ pub type bpf_iter_init_seq_priv_t = ::core::option::Option<
 pub struct bpf_iter_aux_info {
     pub map: *mut bpf_map,
 }
-pub type bpf_iter_fini_seq_priv_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>;
+pub type bpf_iter_fini_seq_priv_t = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct bpf_iter_seq_info {
@@ -15025,13 +16283,17 @@ pub struct bpf_iter_seq_info {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct bpf_map_ops {
-    pub map_alloc_check:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_attr) -> ::aya_bpf::cty::c_int>,
-    pub map_alloc:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_attr) -> *mut bpf_map>,
-    pub map_release:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_map, arg2: *mut file)>,
-    pub map_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_map)>,
+    pub map_alloc_check: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bpf_attr) -> ::aya_bpf::cty::c_int,
+    >,
+    pub map_alloc: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bpf_attr) -> *mut bpf_map,
+    >,
+    pub map_release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bpf_map, arg2: *mut file),
+    >,
+    pub map_free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_map)>,
     pub map_get_next_key: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut bpf_map,
@@ -15039,7 +16301,8 @@ pub struct bpf_map_ops {
             arg3: *mut ::aya_bpf::cty::c_void,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub map_release_uref: ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_map)>,
+    pub map_release_uref:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_map)>,
     pub map_lookup_elem_sys_only: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut bpf_map,
@@ -15128,13 +16391,18 @@ pub struct bpf_map_ops {
             arg3: ::aya_bpf::cty::c_int,
         ) -> *mut ::aya_bpf::cty::c_void,
     >,
-    pub map_fd_put_ptr:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
-    pub map_gen_lookup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut bpf_map, arg2: *mut bpf_insn) -> ::aya_bpf::cty::c_int,
+    pub map_fd_put_ptr: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
     >,
-    pub map_fd_sys_lookup_elem:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> u32_>,
+    pub map_gen_lookup: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut bpf_map,
+            arg2: *mut bpf_insn,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub map_fd_sys_lookup_elem: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> u32_,
+    >,
     pub map_seq_show_elem: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut bpf_map,
@@ -15151,10 +16419,14 @@ pub struct bpf_map_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub map_poke_track: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut bpf_map, arg2: *mut bpf_prog_aux) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut bpf_map,
+            arg2: *mut bpf_prog_aux,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub map_poke_untrack:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_map, arg2: *mut bpf_prog_aux)>,
+    pub map_poke_untrack: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bpf_map, arg2: *mut bpf_prog_aux),
+    >,
     pub map_poke_run: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut bpf_map,
@@ -15205,13 +16477,22 @@ pub struct bpf_map_ops {
         ),
     >,
     pub map_owner_storage_ptr: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> *mut *mut bpf_local_storage,
+        unsafe extern "C" fn(
+            arg1: *mut ::aya_bpf::cty::c_void,
+        ) -> *mut *mut bpf_local_storage,
     >,
     pub map_redirect: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut bpf_map, arg2: u32_, arg3: u64_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut bpf_map,
+            arg2: u32_,
+            arg3: u64_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub map_meta_equal: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const bpf_map, arg2: *const bpf_map) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *const bpf_map,
+            arg2: *const bpf_map,
+        ) -> bool_,
     >,
     pub map_set_for_each_callback_args: ::core::option::Option<
         unsafe extern "C" fn(
@@ -15268,7 +16549,8 @@ pub struct bpf_map {
 impl bpf_map {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -15432,7 +16714,9 @@ pub struct bpf_prog {
 impl bpf_prog {
     #[inline]
     pub fn jited(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_jited(&mut self, val: u16_) {
@@ -15443,7 +16727,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn jit_requested(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_jit_requested(&mut self, val: u16_) {
@@ -15454,7 +16740,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn gpl_compatible(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_gpl_compatible(&mut self, val: u16_) {
@@ -15465,7 +16753,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn cb_access(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_cb_access(&mut self, val: u16_) {
@@ -15476,7 +16766,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn dst_needed(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_dst_needed(&mut self, val: u16_) {
@@ -15487,7 +16779,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn blinded(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_blinded(&mut self, val: u16_) {
@@ -15498,7 +16792,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn is_func(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_is_func(&mut self, val: u16_) {
@@ -15509,7 +16805,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn kprobe_override(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_kprobe_override(&mut self, val: u16_) {
@@ -15520,7 +16818,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn has_callchain_buf(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_has_callchain_buf(&mut self, val: u16_) {
@@ -15531,7 +16831,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn enforce_expected_attach_type(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_enforce_expected_attach_type(&mut self, val: u16_) {
@@ -15542,7 +16844,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn call_get_stack(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_call_get_stack(&mut self, val: u16_) {
@@ -15553,7 +16857,9 @@ impl bpf_prog {
     }
     #[inline]
     pub fn call_get_func_ip(&self) -> u16_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u16) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u16)
+        }
     }
     #[inline]
     pub fn set_call_get_func_ip(&mut self, val: u16_) {
@@ -15577,17 +16883,20 @@ impl bpf_prog {
         call_get_stack: u16_,
         call_get_func_ip: u16_,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let jited: u16 = unsafe { ::core::mem::transmute(jited) };
             jited as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let jit_requested: u16 = unsafe { ::core::mem::transmute(jit_requested) };
+            let jit_requested: u16 =
+                unsafe { ::core::mem::transmute(jit_requested) };
             jit_requested as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let gpl_compatible: u16 = unsafe { ::core::mem::transmute(gpl_compatible) };
+            let gpl_compatible: u16 =
+                unsafe { ::core::mem::transmute(gpl_compatible) };
             gpl_compatible as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
@@ -15607,11 +16916,13 @@ impl bpf_prog {
             is_func as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
-            let kprobe_override: u16 = unsafe { ::core::mem::transmute(kprobe_override) };
+            let kprobe_override: u16 =
+                unsafe { ::core::mem::transmute(kprobe_override) };
             kprobe_override as u64
         });
         __bindgen_bitfield_unit.set(8usize, 1u8, {
-            let has_callchain_buf: u16 = unsafe { ::core::mem::transmute(has_callchain_buf) };
+            let has_callchain_buf: u16 =
+                unsafe { ::core::mem::transmute(has_callchain_buf) };
             has_callchain_buf as u64
         });
         __bindgen_bitfield_unit.set(9usize, 1u8, {
@@ -15620,11 +16931,13 @@ impl bpf_prog {
             enforce_expected_attach_type as u64
         });
         __bindgen_bitfield_unit.set(10usize, 1u8, {
-            let call_get_stack: u16 = unsafe { ::core::mem::transmute(call_get_stack) };
+            let call_get_stack: u16 =
+                unsafe { ::core::mem::transmute(call_get_stack) };
             call_get_stack as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
-            let call_get_func_ip: u16 = unsafe { ::core::mem::transmute(call_get_func_ip) };
+            let call_get_func_ip: u16 =
+                unsafe { ::core::mem::transmute(call_get_func_ip) };
             call_get_func_ip as u64
         });
         __bindgen_bitfield_unit
@@ -15676,7 +16989,8 @@ pub struct bpf_offloaded_map {
 impl bpf_offloaded_map {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -15737,8 +17051,9 @@ pub mod rx_handler_result {
     pub const RX_HANDLER_PASS: Type = 3;
 }
 pub use self::rx_handler_result::Type as rx_handler_result_t;
-pub type rx_handler_func_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut *mut sk_buff) -> rx_handler_result_t>;
+pub type rx_handler_func_t = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut *mut sk_buff) -> rx_handler_result_t,
+>;
 pub mod netdev_ml_priv_type {
     pub type Type = ::aya_bpf::cty::c_uint;
     pub const ML_PRIV_NONE: Type = 0;
@@ -15906,7 +17221,8 @@ pub struct net_device {
     pub _bitfield_align_3: [u16; 0],
     pub _bitfield_3: __BindgenBitfieldUnit<[u8; 2usize]>,
     pub needs_free_netdev: bool_,
-    pub priv_destructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub priv_destructor:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
     pub npinfo: *mut netpoll_info,
     pub nd_net: possible_net_t,
     pub ml_priv: *mut ::aya_bpf::cty::c_void,
@@ -15971,7 +17287,9 @@ pub union net_device__bindgen_ty_4 {
 impl net_device {
     #[inline]
     pub fn reg_state(&self) -> net_device__bindgen_ty_2::Type {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(0usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(0usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_reg_state(&mut self, val: net_device__bindgen_ty_2::Type) {
@@ -15984,7 +17302,8 @@ impl net_device {
     pub fn new_bitfield_2(
         reg_state: net_device__bindgen_ty_2::Type,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let reg_state: u32 = unsafe { ::core::mem::transmute(reg_state) };
             reg_state as u64
@@ -15993,7 +17312,9 @@ impl net_device {
     }
     #[inline]
     pub fn rtnl_link_state(&self) -> net_device__bindgen_ty_3::Type {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(0usize, 16u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(0usize, 16u8) as u32)
+        }
     }
     #[inline]
     pub fn set_rtnl_link_state(&mut self, val: net_device__bindgen_ty_3::Type) {
@@ -16006,16 +17327,20 @@ impl net_device {
     pub fn new_bitfield_3(
         rtnl_link_state: net_device__bindgen_ty_3::Type,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 16u8, {
-            let rtnl_link_state: u32 = unsafe { ::core::mem::transmute(rtnl_link_state) };
+            let rtnl_link_state: u32 =
+                unsafe { ::core::mem::transmute(rtnl_link_state) };
             rtnl_link_state as u64
         });
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn wol_enabled(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_4.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_4.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_wol_enabled(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -16026,7 +17351,9 @@ impl net_device {
     }
     #[inline]
     pub fn threaded(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_4.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_4.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_threaded(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -16040,9 +17367,11 @@ impl net_device {
         wol_enabled: ::aya_bpf::cty::c_uint,
         threaded: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let wol_enabled: u32 = unsafe { ::core::mem::transmute(wol_enabled) };
+            let wol_enabled: u32 =
+                unsafe { ::core::mem::transmute(wol_enabled) };
             wol_enabled as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -16053,7 +17382,8 @@ impl net_device {
     }
     #[inline]
     pub fn new_bitfield_5() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -16298,7 +17628,8 @@ pub union sk_buff__bindgen_ty_4 {
 #[derive(Debug, Copy, Clone)]
 pub struct sk_buff__bindgen_ty_4__bindgen_ty_1 {
     pub _skb_refdst: ::aya_bpf::cty::c_ulong,
-    pub destructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff)>,
+    pub destructor:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff)>,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -16333,7 +17664,9 @@ pub union sk_buff__bindgen_ty_8 {
 impl sk_buff {
     #[inline]
     pub fn cloned(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_cloned(&mut self, val: __u8) {
@@ -16344,7 +17677,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn nohdr(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_nohdr(&mut self, val: __u8) {
@@ -16355,7 +17690,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn fclone(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fclone(&mut self, val: __u8) {
@@ -16366,7 +17703,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn peeked(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_peeked(&mut self, val: __u8) {
@@ -16377,7 +17716,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn head_frag(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_head_frag(&mut self, val: __u8) {
@@ -16388,7 +17729,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn pfmemalloc(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_pfmemalloc(&mut self, val: __u8) {
@@ -16399,7 +17742,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn pp_recycle(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_pp_recycle(&mut self, val: __u8) {
@@ -16418,7 +17763,8 @@ impl sk_buff {
         pfmemalloc: __u8,
         pp_recycle: __u8,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let cloned: u8 = unsafe { ::core::mem::transmute(cloned) };
             cloned as u64
@@ -16451,7 +17797,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn pkt_type(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(0usize, 3u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(0usize, 3u8) as u8)
+        }
     }
     #[inline]
     pub fn set_pkt_type(&mut self, val: __u8) {
@@ -16462,7 +17810,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn ignore_df(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ignore_df(&mut self, val: __u8) {
@@ -16473,7 +17823,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn nf_trace(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_nf_trace(&mut self, val: __u8) {
@@ -16484,7 +17836,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn ip_summed(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(5usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(5usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ip_summed(&mut self, val: __u8) {
@@ -16495,7 +17849,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn ooo_okay(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(7usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(7usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ooo_okay(&mut self, val: __u8) {
@@ -16506,7 +17862,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn l4_hash(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(8usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(8usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_l4_hash(&mut self, val: __u8) {
@@ -16517,7 +17875,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn sw_hash(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(9usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(9usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sw_hash(&mut self, val: __u8) {
@@ -16528,7 +17888,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn wifi_acked_valid(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(10usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(10usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_wifi_acked_valid(&mut self, val: __u8) {
@@ -16539,7 +17901,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn wifi_acked(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(11usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(11usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_wifi_acked(&mut self, val: __u8) {
@@ -16550,7 +17914,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn no_fcs(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(12usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(12usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_no_fcs(&mut self, val: __u8) {
@@ -16561,7 +17927,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn encapsulation(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(13usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(13usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_encapsulation(&mut self, val: __u8) {
@@ -16572,7 +17940,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn encap_hdr_csum(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(14usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(14usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_encap_hdr_csum(&mut self, val: __u8) {
@@ -16583,7 +17953,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn csum_valid(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(15usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(15usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_csum_valid(&mut self, val: __u8) {
@@ -16608,7 +17980,8 @@ impl sk_buff {
         encap_hdr_csum: __u8,
         csum_valid: __u8,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 3u8, {
             let pkt_type: u8 = unsafe { ::core::mem::transmute(pkt_type) };
             pkt_type as u64
@@ -16638,7 +18011,8 @@ impl sk_buff {
             sw_hash as u64
         });
         __bindgen_bitfield_unit.set(10usize, 1u8, {
-            let wifi_acked_valid: u8 = unsafe { ::core::mem::transmute(wifi_acked_valid) };
+            let wifi_acked_valid: u8 =
+                unsafe { ::core::mem::transmute(wifi_acked_valid) };
             wifi_acked_valid as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
@@ -16650,11 +18024,13 @@ impl sk_buff {
             no_fcs as u64
         });
         __bindgen_bitfield_unit.set(13usize, 1u8, {
-            let encapsulation: u8 = unsafe { ::core::mem::transmute(encapsulation) };
+            let encapsulation: u8 =
+                unsafe { ::core::mem::transmute(encapsulation) };
             encapsulation as u64
         });
         __bindgen_bitfield_unit.set(14usize, 1u8, {
-            let encap_hdr_csum: u8 = unsafe { ::core::mem::transmute(encap_hdr_csum) };
+            let encap_hdr_csum: u8 =
+                unsafe { ::core::mem::transmute(encap_hdr_csum) };
             encap_hdr_csum as u64
         });
         __bindgen_bitfield_unit.set(15usize, 1u8, {
@@ -16665,7 +18041,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn vlan_present(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_vlan_present(&mut self, val: __u8) {
@@ -16676,7 +18054,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn csum_complete_sw(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_csum_complete_sw(&mut self, val: __u8) {
@@ -16687,7 +18067,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn csum_level(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(2usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(2usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_csum_level(&mut self, val: __u8) {
@@ -16698,7 +18080,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn csum_not_inet(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_csum_not_inet(&mut self, val: __u8) {
@@ -16709,7 +18093,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn dst_pending_confirm(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(5usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(5usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_dst_pending_confirm(&mut self, val: __u8) {
@@ -16720,7 +18106,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn ndisc_nodetype(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(6usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(6usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ndisc_nodetype(&mut self, val: __u8) {
@@ -16731,7 +18119,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn ipvs_property(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(8usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(8usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ipvs_property(&mut self, val: __u8) {
@@ -16742,7 +18132,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn inner_protocol_type(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(9usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(9usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_inner_protocol_type(&mut self, val: __u8) {
@@ -16753,7 +18145,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn remcsum_offload(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(10usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(10usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_remcsum_offload(&mut self, val: __u8) {
@@ -16764,7 +18158,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn offload_fwd_mark(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(11usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(11usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_offload_fwd_mark(&mut self, val: __u8) {
@@ -16775,7 +18171,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn offload_l3_fwd_mark(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(12usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(12usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_offload_l3_fwd_mark(&mut self, val: __u8) {
@@ -16786,7 +18184,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn tc_skip_classify(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(13usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(13usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_tc_skip_classify(&mut self, val: __u8) {
@@ -16797,7 +18197,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn tc_at_ingress(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(14usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(14usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_tc_at_ingress(&mut self, val: __u8) {
@@ -16808,7 +18210,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn redirected(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(15usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(15usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_redirected(&mut self, val: __u8) {
@@ -16819,7 +18223,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn from_ingress(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(16usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(16usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_from_ingress(&mut self, val: __u8) {
@@ -16830,7 +18236,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn decrypted(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(17usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(17usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_decrypted(&mut self, val: __u8) {
@@ -16841,7 +18249,9 @@ impl sk_buff {
     }
     #[inline]
     pub fn slow_gro(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_3.get(18usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_3.get(18usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_slow_gro(&mut self, val: __u8) {
@@ -16870,13 +18280,16 @@ impl sk_buff {
         decrypted: __u8,
         slow_gro: __u8,
     ) -> __BindgenBitfieldUnit<[u8; 3usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let vlan_present: u8 = unsafe { ::core::mem::transmute(vlan_present) };
+            let vlan_present: u8 =
+                unsafe { ::core::mem::transmute(vlan_present) };
             vlan_present as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let csum_complete_sw: u8 = unsafe { ::core::mem::transmute(csum_complete_sw) };
+            let csum_complete_sw: u8 =
+                unsafe { ::core::mem::transmute(csum_complete_sw) };
             csum_complete_sw as u64
         });
         __bindgen_bitfield_unit.set(2usize, 2u8, {
@@ -16884,43 +18297,53 @@ impl sk_buff {
             csum_level as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let csum_not_inet: u8 = unsafe { ::core::mem::transmute(csum_not_inet) };
+            let csum_not_inet: u8 =
+                unsafe { ::core::mem::transmute(csum_not_inet) };
             csum_not_inet as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let dst_pending_confirm: u8 = unsafe { ::core::mem::transmute(dst_pending_confirm) };
+            let dst_pending_confirm: u8 =
+                unsafe { ::core::mem::transmute(dst_pending_confirm) };
             dst_pending_confirm as u64
         });
         __bindgen_bitfield_unit.set(6usize, 2u8, {
-            let ndisc_nodetype: u8 = unsafe { ::core::mem::transmute(ndisc_nodetype) };
+            let ndisc_nodetype: u8 =
+                unsafe { ::core::mem::transmute(ndisc_nodetype) };
             ndisc_nodetype as u64
         });
         __bindgen_bitfield_unit.set(8usize, 1u8, {
-            let ipvs_property: u8 = unsafe { ::core::mem::transmute(ipvs_property) };
+            let ipvs_property: u8 =
+                unsafe { ::core::mem::transmute(ipvs_property) };
             ipvs_property as u64
         });
         __bindgen_bitfield_unit.set(9usize, 1u8, {
-            let inner_protocol_type: u8 = unsafe { ::core::mem::transmute(inner_protocol_type) };
+            let inner_protocol_type: u8 =
+                unsafe { ::core::mem::transmute(inner_protocol_type) };
             inner_protocol_type as u64
         });
         __bindgen_bitfield_unit.set(10usize, 1u8, {
-            let remcsum_offload: u8 = unsafe { ::core::mem::transmute(remcsum_offload) };
+            let remcsum_offload: u8 =
+                unsafe { ::core::mem::transmute(remcsum_offload) };
             remcsum_offload as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
-            let offload_fwd_mark: u8 = unsafe { ::core::mem::transmute(offload_fwd_mark) };
+            let offload_fwd_mark: u8 =
+                unsafe { ::core::mem::transmute(offload_fwd_mark) };
             offload_fwd_mark as u64
         });
         __bindgen_bitfield_unit.set(12usize, 1u8, {
-            let offload_l3_fwd_mark: u8 = unsafe { ::core::mem::transmute(offload_l3_fwd_mark) };
+            let offload_l3_fwd_mark: u8 =
+                unsafe { ::core::mem::transmute(offload_l3_fwd_mark) };
             offload_l3_fwd_mark as u64
         });
         __bindgen_bitfield_unit.set(13usize, 1u8, {
-            let tc_skip_classify: u8 = unsafe { ::core::mem::transmute(tc_skip_classify) };
+            let tc_skip_classify: u8 =
+                unsafe { ::core::mem::transmute(tc_skip_classify) };
             tc_skip_classify as u64
         });
         __bindgen_bitfield_unit.set(14usize, 1u8, {
-            let tc_at_ingress: u8 = unsafe { ::core::mem::transmute(tc_at_ingress) };
+            let tc_at_ingress: u8 =
+                unsafe { ::core::mem::transmute(tc_at_ingress) };
             tc_at_ingress as u64
         });
         __bindgen_bitfield_unit.set(15usize, 1u8, {
@@ -16928,7 +18351,8 @@ impl sk_buff {
             redirected as u64
         });
         __bindgen_bitfield_unit.set(16usize, 1u8, {
-            let from_ingress: u8 = unsafe { ::core::mem::transmute(from_ingress) };
+            let from_ingress: u8 =
+                unsafe { ::core::mem::transmute(from_ingress) };
             from_ingress as u64
         });
         __bindgen_bitfield_unit.set(17usize, 1u8, {
@@ -17127,12 +18551,14 @@ pub struct fqdir {
 impl fqdir {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_3() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -17141,10 +18567,16 @@ impl fqdir {
 pub struct inet_frags {
     pub qsize: ::aya_bpf::cty::c_uint,
     pub constructor: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inet_frag_queue, arg2: *const ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut inet_frag_queue,
+            arg2: *const ::aya_bpf::cty::c_void,
+        ),
     >,
-    pub destructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inet_frag_queue)>,
-    pub frag_expire: ::core::option::Option<unsafe extern "C" fn(arg1: *mut timer_list)>,
+    pub destructor: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut inet_frag_queue),
+    >,
+    pub frag_expire:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut timer_list)>,
     pub frags_cachep: *mut kmem_cache,
     pub frags_cache_name: *const ::aya_bpf::cty::c_char,
     pub rhash_params: rhashtable_params,
@@ -17236,8 +18668,9 @@ pub struct fib_rules_ops {
             arg5: *mut netlink_ext_ack,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub delete:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut fib_rule) -> ::aya_bpf::cty::c_int>,
+    pub delete: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut fib_rule) -> ::aya_bpf::cty::c_int,
+    >,
     pub compare: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut fib_rule,
@@ -17252,8 +18685,11 @@ pub struct fib_rules_ops {
             arg3: *mut fib_rule_hdr,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub nlmsg_payload: ::core::option::Option<unsafe extern "C" fn(arg1: *mut fib_rule) -> size_t>,
-    pub flush_cache: ::core::option::Option<unsafe extern "C" fn(arg1: *mut fib_rules_ops)>,
+    pub nlmsg_payload: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut fib_rule) -> size_t,
+    >,
+    pub flush_cache:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut fib_rules_ops)>,
     pub nlgroup: ::aya_bpf::cty::c_int,
     pub policy: *const nla_policy,
     pub rules_list: list_head,
@@ -17273,20 +18709,32 @@ pub mod tcp_ca_event {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct tcp_congestion_ops {
-    pub ssthresh: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
-    pub cong_avoid:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: u32_, arg3: u32_)>,
-    pub set_state: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: u8_)>,
-    pub cwnd_event:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: tcp_ca_event::Type)>,
-    pub in_ack_event: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: u32_)>,
-    pub pkts_acked:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: *const ack_sample)>,
-    pub min_tso_segs: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
-    pub cong_control:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: *const rate_sample)>,
-    pub undo_cwnd: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
-    pub sndbuf_expand: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
+    pub ssthresh:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
+    pub cong_avoid: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: u32_, arg3: u32_),
+    >,
+    pub set_state: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: u8_),
+    >,
+    pub cwnd_event: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: tcp_ca_event::Type),
+    >,
+    pub in_ack_event: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: u32_),
+    >,
+    pub pkts_acked: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: *const ack_sample),
+    >,
+    pub min_tso_segs:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
+    pub cong_control: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: *const rate_sample),
+    >,
+    pub undo_cwnd:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
+    pub sndbuf_expand:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> u32_>,
     pub get_info: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut sock,
@@ -17310,8 +18758,9 @@ pub struct tcp_congestion_ops {
 pub struct fib_notifier_ops {
     pub family: ::aya_bpf::cty::c_int,
     pub list: list_head,
-    pub fib_seq_read:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net) -> ::aya_bpf::cty::c_uint>,
+    pub fib_seq_read: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net) -> ::aya_bpf::cty::c_uint,
+    >,
     pub fib_dump: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net,
@@ -17330,8 +18779,9 @@ pub struct dst_entry {
     pub _metrics: ::aya_bpf::cty::c_ulong,
     pub expires: ::aya_bpf::cty::c_ulong,
     pub xfrm: *mut xfrm_state,
-    pub input:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff) -> ::aya_bpf::cty::c_int>,
+    pub input: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+    >,
     pub output: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net,
@@ -17384,7 +18834,10 @@ pub struct neighbour {
     pub ha: [::aya_bpf::cty::c_uchar; 32usize],
     pub hh: hh_cache,
     pub output: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut neighbour, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut neighbour,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ops: *const neigh_ops,
     pub gc_list: list_head,
@@ -17395,7 +18848,8 @@ pub struct neighbour {
 impl neighbour {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -17543,7 +18997,8 @@ pub struct socket_wq {
 impl socket_wq {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -17563,7 +19018,8 @@ pub struct socket {
 impl socket {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -17580,8 +19036,9 @@ pub type sk_read_actor_t = ::core::option::Option<
 pub struct proto_ops {
     pub family: ::aya_bpf::cty::c_int,
     pub owner: *mut module,
-    pub release:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut socket) -> ::aya_bpf::cty::c_int>,
+    pub release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut socket) -> ::aya_bpf::cty::c_int,
+    >,
     pub bind: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut socket,
@@ -17598,7 +19055,10 @@ pub struct proto_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub socketpair: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut socket, arg2: *mut socket) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut socket,
+            arg2: *mut socket,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub accept: ::core::option::Option<
         unsafe extern "C" fn(
@@ -17674,8 +19134,9 @@ pub struct proto_ops {
             arg5: *mut ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub show_fdinfo:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut socket)>,
+    pub show_fdinfo: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut socket),
+    >,
     pub sendmsg: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut socket,
@@ -17717,10 +19178,14 @@ pub struct proto_ops {
         ) -> ssize_t,
     >,
     pub set_peek_off: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sock,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub peek_len:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut socket) -> ::aya_bpf::cty::c_int>,
+    pub peek_len: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut socket) -> ::aya_bpf::cty::c_int,
+    >,
     pub read_sock: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut sock,
@@ -17745,7 +19210,10 @@ pub struct proto_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub set_rcvlowat: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sock,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -17768,13 +19236,22 @@ pub struct pipe_buf_operations {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub release: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut pipe_inode_info, arg2: *mut pipe_buffer),
+        unsafe extern "C" fn(
+            arg1: *mut pipe_inode_info,
+            arg2: *mut pipe_buffer,
+        ),
     >,
     pub try_steal: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut pipe_inode_info, arg2: *mut pipe_buffer) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut pipe_inode_info,
+            arg2: *mut pipe_buffer,
+        ) -> bool_,
     >,
     pub get: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut pipe_inode_info, arg2: *mut pipe_buffer) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut pipe_inode_info,
+            arg2: *mut pipe_buffer,
+        ) -> bool_,
     >,
 }
 #[repr(C)]
@@ -17790,7 +19267,8 @@ pub struct skb_ext {
 impl skb_ext {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 7usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 7usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 7usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -17818,7 +19296,8 @@ pub struct dql {
 impl dql {
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -17915,10 +19394,16 @@ pub struct dcb_peer_app_info {
 #[derive(Debug, Copy, Clone)]
 pub struct dcbnl_rtnl_ops {
     pub ieee_getets: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_ets) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_ets,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_setets: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_ets) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_ets,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_getmaxrate: ::core::option::Option<
         unsafe extern "C" fn(
@@ -17933,10 +19418,16 @@ pub struct dcbnl_rtnl_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_getqcn: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_qcn) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_qcn,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_setqcn: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_qcn) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_qcn,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_getqcnstats: ::core::option::Option<
         unsafe extern "C" fn(
@@ -17945,31 +19436,56 @@ pub struct dcbnl_rtnl_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_getpfc: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_pfc) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_pfc,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_setpfc: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_pfc) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_pfc,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_getapp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut dcb_app) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut dcb_app,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_setapp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut dcb_app) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut dcb_app,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_delapp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut dcb_app) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut dcb_app,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_peer_getets: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_ets) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_ets,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ieee_peer_getpfc: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ieee_pfc) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ieee_pfc,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub getstate: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u8_>,
-    pub setstate:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device, arg2: u8_) -> u8_>,
-    pub getpermhwaddr:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut u8_)>,
+    pub getstate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u8_,
+    >,
+    pub setstate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device, arg2: u8_) -> u8_,
+    >,
+    pub getpermhwaddr: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut u8_),
+    >,
     pub setpgtccfgtx: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -17981,7 +19497,11 @@ pub struct dcbnl_rtnl_ops {
         ),
     >,
     pub setpgbwgcfgtx: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: u8_,
+        ),
     >,
     pub setpgtccfgrx: ::core::option::Option<
         unsafe extern "C" fn(
@@ -17994,7 +19514,11 @@ pub struct dcbnl_rtnl_ops {
         ),
     >,
     pub setpgbwgcfgrx: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: u8_,
+        ),
     >,
     pub getpgtccfgtx: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18007,7 +19531,11 @@ pub struct dcbnl_rtnl_ops {
         ),
     >,
     pub getpgbwgcfgtx: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: *mut u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: *mut u8_,
+        ),
     >,
     pub getpgtccfgrx: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18020,15 +19548,29 @@ pub struct dcbnl_rtnl_ops {
         ),
     >,
     pub getpgbwgcfgrx: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: *mut u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: *mut u8_,
+        ),
     >,
     pub setpfccfg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: u8_,
+        ),
     >,
     pub getpfccfg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: *mut u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: *mut u8_,
+        ),
     >,
-    pub setall: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u8_>,
+    pub setall: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u8_,
+    >,
     pub getcap: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -18050,19 +19592,39 @@ pub struct dcbnl_rtnl_ops {
             arg3: u8_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub getpfcstate: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u8_>,
-    pub setpfcstate: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device, arg2: u8_)>,
+    pub getpfcstate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u8_,
+    >,
+    pub setpfcstate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device, arg2: u8_),
+    >,
     pub getbcncfg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: *mut u32_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: *mut u32_,
+        ),
     >,
     pub setbcncfg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: u32_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: u32_,
+        ),
     >,
     pub getbcnrp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: *mut u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: *mut u8_,
+        ),
     >,
     pub setbcnrp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: u8_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: u8_,
+        ),
     >,
     pub setapp: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18073,7 +19635,11 @@ pub struct dcbnl_rtnl_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub getapp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: u8_, arg3: u16_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: u8_,
+            arg3: u16_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub getfeatcfg: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18083,11 +19649,18 @@ pub struct dcbnl_rtnl_ops {
         ) -> u8_,
     >,
     pub setfeatcfg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int, arg3: u8_) -> u8_,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: u8_,
+        ) -> u8_,
     >,
-    pub getdcbx: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u8_>,
-    pub setdcbx:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device, arg2: u8_) -> u8_>,
+    pub getdcbx: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u8_,
+    >,
+    pub setdcbx: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device, arg2: u8_) -> u8_,
+    >,
     pub peer_getappinfo: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -18096,13 +19669,22 @@ pub struct dcbnl_rtnl_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub peer_getapptable: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut dcb_app) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut dcb_app,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub cee_peer_getpg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut cee_pg) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut cee_pg,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub cee_peer_getpfc: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut cee_pfc) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut cee_pfc,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub dcbnl_getbuffer: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18171,7 +19753,9 @@ pub struct xdp_frame {
 impl xdp_frame {
     #[inline]
     pub fn metasize(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_metasize(&mut self, val: u32_) {
@@ -18182,7 +19766,9 @@ impl xdp_frame {
     }
     #[inline]
     pub fn frame_sz(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 24u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 24u8) as u32)
+        }
     }
     #[inline]
     pub fn set_frame_sz(&mut self, val: u32_) {
@@ -18192,8 +19778,12 @@ impl xdp_frame {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(metasize: u32_, frame_sz: u32_) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+    pub fn new_bitfield_1(
+        metasize: u32_,
+        frame_sz: u32_,
+    ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let metasize: u32 = unsafe { ::core::mem::transmute(metasize) };
             metasize as u64
@@ -18273,7 +19863,9 @@ pub struct netlink_callback {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub done: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut netlink_callback) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut netlink_callback,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub data: *mut ::aya_bpf::cty::c_void,
     pub module: *mut module,
@@ -18434,8 +20026,9 @@ pub struct header_ops {
             arg2: ::aya_bpf::cty::c_uint,
         ) -> bool_,
     >,
-    pub parse_protocol:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const sk_buff) -> __be16>,
+    pub parse_protocol: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const sk_buff) -> __be16,
+    >,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -18494,7 +20087,9 @@ pub struct Qdisc {
             arg3: *mut *mut sk_buff,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub dequeue: ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc) -> *mut sk_buff>,
+    pub dequeue: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut Qdisc) -> *mut sk_buff,
+    >,
     pub flags: ::aya_bpf::cty::c_uint,
     pub limit: u32_,
     pub ops: *const Qdisc_ops,
@@ -18528,7 +20123,8 @@ pub struct Qdisc {
 impl Qdisc {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -18568,7 +20164,8 @@ pub struct netdev_rx_queue {
 impl netdev_rx_queue {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -18638,7 +20235,8 @@ pub struct net_device_path__bindgen_ty_1__bindgen_ty_1 {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct net_device_path__bindgen_ty_1__bindgen_ty_2 {
-    pub vlan_mode: net_device_path__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1::Type,
+    pub vlan_mode:
+        net_device_path__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1::Type,
     pub vlan_id: u16_,
     pub vlan_proto: __be16,
 }
@@ -18736,10 +20334,15 @@ pub struct xfrmdev_ops {
     pub xdo_dev_state_add: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut xfrm_state) -> ::aya_bpf::cty::c_int,
     >,
-    pub xdo_dev_state_delete: ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state)>,
-    pub xdo_dev_state_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state)>,
+    pub xdo_dev_state_delete:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state)>,
+    pub xdo_dev_state_free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state)>,
     pub xdo_dev_offload_ok: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *mut xfrm_state) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *mut xfrm_state,
+        ) -> bool_,
     >,
     pub xdo_dev_state_advance_esn:
         ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state)>,
@@ -18764,7 +20367,8 @@ pub struct net_device_ops {
     pub ndo_init: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut net_device) -> ::aya_bpf::cty::c_int,
     >,
-    pub ndo_uninit: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub ndo_uninit:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
     pub ndo_open: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut net_device) -> ::aya_bpf::cty::c_int,
     >,
@@ -18772,7 +20376,10 @@ pub struct net_device_ops {
         unsafe extern "C" fn(arg1: *mut net_device) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_start_xmit: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *mut net_device) -> netdev_tx_t,
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *mut net_device,
+        ) -> netdev_tx_t,
     >,
     pub ndo_features_check: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18789,9 +20396,13 @@ pub struct net_device_ops {
         ) -> u16_,
     >,
     pub ndo_change_rx_flags: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
-    pub ndo_set_rx_mode: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub ndo_set_rx_mode:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
     pub ndo_set_mac_address: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -18837,7 +20448,10 @@ pub struct net_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_set_config: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ifmap) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ifmap,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_change_mtu: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18852,13 +20466,22 @@ pub struct net_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_tx_timeout: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_uint),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_uint,
+        ),
     >,
     pub ndo_get_stats64: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut rtnl_link_stats64),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut rtnl_link_stats64,
+        ),
     >,
     pub ndo_has_offload_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const net_device, arg2: ::aya_bpf::cty::c_int) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *const net_device,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> bool_,
     >,
     pub ndo_get_offload_stats: ::core::option::Option<
         unsafe extern "C" fn(
@@ -18884,14 +20507,16 @@ pub struct net_device_ops {
             arg3: u16_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub ndo_poll_controller: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub ndo_poll_controller:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
     pub ndo_netpoll_setup: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
             arg2: *mut netpoll_info,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub ndo_netpoll_cleanup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub ndo_netpoll_cleanup:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
     pub ndo_set_vf_mac: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -19010,7 +20635,10 @@ pub struct net_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_fcoe_ddp_done: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: u16_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: u16_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_fcoe_ddp_target: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19049,7 +20677,10 @@ pub struct net_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_del_slave: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut net_device) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut net_device,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_get_xmit_slave: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19059,10 +20690,16 @@ pub struct net_device_ops {
         ) -> *mut net_device,
     >,
     pub ndo_sk_get_lower_dev: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut sock) -> *mut net_device,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut sock,
+        ) -> *mut net_device,
     >,
     pub ndo_fix_features: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: netdev_features_t) -> netdev_features_t,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: netdev_features_t,
+        ) -> netdev_features_t,
     >,
     pub ndo_set_features: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19071,10 +20708,14 @@ pub struct net_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_neigh_construct: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut neighbour) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut neighbour,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub ndo_neigh_destroy:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut neighbour)>,
+    pub ndo_neigh_destroy: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut neighbour),
+    >,
     pub ndo_fdb_add: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut ndmsg,
@@ -19142,7 +20783,10 @@ pub struct net_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_change_carrier: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: bool_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: bool_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_get_phys_port_id: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19170,7 +20814,10 @@ pub struct net_device_ops {
         ) -> *mut ::aya_bpf::cty::c_void,
     >,
     pub ndo_dfwd_del_station: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub ndo_set_tx_maxrate: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19183,16 +20830,28 @@ pub struct net_device_ops {
         unsafe extern "C" fn(arg1: *const net_device) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_change_proto_down: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: bool_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: bool_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_fill_metadata_dst: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_set_rx_headroom: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub ndo_bpf: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut netdev_bpf) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut netdev_bpf,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_xdp_xmit: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19203,7 +20862,10 @@ pub struct net_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub ndo_xdp_get_xmit_slave: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut xdp_buff) -> *mut net_device,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut xdp_buff,
+        ) -> *mut net_device,
     >,
     pub ndo_xsk_wakeup: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19212,8 +20874,9 @@ pub struct net_device_ops {
             arg3: u32_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub ndo_get_devlink_port:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> *mut devlink_port>,
+    pub ndo_get_devlink_port: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> *mut devlink_port,
+    >,
     pub ndo_tunnel_ctl: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -19221,8 +20884,9 @@ pub struct net_device_ops {
             arg3: ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub ndo_get_peer_dev:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> *mut net_device>,
+    pub ndo_get_peer_dev: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> *mut net_device,
+    >,
     pub ndo_fill_forward_path: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device_path_ctx,
@@ -19236,8 +20900,9 @@ pub struct neigh_parms {
     pub net: possible_net_t,
     pub dev: *mut net_device,
     pub list: list_head,
-    pub neigh_setup:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut neighbour) -> ::aya_bpf::cty::c_int>,
+    pub neigh_setup: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut neighbour) -> ::aya_bpf::cty::c_int,
+    >,
     pub tbl: *mut neigh_table,
     pub sysctl_table: *mut ::aya_bpf::cty::c_void,
     pub dead: ::aya_bpf::cty::c_int,
@@ -19280,8 +20945,9 @@ pub struct iw_handler_def {
     pub num_private_args: __u16,
     pub private: *const iw_handler,
     pub private_args: *const iw_priv_args,
-    pub get_wireless_stats:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> *mut iw_statistics>,
+    pub get_wireless_stats: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> *mut iw_statistics,
+    >,
 }
 pub mod ethtool_phys_id_state {
     pub type Type = ::aya_bpf::cty::c_uint;
@@ -19318,13 +20984,18 @@ pub struct ethtool_ops {
             arg2: *mut ethtool_wolinfo,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_msglevel: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u32_>,
-    pub set_msglevel:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device, arg2: u32_)>,
+    pub get_msglevel: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u32_,
+    >,
+    pub set_msglevel: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device, arg2: u32_),
+    >,
     pub nway_reset: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut net_device) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_link: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u32_>,
+    pub get_link: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u32_,
+    >,
     pub get_link_ext_state: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -19365,7 +21036,10 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_ringparam: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_ringparam),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_ringparam,
+        ),
     >,
     pub set_ringparam: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19374,10 +21048,16 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_pause_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_pause_stats),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_pause_stats,
+        ),
     >,
     pub get_pauseparam: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_pauseparam),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_pauseparam,
+        ),
     >,
     pub set_pauseparam: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19386,7 +21066,11 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub self_test: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_test, arg3: *mut u64_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_test,
+            arg3: *mut u64_,
+        ),
     >,
     pub get_strings: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut net_device, arg2: u32_, arg3: *mut u8_),
@@ -19398,15 +21082,25 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_ethtool_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_stats, arg3: *mut u64_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_stats,
+            arg3: *mut u64_,
+        ),
     >,
     pub begin: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut net_device) -> ::aya_bpf::cty::c_int,
     >,
-    pub complete: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
-    pub get_priv_flags: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u32_>,
+    pub complete:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub get_priv_flags: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u32_,
+    >,
     pub set_priv_flags: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: u32_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: u32_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_sset_count: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19434,12 +21128,17 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub reset: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut u32_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut u32_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_rxfh_key_size:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u32_>,
-    pub get_rxfh_indir_size:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device) -> u32_>,
+    pub get_rxfh_key_size: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u32_,
+    >,
+    pub get_rxfh_indir_size: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device) -> u32_,
+    >,
     pub get_rxfh: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net_device,
@@ -19476,7 +21175,10 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_channels: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_channels),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_channels,
+        ),
     >,
     pub set_channels: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19575,7 +21277,10 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_fec_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_fec_stats),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_fec_stats,
+        ),
     >,
     pub get_fecparam: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19590,7 +21295,11 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_ethtool_phy_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_stats, arg3: *mut u64_),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_stats,
+            arg3: *mut u64_,
+        ),
     >,
     pub get_phy_tunable: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19614,13 +21323,22 @@ pub struct ethtool_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_eth_phy_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_eth_phy_stats),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_eth_phy_stats,
+        ),
     >,
     pub get_eth_mac_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_eth_mac_stats),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_eth_mac_stats,
+        ),
     >,
     pub get_eth_ctrl_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut ethtool_eth_ctrl_stats),
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut ethtool_eth_ctrl_stats,
+        ),
     >,
     pub get_rmon_stats: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19633,7 +21351,9 @@ pub struct ethtool_ops {
 impl ethtool_ops {
     #[inline]
     pub fn cap_link_lanes_supported(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_cap_link_lanes_supported(&mut self, val: u32_) {
@@ -19643,8 +21363,11 @@ impl ethtool_ops {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(cap_link_lanes_supported: u32_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        cap_link_lanes_supported: u32_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let cap_link_lanes_supported: u32 =
                 unsafe { ::core::mem::transmute(cap_link_lanes_supported) };
@@ -19656,10 +21379,15 @@ impl ethtool_ops {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct l3mdev_ops {
-    pub l3mdev_fib_table:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const net_device) -> u32_>,
+    pub l3mdev_fib_table: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const net_device) -> u32_,
+    >,
     pub l3mdev_l3_rcv: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut sk_buff, arg3: u16_) -> *mut sk_buff,
+        unsafe extern "C" fn(
+            arg1: *mut net_device,
+            arg2: *mut sk_buff,
+            arg3: u16_,
+        ) -> *mut sk_buff,
     >,
     pub l3mdev_l3_out: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19670,14 +21398,18 @@ pub struct l3mdev_ops {
         ) -> *mut sk_buff,
     >,
     pub l3mdev_link_scope_lookup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const net_device, arg2: *mut flowi6) -> *mut dst_entry,
+        unsafe extern "C" fn(
+            arg1: *const net_device,
+            arg2: *mut flowi6,
+        ) -> *mut dst_entry,
     >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct ndisc_ops {
-    pub is_useropt:
-        ::core::option::Option<unsafe extern "C" fn(arg1: u8_) -> ::aya_bpf::cty::c_int>,
+    pub is_useropt: ::core::option::Option<
+        unsafe extern "C" fn(arg1: u8_) -> ::aya_bpf::cty::c_int,
+    >,
     pub parse_options: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *const net_device,
@@ -19837,7 +21569,8 @@ pub struct rtnl_link_ops {
             arg5: ::aya_bpf::cty::c_uint,
         ) -> *mut net_device,
     >,
-    pub setup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub setup:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
     pub netns_refund: bool_,
     pub maxtype: ::aya_bpf::cty::c_uint,
     pub policy: *const nla_policy,
@@ -19865,19 +21598,33 @@ pub struct rtnl_link_ops {
             arg4: *mut netlink_ext_ack,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub dellink:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut list_head)>,
-    pub get_size: ::core::option::Option<unsafe extern "C" fn(arg1: *const net_device) -> size_t>,
+    pub dellink: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut net_device, arg2: *mut list_head),
+    >,
+    pub get_size: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const net_device) -> size_t,
+    >,
     pub fill_info: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *const net_device) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *const net_device,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_xstats_size:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const net_device) -> size_t>,
+    pub get_xstats_size: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const net_device) -> size_t,
+    >,
     pub fill_xstats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *const net_device) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *const net_device,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_num_tx_queues: ::core::option::Option<unsafe extern "C" fn() -> ::aya_bpf::cty::c_uint>,
-    pub get_num_rx_queues: ::core::option::Option<unsafe extern "C" fn() -> ::aya_bpf::cty::c_uint>,
+    pub get_num_tx_queues: ::core::option::Option<
+        unsafe extern "C" fn() -> ::aya_bpf::cty::c_uint,
+    >,
+    pub get_num_rx_queues: ::core::option::Option<
+        unsafe extern "C" fn() -> ::aya_bpf::cty::c_uint,
+    >,
     pub slave_maxtype: ::aya_bpf::cty::c_uint,
     pub slave_policy: *const nla_policy,
     pub slave_changelink: ::core::option::Option<
@@ -19890,7 +21637,10 @@ pub struct rtnl_link_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_slave_size: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const net_device, arg2: *const net_device) -> size_t,
+        unsafe extern "C" fn(
+            arg1: *const net_device,
+            arg2: *const net_device,
+        ) -> size_t,
     >,
     pub fill_slave_info: ::core::option::Option<
         unsafe extern "C" fn(
@@ -19899,10 +21649,14 @@ pub struct rtnl_link_ops {
             arg3: *const net_device,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_link_net:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const net_device) -> *mut net>,
+    pub get_link_net: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const net_device) -> *mut net,
+    >,
     pub get_linkxstats_size: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const net_device, arg2: ::aya_bpf::cty::c_int) -> size_t,
+        unsafe extern "C" fn(
+            arg1: *const net_device,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> size_t,
     >,
     pub fill_linkxstats: ::core::option::Option<
         unsafe extern "C" fn(
@@ -20026,8 +21780,12 @@ pub struct Qdisc_ops {
             arg3: *mut *mut sk_buff,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub dequeue: ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc) -> *mut sk_buff>,
-    pub peek: ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc) -> *mut sk_buff>,
+    pub dequeue: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut Qdisc) -> *mut sk_buff,
+    >,
+    pub peek: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut Qdisc) -> *mut sk_buff,
+    >,
     pub init: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut Qdisc,
@@ -20055,17 +21813,27 @@ pub struct Qdisc_ops {
         unsafe extern "C" fn(arg1: *mut Qdisc, arg2: ::aya_bpf::cty::c_uint),
     >,
     pub dump: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut Qdisc,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub dump_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: *mut gnet_dump) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut Qdisc,
+            arg2: *mut gnet_dump,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub ingress_block_set:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc, arg2: u32_)>,
-    pub egress_block_set:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc, arg2: u32_)>,
-    pub ingress_block_get: ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc) -> u32_>,
-    pub egress_block_get: ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc) -> u32_>,
+    pub ingress_block_set: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: u32_),
+    >,
+    pub egress_block_set: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: u32_),
+    >,
+    pub ingress_block_get:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc) -> u32_>,
+    pub egress_block_get:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc) -> u32_>,
     pub owner: *mut module,
 }
 #[repr(C)]
@@ -20073,7 +21841,10 @@ pub struct Qdisc_ops {
 pub struct Qdisc_class_ops {
     pub flags: ::aya_bpf::cty::c_uint,
     pub select_queue: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: *mut tcmsg) -> *mut netdev_queue,
+        unsafe extern "C" fn(
+            arg1: *mut Qdisc,
+            arg2: *mut tcmsg,
+        ) -> *mut netdev_queue,
     >,
     pub graft: ::core::option::Option<
         unsafe extern "C" fn(
@@ -20085,13 +21856,19 @@ pub struct Qdisc_class_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub leaf: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: ::aya_bpf::cty::c_ulong) -> *mut Qdisc,
+        unsafe extern "C" fn(
+            arg1: *mut Qdisc,
+            arg2: ::aya_bpf::cty::c_ulong,
+        ) -> *mut Qdisc,
     >,
     pub qlen_notify: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut Qdisc, arg2: ::aya_bpf::cty::c_ulong),
     >,
     pub find: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: u32_) -> ::aya_bpf::cty::c_ulong,
+        unsafe extern "C" fn(
+            arg1: *mut Qdisc,
+            arg2: u32_,
+        ) -> ::aya_bpf::cty::c_ulong,
     >,
     pub change: ::core::option::Option<
         unsafe extern "C" fn(
@@ -20110,8 +21887,9 @@ pub struct Qdisc_class_ops {
             arg3: *mut netlink_ext_ack,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub walk:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut Qdisc, arg2: *mut qdisc_walker)>,
+    pub walk: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut Qdisc, arg2: *mut qdisc_walker),
+    >,
     pub tcf_block: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut Qdisc,
@@ -20232,16 +22010,27 @@ pub struct tcf_proto_ops {
             arg3: *mut tcf_result,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub init:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut tcf_proto) -> ::aya_bpf::cty::c_int>,
+    pub init: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tcf_proto) -> ::aya_bpf::cty::c_int,
+    >,
     pub destroy: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tcf_proto, arg2: bool_, arg3: *mut netlink_ext_ack),
+        unsafe extern "C" fn(
+            arg1: *mut tcf_proto,
+            arg2: bool_,
+            arg3: *mut netlink_ext_ack,
+        ),
     >,
     pub get: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tcf_proto, arg2: u32_) -> *mut ::aya_bpf::cty::c_void,
+        unsafe extern "C" fn(
+            arg1: *mut tcf_proto,
+            arg2: u32_,
+        ) -> *mut ::aya_bpf::cty::c_void,
     >,
     pub put: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tcf_proto, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut tcf_proto,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub change: ::core::option::Option<
         unsafe extern "C" fn(
@@ -20265,9 +22054,15 @@ pub struct tcf_proto_ops {
             arg5: *mut netlink_ext_ack,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub delete_empty: ::core::option::Option<unsafe extern "C" fn(arg1: *mut tcf_proto) -> bool_>,
+    pub delete_empty: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut tcf_proto) -> bool_,
+    >,
     pub walk: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tcf_proto, arg2: *mut tcf_walker, arg3: bool_),
+        unsafe extern "C" fn(
+            arg1: *mut tcf_proto,
+            arg2: *mut tcf_walker,
+            arg3: bool_,
+        ),
     >,
     pub reoffload: ::core::option::Option<
         unsafe extern "C" fn(
@@ -20279,10 +22074,16 @@ pub struct tcf_proto_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub hw_add: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tcf_proto, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut tcf_proto,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub hw_del: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut tcf_proto, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut tcf_proto,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub bind_class: ::core::option::Option<
         unsafe extern "C" fn(
@@ -20301,8 +22102,9 @@ pub struct tcf_proto_ops {
             arg4: *mut netlink_ext_ack,
         ) -> *mut ::aya_bpf::cty::c_void,
     >,
-    pub tmplt_destroy:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub tmplt_destroy: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub dump: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut net,
@@ -20368,7 +22170,8 @@ pub struct bpf_prog_stats {
 impl bpf_prog_stats {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -20394,20 +22197,31 @@ pub struct neigh_table {
         ) -> __u32,
     >,
     pub key_eq: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const neighbour, arg2: *const ::aya_bpf::cty::c_void) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *const neighbour,
+            arg2: *const ::aya_bpf::cty::c_void,
+        ) -> bool_,
     >,
-    pub constructor:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut neighbour) -> ::aya_bpf::cty::c_int>,
+    pub constructor: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut neighbour) -> ::aya_bpf::cty::c_int,
+    >,
     pub pconstructor: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut pneigh_entry) -> ::aya_bpf::cty::c_int,
     >,
-    pub pdestructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut pneigh_entry)>,
-    pub proxy_redo: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff)>,
+    pub pdestructor:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut pneigh_entry)>,
+    pub proxy_redo:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff)>,
     pub is_multicast: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const ::aya_bpf::cty::c_void) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *const ::aya_bpf::cty::c_void,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub allow_add: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const net_device, arg2: *mut netlink_ext_ack) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *const net_device,
+            arg2: *mut netlink_ext_ack,
+        ) -> bool_,
     >,
     pub id: *mut ::aya_bpf::cty::c_char,
     pub parms: neigh_parms,
@@ -20449,15 +22263,23 @@ pub struct neigh_statistics {
 #[derive(Debug, Copy, Clone)]
 pub struct neigh_ops {
     pub family: ::aya_bpf::cty::c_int,
-    pub solicit:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut neighbour, arg2: *mut sk_buff)>,
-    pub error_report:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut neighbour, arg2: *mut sk_buff)>,
+    pub solicit: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut neighbour, arg2: *mut sk_buff),
+    >,
+    pub error_report: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut neighbour, arg2: *mut sk_buff),
+    >,
     pub output: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut neighbour, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut neighbour,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub connected_output: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut neighbour, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut neighbour,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -20550,8 +22372,9 @@ pub struct smc_hashinfo {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct proto {
-    pub close:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_long)>,
+    pub close: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_long),
+    >,
     pub pre_connect: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut sock,
@@ -20567,7 +22390,10 @@ pub struct proto {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub disconnect: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sock,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub accept: ::core::option::Option<
         unsafe extern "C" fn(
@@ -20584,11 +22410,13 @@ pub struct proto {
             arg3: ::aya_bpf::cty::c_ulong,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub init:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> ::aya_bpf::cty::c_int>,
+    pub init: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock) -> ::aya_bpf::cty::c_int,
+    >,
     pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub shutdown:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int)>,
+    pub shutdown: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int),
+    >,
     pub setsockopt: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut sock,
@@ -20607,8 +22435,9 @@ pub struct proto {
             arg5: *mut ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub keepalive:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int)>,
+    pub keepalive: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int),
+    >,
     pub compat_ioctl: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut sock,
@@ -20657,14 +22486,22 @@ pub struct proto {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub backlog_rcv: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sock, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sock,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub bpf_bypass_getsockopt: ::core::option::Option<
-        unsafe extern "C" fn(arg1: ::aya_bpf::cty::c_int, arg2: ::aya_bpf::cty::c_int) -> bool_,
+        unsafe extern "C" fn(
+            arg1: ::aya_bpf::cty::c_int,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> bool_,
     >,
-    pub release_cb: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub hash:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> ::aya_bpf::cty::c_int>,
+    pub release_cb:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub hash: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock) -> ::aya_bpf::cty::c_int,
+    >,
     pub unhash: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub rehash: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub get_port: ::core::option::Option<
@@ -20682,11 +22519,17 @@ pub struct proto {
     >,
     pub inuse_idx: ::aya_bpf::cty::c_uint,
     pub stream_memory_free: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const sock, arg2: ::aya_bpf::cty::c_int) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *const sock,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> bool_,
     >,
-    pub sock_is_readable: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> bool_>,
-    pub enter_memory_pressure: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub leave_memory_pressure: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sock_is_readable:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock) -> bool_>,
+    pub enter_memory_pressure:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub leave_memory_pressure:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub memory_allocated: *mut atomic_long_t,
     pub sockets_allocated: *mut percpu_counter,
     pub memory_pressure: *mut ::aya_bpf::cty::c_ulong,
@@ -20710,7 +22553,10 @@ pub struct proto {
     pub name: [::aya_bpf::cty::c_char; 32usize],
     pub node: list_head,
     pub diag_destroy: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sock,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -20729,15 +22575,25 @@ pub struct request_sock_ops {
     pub slab: *mut kmem_cache,
     pub slab_name: *mut ::aya_bpf::cty::c_char,
     pub rtx_syn_ack: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const sock, arg2: *mut request_sock) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *const sock,
+            arg2: *mut request_sock,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub send_ack: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const sock, arg2: *mut sk_buff, arg3: *mut request_sock),
+        unsafe extern "C" fn(
+            arg1: *const sock,
+            arg2: *mut sk_buff,
+            arg3: *mut request_sock,
+        ),
     >,
-    pub send_reset:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const sock, arg2: *mut sk_buff)>,
-    pub destructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut request_sock)>,
-    pub syn_ack_timeout: ::core::option::Option<unsafe extern "C" fn(arg1: *const request_sock)>,
+    pub send_reset: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const sock, arg2: *mut sk_buff),
+    >,
+    pub destructor:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut request_sock)>,
+    pub syn_ack_timeout:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *const request_sock)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -20752,7 +22608,8 @@ pub struct timewait_sock_ops {
             arg3: *mut ::aya_bpf::cty::c_void,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub twsk_destructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub twsk_destructor:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
 }
 #[repr(C)]
 pub struct request_sock {
@@ -20773,7 +22630,9 @@ pub struct request_sock {
 impl request_sock {
     #[inline]
     pub fn syncookie(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_syncookie(&mut self, val: u8_) {
@@ -20784,7 +22643,9 @@ impl request_sock {
     }
     #[inline]
     pub fn num_timeout(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 7u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 7u8) as u8)
+        }
     }
     #[inline]
     pub fn set_num_timeout(&mut self, val: u8_) {
@@ -20794,14 +22655,19 @@ impl request_sock {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(syncookie: u8_, num_timeout: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        syncookie: u8_,
+        num_timeout: u8_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let syncookie: u8 = unsafe { ::core::mem::transmute(syncookie) };
             syncookie as u64
         });
         __bindgen_bitfield_unit.set(1usize, 7u8, {
-            let num_timeout: u8 = unsafe { ::core::mem::transmute(num_timeout) };
+            let num_timeout: u8 =
+                unsafe { ::core::mem::transmute(num_timeout) };
             num_timeout as u64
         });
         __bindgen_bitfield_unit
@@ -20890,7 +22756,9 @@ pub struct prefix_info {
 impl prefix_info {
     #[inline]
     pub fn reserved(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 6u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 6u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reserved(&mut self, val: __u8) {
@@ -20901,7 +22769,9 @@ impl prefix_info {
     }
     #[inline]
     pub fn autoconf(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_autoconf(&mut self, val: __u8) {
@@ -20912,7 +22782,9 @@ impl prefix_info {
     }
     #[inline]
     pub fn onlink(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_onlink(&mut self, val: __u8) {
@@ -20927,7 +22799,8 @@ impl prefix_info {
         autoconf: __u8,
         onlink: __u8,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 6u8, {
             let reserved: u8 = unsafe { ::core::mem::transmute(reserved) };
             reserved as u64
@@ -21006,7 +22879,8 @@ pub struct irqaction {
 impl irqaction {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -21017,7 +22891,10 @@ pub struct irq_affinity_notify {
     pub kref: kref,
     pub work: work_struct,
     pub notify: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut irq_affinity_notify, arg2: *const cpumask_t),
+        unsafe extern "C" fn(
+            arg1: *mut irq_affinity_notify,
+            arg2: *const cpumask_t,
+        ),
     >,
     pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut kref)>,
 }
@@ -21032,7 +22909,9 @@ pub struct irq_affinity_desc {
 impl irq_affinity_desc {
     #[inline]
     pub fn is_managed(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_managed(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -21045,7 +22924,8 @@ impl irq_affinity_desc {
     pub fn new_bitfield_1(
         is_managed: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let is_managed: u32 = unsafe { ::core::mem::transmute(is_managed) };
             is_managed as u64
@@ -21060,7 +22940,8 @@ pub mod irqchip_irq_state {
     pub const IRQCHIP_STATE_MASKED: Type = 2;
     pub const IRQCHIP_STATE_LINE_LEVEL: Type = 3;
 }
-pub type irq_flow_handler_t = ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_desc)>;
+pub type irq_flow_handler_t =
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_desc)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct irq_common_data {
@@ -21127,7 +23008,8 @@ pub struct irq_desc {
 impl irq_desc {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -21152,7 +23034,9 @@ pub struct x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
 impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
     pub fn reserved_0(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 2u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 2u8) as u32)
+        }
     }
     #[inline]
     pub fn set_reserved_0(&mut self, val: u32_) {
@@ -21163,7 +23047,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn dest_mode_logical(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dest_mode_logical(&mut self, val: u32_) {
@@ -21174,7 +23060,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn redirect_hint(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_redirect_hint(&mut self, val: u32_) {
@@ -21185,7 +23073,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn reserved_1(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_reserved_1(&mut self, val: u32_) {
@@ -21196,7 +23086,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn virt_destid_8_14(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 7u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 7u8) as u32)
+        }
     }
     #[inline]
     pub fn set_virt_destid_8_14(&mut self, val: u32_) {
@@ -21207,7 +23099,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn destid_0_7(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(12usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(12usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_destid_0_7(&mut self, val: u32_) {
@@ -21218,7 +23112,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn base_address(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(20usize, 12u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(20usize, 12u8) as u32)
+        }
     }
     #[inline]
     pub fn set_base_address(&mut self, val: u32_) {
@@ -21237,17 +23133,20 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
         destid_0_7: u32_,
         base_address: u32_,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 2u8, {
             let reserved_0: u32 = unsafe { ::core::mem::transmute(reserved_0) };
             reserved_0 as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let dest_mode_logical: u32 = unsafe { ::core::mem::transmute(dest_mode_logical) };
+            let dest_mode_logical: u32 =
+                unsafe { ::core::mem::transmute(dest_mode_logical) };
             dest_mode_logical as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let redirect_hint: u32 = unsafe { ::core::mem::transmute(redirect_hint) };
+            let redirect_hint: u32 =
+                unsafe { ::core::mem::transmute(redirect_hint) };
             redirect_hint as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
@@ -21255,7 +23154,8 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
             reserved_1 as u64
         });
         __bindgen_bitfield_unit.set(5usize, 7u8, {
-            let virt_destid_8_14: u32 = unsafe { ::core::mem::transmute(virt_destid_8_14) };
+            let virt_destid_8_14: u32 =
+                unsafe { ::core::mem::transmute(virt_destid_8_14) };
             virt_destid_8_14 as u64
         });
         __bindgen_bitfield_unit.set(12usize, 8u8, {
@@ -21263,7 +23163,8 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_1 {
             destid_0_7 as u64
         });
         __bindgen_bitfield_unit.set(20usize, 12u8, {
-            let base_address: u32 = unsafe { ::core::mem::transmute(base_address) };
+            let base_address: u32 =
+                unsafe { ::core::mem::transmute(base_address) };
             base_address as u64
         });
         __bindgen_bitfield_unit
@@ -21279,7 +23180,9 @@ pub struct x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
 impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
     #[inline]
     pub fn dmar_reserved_0(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 2u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 2u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dmar_reserved_0(&mut self, val: u32_) {
@@ -21290,7 +23193,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn dmar_index_15(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dmar_index_15(&mut self, val: u32_) {
@@ -21301,7 +23206,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn dmar_subhandle_valid(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dmar_subhandle_valid(&mut self, val: u32_) {
@@ -21312,7 +23219,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn dmar_format(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dmar_format(&mut self, val: u32_) {
@@ -21323,7 +23232,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn dmar_index_0_14(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 15u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 15u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dmar_index_0_14(&mut self, val: u32_) {
@@ -21334,7 +23245,9 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn dmar_base_address(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(20usize, 12u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(20usize, 12u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dmar_base_address(&mut self, val: u32_) {
@@ -21352,29 +23265,36 @@ impl x86_msi_addr_lo__bindgen_ty_1__bindgen_ty_2 {
         dmar_index_0_14: u32_,
         dmar_base_address: u32_,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 2u8, {
-            let dmar_reserved_0: u32 = unsafe { ::core::mem::transmute(dmar_reserved_0) };
+            let dmar_reserved_0: u32 =
+                unsafe { ::core::mem::transmute(dmar_reserved_0) };
             dmar_reserved_0 as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let dmar_index_15: u32 = unsafe { ::core::mem::transmute(dmar_index_15) };
+            let dmar_index_15: u32 =
+                unsafe { ::core::mem::transmute(dmar_index_15) };
             dmar_index_15 as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let dmar_subhandle_valid: u32 = unsafe { ::core::mem::transmute(dmar_subhandle_valid) };
+            let dmar_subhandle_valid: u32 =
+                unsafe { ::core::mem::transmute(dmar_subhandle_valid) };
             dmar_subhandle_valid as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let dmar_format: u32 = unsafe { ::core::mem::transmute(dmar_format) };
+            let dmar_format: u32 =
+                unsafe { ::core::mem::transmute(dmar_format) };
             dmar_format as u64
         });
         __bindgen_bitfield_unit.set(5usize, 15u8, {
-            let dmar_index_0_14: u32 = unsafe { ::core::mem::transmute(dmar_index_0_14) };
+            let dmar_index_0_14: u32 =
+                unsafe { ::core::mem::transmute(dmar_index_0_14) };
             dmar_index_0_14 as u64
         });
         __bindgen_bitfield_unit.set(20usize, 12u8, {
-            let dmar_base_address: u32 = unsafe { ::core::mem::transmute(dmar_base_address) };
+            let dmar_base_address: u32 =
+                unsafe { ::core::mem::transmute(dmar_base_address) };
             dmar_base_address as u64
         });
         __bindgen_bitfield_unit
@@ -21391,7 +23311,9 @@ pub struct x86_msi_addr_hi {
 impl x86_msi_addr_hi {
     #[inline]
     pub fn reserved(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_reserved(&mut self, val: u32_) {
@@ -21402,7 +23324,9 @@ impl x86_msi_addr_hi {
     }
     #[inline]
     pub fn destid_8_31(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 24u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 24u8) as u32)
+        }
     }
     #[inline]
     pub fn set_destid_8_31(&mut self, val: u32_) {
@@ -21416,13 +23340,15 @@ impl x86_msi_addr_hi {
         reserved: u32_,
         destid_8_31: u32_,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let reserved: u32 = unsafe { ::core::mem::transmute(reserved) };
             reserved as u64
         });
         __bindgen_bitfield_unit.set(8usize, 24u8, {
-            let destid_8_31: u32 = unsafe { ::core::mem::transmute(destid_8_31) };
+            let destid_8_31: u32 =
+                unsafe { ::core::mem::transmute(destid_8_31) };
             destid_8_31 as u64
         });
         __bindgen_bitfield_unit
@@ -21439,7 +23365,9 @@ pub struct x86_msi_data {
 impl x86_msi_data {
     #[inline]
     pub fn vector(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_vector(&mut self, val: u32_) {
@@ -21450,7 +23378,9 @@ impl x86_msi_data {
     }
     #[inline]
     pub fn delivery_mode(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 3u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 3u8) as u32)
+        }
     }
     #[inline]
     pub fn set_delivery_mode(&mut self, val: u32_) {
@@ -21461,7 +23391,9 @@ impl x86_msi_data {
     }
     #[inline]
     pub fn dest_mode_logical(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_dest_mode_logical(&mut self, val: u32_) {
@@ -21472,7 +23404,9 @@ impl x86_msi_data {
     }
     #[inline]
     pub fn reserved(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(12usize, 2u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(12usize, 2u8) as u32)
+        }
     }
     #[inline]
     pub fn set_reserved(&mut self, val: u32_) {
@@ -21483,7 +23417,9 @@ impl x86_msi_data {
     }
     #[inline]
     pub fn active_low(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_active_low(&mut self, val: u32_) {
@@ -21494,7 +23430,9 @@ impl x86_msi_data {
     }
     #[inline]
     pub fn is_level(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_level(&mut self, val: u32_) {
@@ -21512,17 +23450,20 @@ impl x86_msi_data {
         active_low: u32_,
         is_level: u32_,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let vector: u32 = unsafe { ::core::mem::transmute(vector) };
             vector as u64
         });
         __bindgen_bitfield_unit.set(8usize, 3u8, {
-            let delivery_mode: u32 = unsafe { ::core::mem::transmute(delivery_mode) };
+            let delivery_mode: u32 =
+                unsafe { ::core::mem::transmute(delivery_mode) };
             delivery_mode as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
-            let dest_mode_logical: u32 = unsafe { ::core::mem::transmute(dest_mode_logical) };
+            let dest_mode_logical: u32 =
+                unsafe { ::core::mem::transmute(dest_mode_logical) };
             dest_mode_logical as u64
         });
         __bindgen_bitfield_unit.set(12usize, 2u8, {
@@ -21593,7 +23534,10 @@ pub struct msi_desc {
     pub affinity: *mut irq_affinity_desc,
     pub iommu_cookie: *const ::aya_bpf::cty::c_void,
     pub write_msi_msg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut msi_desc, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut msi_desc,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub write_msi_msg_data: *mut ::aya_bpf::cty::c_void,
     pub __bindgen_anon_1: msi_desc__bindgen_ty_1,
@@ -21630,7 +23574,9 @@ pub struct msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
 impl msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
     #[inline]
     pub fn is_msix(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_msix(&mut self, val: u8_) {
@@ -21641,7 +23587,9 @@ impl msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn multiple(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 3u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 3u8) as u8)
+        }
     }
     #[inline]
     pub fn set_multiple(&mut self, val: u8_) {
@@ -21652,7 +23600,9 @@ impl msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn multi_cap(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 3u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 3u8) as u8)
+        }
     }
     #[inline]
     pub fn set_multi_cap(&mut self, val: u8_) {
@@ -21663,7 +23613,9 @@ impl msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn can_mask(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_can_mask(&mut self, val: u8_) {
@@ -21674,7 +23626,9 @@ impl msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn is_64(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_64(&mut self, val: u8_) {
@@ -21685,7 +23639,9 @@ impl msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn is_virtual(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_is_virtual(&mut self, val: u8_) {
@@ -21703,7 +23659,8 @@ impl msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_2 {
         is_64: u8_,
         is_virtual: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let is_msix: u8 = unsafe { ::core::mem::transmute(is_msix) };
             is_msix as u64
@@ -21742,16 +23699,25 @@ pub union msi_desc__bindgen_ty_1__bindgen_ty_1__bindgen_ty_3 {
 pub struct irq_chip {
     pub parent_device: *mut device,
     pub name: *const ::aya_bpf::cty::c_char,
-    pub irq_startup:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_uint>,
-    pub irq_shutdown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_enable: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_disable: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_ack: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_mask: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_mask_ack: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_unmask: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_eoi: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_startup: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_uint,
+    >,
+    pub irq_shutdown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_enable:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_disable:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_ack:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_mask:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_mask_ack:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_unmask:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_eoi:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
     pub irq_set_affinity: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut irq_data,
@@ -21759,8 +23725,9 @@ pub struct irq_chip {
             arg3: bool_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub irq_retrigger:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_int>,
+    pub irq_retrigger: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_int,
+    >,
     pub irq_set_type: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut irq_data,
@@ -21773,23 +23740,36 @@ pub struct irq_chip {
             arg2: ::aya_bpf::cty::c_uint,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub irq_bus_lock: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_bus_sync_unlock: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_cpu_online: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_cpu_offline: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_suspend: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_resume: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_pm_shutdown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_calc_mask: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_print_chip:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data, arg2: *mut seq_file)>,
-    pub irq_request_resources:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_int>,
-    pub irq_release_resources: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
-    pub irq_compose_msi_msg:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data, arg2: *mut msi_msg)>,
-    pub irq_write_msi_msg:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data, arg2: *mut msi_msg)>,
+    pub irq_bus_lock:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_bus_sync_unlock:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_cpu_online:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_cpu_offline:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_suspend:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_resume:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_pm_shutdown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_calc_mask:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_print_chip: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data, arg2: *mut seq_file),
+    >,
+    pub irq_request_resources: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_int,
+    >,
+    pub irq_release_resources:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub irq_compose_msi_msg: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data, arg2: *mut msi_msg),
+    >,
+    pub irq_write_msi_msg: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data, arg2: *mut msi_msg),
+    >,
     pub irq_get_irqchip_state: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut irq_data,
@@ -21813,11 +23793,14 @@ pub struct irq_chip {
     pub ipi_send_single: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut irq_data, arg2: ::aya_bpf::cty::c_uint),
     >,
-    pub ipi_send_mask:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data, arg2: *const cpumask)>,
-    pub irq_nmi_setup:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_int>,
-    pub irq_nmi_teardown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
+    pub ipi_send_mask: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data, arg2: *const cpumask),
+    >,
+    pub irq_nmi_setup: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_data) -> ::aya_bpf::cty::c_int,
+    >,
+    pub irq_nmi_teardown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_data)>,
     pub flags: ::aya_bpf::cty::c_ulong,
 }
 #[repr(C)]
@@ -21845,12 +23828,18 @@ pub struct irq_chip_type {
 pub struct irq_chip_generic {
     pub lock: raw_spinlock_t,
     pub reg_base: *mut ::aya_bpf::cty::c_void,
-    pub reg_readl:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> u32_>,
-    pub reg_writel:
-        ::core::option::Option<unsafe extern "C" fn(arg1: u32_, arg2: *mut ::aya_bpf::cty::c_void)>,
-    pub suspend: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_chip_generic)>,
-    pub resume: ::core::option::Option<unsafe extern "C" fn(arg1: *mut irq_chip_generic)>,
+    pub reg_readl: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> u32_,
+    >,
+    pub reg_writel: ::core::option::Option<
+        unsafe extern "C" fn(arg1: u32_, arg2: *mut ::aya_bpf::cty::c_void),
+    >,
+    pub suspend: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_chip_generic),
+    >,
+    pub resume: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut irq_chip_generic),
+    >,
     pub irq_base: ::aya_bpf::cty::c_uint,
     pub irq_cnt: ::aya_bpf::cty::c_uint,
     pub mask_cache: u32_,
@@ -21965,7 +23954,9 @@ pub struct perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
 impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
     pub fn cap_bit0(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cap_bit0(&mut self, val: __u64) {
@@ -21976,7 +23967,9 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn cap_bit0_is_deprecated(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cap_bit0_is_deprecated(&mut self, val: __u64) {
@@ -21987,7 +23980,9 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn cap_user_rdpmc(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cap_user_rdpmc(&mut self, val: __u64) {
@@ -21998,7 +23993,9 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn cap_user_time(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cap_user_time(&mut self, val: __u64) {
@@ -22009,7 +24006,9 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn cap_user_time_zero(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cap_user_time_zero(&mut self, val: __u64) {
@@ -22020,7 +24019,9 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn cap_user_time_short(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cap_user_time_short(&mut self, val: __u64) {
@@ -22031,7 +24032,9 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn cap_____res(&self) -> __u64 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 58u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 58u8) as u64)
+        }
     }
     #[inline]
     pub fn set_cap_____res(&mut self, val: __u64) {
@@ -22050,7 +24053,8 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
         cap_user_time_short: __u64,
         cap_____res: __u64,
     ) -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let cap_bit0: u64 = unsafe { ::core::mem::transmute(cap_bit0) };
             cap_bit0 as u64
@@ -22061,23 +24065,28 @@ impl perf_event_mmap_page__bindgen_ty_1__bindgen_ty_1 {
             cap_bit0_is_deprecated as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let cap_user_rdpmc: u64 = unsafe { ::core::mem::transmute(cap_user_rdpmc) };
+            let cap_user_rdpmc: u64 =
+                unsafe { ::core::mem::transmute(cap_user_rdpmc) };
             cap_user_rdpmc as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let cap_user_time: u64 = unsafe { ::core::mem::transmute(cap_user_time) };
+            let cap_user_time: u64 =
+                unsafe { ::core::mem::transmute(cap_user_time) };
             cap_user_time as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let cap_user_time_zero: u64 = unsafe { ::core::mem::transmute(cap_user_time_zero) };
+            let cap_user_time_zero: u64 =
+                unsafe { ::core::mem::transmute(cap_user_time_zero) };
             cap_user_time_zero as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let cap_user_time_short: u64 = unsafe { ::core::mem::transmute(cap_user_time_short) };
+            let cap_user_time_short: u64 =
+                unsafe { ::core::mem::transmute(cap_user_time_short) };
             cap_user_time_short as u64
         });
         __bindgen_bitfield_unit.set(6usize, 58u8, {
-            let cap_____res: u64 = unsafe { ::core::mem::transmute(cap_____res) };
+            let cap_____res: u64 =
+                unsafe { ::core::mem::transmute(cap_____res) };
             cap_____res as u64
         });
         __bindgen_bitfield_unit
@@ -22220,7 +24229,9 @@ pub struct ioapic_alloc_info {
 impl ioapic_alloc_info {
     #[inline]
     pub fn is_level(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_level(&mut self, val: u32_) {
@@ -22231,7 +24242,9 @@ impl ioapic_alloc_info {
     }
     #[inline]
     pub fn active_low(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_active_low(&mut self, val: u32_) {
@@ -22242,7 +24255,9 @@ impl ioapic_alloc_info {
     }
     #[inline]
     pub fn valid(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_valid(&mut self, val: u32_) {
@@ -22257,7 +24272,8 @@ impl ioapic_alloc_info {
         active_low: u32_,
         valid: u32_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let is_level: u32 = unsafe { ::core::mem::transmute(is_level) };
             is_level as u64
@@ -22539,14 +24555,19 @@ pub struct iommu_fwspec {
 }
 pub type cycles_t = ::aya_bpf::cty::c_ulonglong;
 pub type cpu_stop_fn_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> ::aya_bpf::cty::c_int,
+    unsafe extern "C" fn(
+        arg1: *mut ::aya_bpf::cty::c_void,
+    ) -> ::aya_bpf::cty::c_int,
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct proc_ops {
     pub proc_flags: ::aya_bpf::cty::c_uint,
     pub proc_open: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut file) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut file,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub proc_read: ::core::option::Option<
         unsafe extern "C" fn(
@@ -22568,13 +24589,23 @@ pub struct proc_ops {
         ) -> ssize_t,
     >,
     pub proc_lseek: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: loff_t, arg3: ::aya_bpf::cty::c_int) -> loff_t,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: loff_t,
+            arg3: ::aya_bpf::cty::c_int,
+        ) -> loff_t,
     >,
     pub proc_release: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut file) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut file,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub proc_poll: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: *mut poll_table_struct) -> __poll_t,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: *mut poll_table_struct,
+        ) -> __poll_t,
     >,
     pub proc_ioctl: ::core::option::Option<
         unsafe extern "C" fn(
@@ -22591,7 +24622,10 @@ pub struct proc_ops {
         ) -> ::aya_bpf::cty::c_long,
     >,
     pub proc_mmap: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut file, arg2: *mut vm_area_struct) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut file,
+            arg2: *mut vm_area_struct,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub proc_get_unmapped_area: ::core::option::Option<
         unsafe extern "C" fn(
@@ -22616,7 +24650,8 @@ pub struct firmware {
 pub struct crypto_tfm {
     pub crt_flags: u32_,
     pub node: ::aya_bpf::cty::c_int,
-    pub exit: ::core::option::Option<unsafe extern "C" fn(arg1: *mut crypto_tfm)>,
+    pub exit:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut crypto_tfm)>,
     pub __crt_alg: *mut crypto_alg,
     pub __crt_ctx: __IncompleteArrayField<*mut ::aya_bpf::cty::c_void>,
 }
@@ -22633,10 +24668,18 @@ pub struct cipher_alg {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub cia_encrypt: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut crypto_tfm, arg2: *mut u8_, arg3: *const u8_),
+        unsafe extern "C" fn(
+            arg1: *mut crypto_tfm,
+            arg2: *mut u8_,
+            arg3: *const u8_,
+        ),
     >,
     pub cia_decrypt: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut crypto_tfm, arg2: *mut u8_, arg3: *const u8_),
+        unsafe extern "C" fn(
+            arg1: *mut crypto_tfm,
+            arg2: *mut u8_,
+            arg3: *const u8_,
+        ),
     >,
 }
 #[repr(C)]
@@ -22740,8 +24783,10 @@ pub struct crypto_alg {
     pub cra_init: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut crypto_tfm) -> ::aya_bpf::cty::c_int,
     >,
-    pub cra_exit: ::core::option::Option<unsafe extern "C" fn(arg1: *mut crypto_tfm)>,
-    pub cra_destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut crypto_alg)>,
+    pub cra_exit:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut crypto_tfm)>,
+    pub cra_destroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut crypto_alg)>,
     pub cra_module: *mut module,
     pub stats: crypto_alg__bindgen_ty_2,
 }
@@ -22785,12 +24830,18 @@ pub struct crypto_type {
     pub init_tfm: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut crypto_tfm) -> ::aya_bpf::cty::c_int,
     >,
-    pub show:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut crypto_alg)>,
-    pub report: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *mut crypto_alg) -> ::aya_bpf::cty::c_int,
+    pub show: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut seq_file, arg2: *mut crypto_alg),
     >,
-    pub free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut crypto_instance)>,
+    pub report: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *mut crypto_alg,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub free: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut crypto_instance),
+    >,
     pub type_: ::aya_bpf::cty::c_uint,
     pub maskclear: ::aya_bpf::cty::c_uint,
     pub maskset: ::aya_bpf::cty::c_uint,
@@ -22941,16 +24992,26 @@ pub struct arch_uprobe__bindgen_ty_2__bindgen_ty_3 {
 #[derive(Debug, Copy, Clone)]
 pub struct uprobe_xol_ops {
     pub emulate: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut arch_uprobe, arg2: *mut pt_regs) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *mut arch_uprobe,
+            arg2: *mut pt_regs,
+        ) -> bool_,
     >,
     pub pre_xol: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut arch_uprobe, arg2: *mut pt_regs) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut arch_uprobe,
+            arg2: *mut pt_regs,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub post_xol: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut arch_uprobe, arg2: *mut pt_regs) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut arch_uprobe,
+            arg2: *mut pt_regs,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub abort:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut arch_uprobe, arg2: *mut pt_regs)>,
+    pub abort: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut arch_uprobe, arg2: *mut pt_regs),
+    >,
 }
 pub type compat_size_t = u32_;
 #[repr(C)]
@@ -22985,12 +25046,14 @@ pub struct files_struct {
 impl files_struct {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -23124,7 +25187,8 @@ pub struct worker_pool {
 impl worker_pool {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -23311,14 +25375,16 @@ pub struct cfs_rq__bindgen_ty_1 {
 impl cfs_rq__bindgen_ty_1 {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
 impl cfs_rq {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 16usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 16usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -23368,7 +25434,8 @@ pub struct task_group {
 impl task_group {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -23413,7 +25480,9 @@ pub struct uclamp_bucket {
 impl uclamp_bucket {
     #[inline]
     pub fn value(&self) -> ::aya_bpf::cty::c_ulong {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 11u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 11u8) as u64)
+        }
     }
     #[inline]
     pub fn set_value(&mut self, val: ::aya_bpf::cty::c_ulong) {
@@ -23424,7 +25493,9 @@ impl uclamp_bucket {
     }
     #[inline]
     pub fn tasks(&self) -> ::aya_bpf::cty::c_ulong {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(11usize, 53u8) as u64) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(11usize, 53u8) as u64)
+        }
     }
     #[inline]
     pub fn set_tasks(&mut self, val: ::aya_bpf::cty::c_ulong) {
@@ -23438,7 +25509,8 @@ impl uclamp_bucket {
         value: ::aya_bpf::cty::c_ulong,
         tasks: ::aya_bpf::cty::c_ulong,
     ) -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 11u8, {
             let value: u64 = unsafe { ::core::mem::transmute(value) };
             value as u64
@@ -23619,27 +25691,32 @@ pub struct rq {
 impl rq {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_3() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_5() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_6() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -23712,7 +25789,9 @@ pub struct cpuidle_device {
 impl cpuidle_device {
     #[inline]
     pub fn registered(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_registered(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -23723,7 +25802,9 @@ impl cpuidle_device {
     }
     #[inline]
     pub fn enabled(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_enabled(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -23734,7 +25815,9 @@ impl cpuidle_device {
     }
     #[inline]
     pub fn poll_time_limit(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_poll_time_limit(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -23749,7 +25832,8 @@ impl cpuidle_device {
         enabled: ::aya_bpf::cty::c_uint,
         poll_time_limit: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let registered: u32 = unsafe { ::core::mem::transmute(registered) };
             registered as u64
@@ -23759,7 +25843,8 @@ impl cpuidle_device {
             enabled as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let poll_time_limit: u32 = unsafe { ::core::mem::transmute(poll_time_limit) };
+            let poll_time_limit: u32 =
+                unsafe { ::core::mem::transmute(poll_time_limit) };
             poll_time_limit as u64
         });
         __bindgen_bitfield_unit
@@ -23781,7 +25866,9 @@ pub struct cpuidle_driver {
 impl cpuidle_driver {
     #[inline]
     pub fn bctimer(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_bctimer(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -23791,8 +25878,11 @@ impl cpuidle_driver {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(bctimer: ::aya_bpf::cty::c_uint) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        bctimer: ::aya_bpf::cty::c_uint,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let bctimer: u32 = unsafe { ::core::mem::transmute(bctimer) };
             bctimer as u64
@@ -23929,7 +26019,8 @@ pub struct rcu_node {
 impl rcu_node {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -24081,16 +26172,19 @@ pub struct bpf_link_info__bindgen_ty_1__bindgen_ty_3 {
 pub struct bpf_link_info__bindgen_ty_1__bindgen_ty_4 {
     pub target_name: __u64,
     pub target_name_len: __u32,
-    pub __bindgen_anon_1: bpf_link_info__bindgen_ty_1__bindgen_ty_4__bindgen_ty_1,
+    pub __bindgen_anon_1:
+        bpf_link_info__bindgen_ty_1__bindgen_ty_4__bindgen_ty_1,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union bpf_link_info__bindgen_ty_1__bindgen_ty_4__bindgen_ty_1 {
-    pub map: bpf_link_info__bindgen_ty_1__bindgen_ty_4__bindgen_ty_1__bindgen_ty_1,
+    pub map:
+        bpf_link_info__bindgen_ty_1__bindgen_ty_4__bindgen_ty_1__bindgen_ty_1,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct bpf_link_info__bindgen_ty_1__bindgen_ty_4__bindgen_ty_1__bindgen_ty_1 {
+pub struct bpf_link_info__bindgen_ty_1__bindgen_ty_4__bindgen_ty_1__bindgen_ty_1
+{
     pub map_id: __u32,
 }
 #[repr(C)]
@@ -24117,10 +26211,13 @@ pub struct bpf_link {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct bpf_link_ops {
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_link)>,
-    pub dealloc: ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_link)>,
-    pub detach:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_link) -> ::aya_bpf::cty::c_int>,
+    pub release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_link)>,
+    pub dealloc:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_link)>,
+    pub detach: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bpf_link) -> ::aya_bpf::cty::c_int,
+    >,
     pub update_prog: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut bpf_link,
@@ -24128,8 +26225,9 @@ pub struct bpf_link_ops {
             arg3: *mut bpf_prog,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub show_fdinfo:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const bpf_link, arg2: *mut seq_file)>,
+    pub show_fdinfo: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const bpf_link, arg2: *mut seq_file),
+    >,
     pub fill_link_info: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *const bpf_link,
@@ -24187,7 +26285,9 @@ pub union kernel_pkey_params__bindgen_ty_1 {
 impl kernel_pkey_params {
     #[inline]
     pub fn op(&self) -> kernel_pkey_operation::Type {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 8u8) as u32)
+        }
     }
     #[inline]
     pub fn set_op(&mut self, val: kernel_pkey_operation::Type) {
@@ -24197,8 +26297,11 @@ impl kernel_pkey_params {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(op: kernel_pkey_operation::Type) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        op: kernel_pkey_operation::Type,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 8u8, {
             let op: u32 = unsafe { ::core::mem::transmute(op) };
             op as u64
@@ -24221,7 +26324,10 @@ pub struct key_preparsed_payload {
 #[derive(Debug, Copy, Clone)]
 pub struct key_match_data {
     pub cmp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const key, arg2: *const key_match_data) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *const key,
+            arg2: *const key_match_data,
+        ) -> bool_,
     >,
     pub raw_data: *const ::aya_bpf::cty::c_void,
     pub preparsed: *mut ::aya_bpf::cty::c_void,
@@ -24543,7 +26649,8 @@ pub struct rchan_buf {
 impl rchan_buf {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -24585,8 +26692,9 @@ pub struct rchan_callbacks {
             arg5: *mut ::aya_bpf::cty::c_int,
         ) -> *mut dentry,
     >,
-    pub remove_buf_file:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dentry) -> ::aya_bpf::cty::c_int>,
+    pub remove_buf_file: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut dentry) -> ::aya_bpf::cty::c_int,
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -24674,16 +26782,23 @@ pub struct tracer {
     pub init: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut trace_array) -> ::aya_bpf::cty::c_int,
     >,
-    pub reset: ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_array)>,
-    pub start: ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_array)>,
-    pub stop: ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_array)>,
+    pub reset:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_array)>,
+    pub start:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_array)>,
+    pub stop:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_array)>,
     pub update_thresh: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut trace_array) -> ::aya_bpf::cty::c_int,
     >,
-    pub open: ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
-    pub pipe_open: ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
-    pub close: ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
-    pub pipe_close: ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
+    pub open:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
+    pub pipe_open:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
+    pub close:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
+    pub pipe_close:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut trace_iterator)>,
     pub read: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut trace_iterator,
@@ -24703,7 +26818,8 @@ pub struct tracer {
             arg6: ::aya_bpf::cty::c_uint,
         ) -> ssize_t,
     >,
-    pub print_header: ::core::option::Option<unsafe extern "C" fn(arg1: *mut seq_file)>,
+    pub print_header:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut seq_file)>,
     pub print_line: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut trace_iterator) -> print_line_t::Type,
     >,
@@ -24782,7 +26898,10 @@ pub struct trace_pid_list {
     pub pids: *mut ::aya_bpf::cty::c_ulong,
 }
 pub type cond_update_fn_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *mut trace_array, arg2: *mut ::aya_bpf::cty::c_void) -> bool_,
+    unsafe extern "C" fn(
+        arg1: *mut trace_array,
+        arg2: *mut ::aya_bpf::cty::c_void,
+    ) -> bool_,
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -24969,14 +27088,16 @@ pub struct blk_mq_ctx__bindgen_ty_1 {
 impl blk_mq_ctx__bindgen_ty_1 {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
 impl blk_mq_ctx {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -25034,14 +27155,16 @@ pub struct blk_mq_hw_ctx__bindgen_ty_1 {
 impl blk_mq_hw_ctx__bindgen_ty_1 {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
 impl blk_mq_hw_ctx {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -25061,11 +27184,14 @@ pub struct blk_stat_callback {
     pub list: list_head,
     pub timer: timer_list,
     pub cpu_stat: *mut blk_rq_stat,
-    pub bucket_fn:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *const request) -> ::aya_bpf::cty::c_int>,
+    pub bucket_fn: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const request) -> ::aya_bpf::cty::c_int,
+    >,
     pub buckets: ::aya_bpf::cty::c_uint,
     pub stat: *mut blk_rq_stat,
-    pub timer_fn: ::core::option::Option<unsafe extern "C" fn(arg1: *mut blk_stat_callback)>,
+    pub timer_fn: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut blk_stat_callback),
+    >,
     pub data: *mut ::aya_bpf::cty::c_void,
     pub rcu: callback_head,
 }
@@ -25100,7 +27226,9 @@ pub struct blk_flush_queue {
 impl blk_flush_queue {
     #[inline]
     pub fn flush_pending_idx(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_flush_pending_idx(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -25111,7 +27239,9 @@ impl blk_flush_queue {
     }
     #[inline]
     pub fn flush_running_idx(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_flush_running_idx(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -25125,13 +27255,16 @@ impl blk_flush_queue {
         flush_pending_idx: ::aya_bpf::cty::c_uint,
         flush_running_idx: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let flush_pending_idx: u32 = unsafe { ::core::mem::transmute(flush_pending_idx) };
+            let flush_pending_idx: u32 =
+                unsafe { ::core::mem::transmute(flush_pending_idx) };
             flush_pending_idx as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let flush_running_idx: u32 = unsafe { ::core::mem::transmute(flush_running_idx) };
+            let flush_running_idx: u32 =
+                unsafe { ::core::mem::transmute(flush_running_idx) };
             flush_running_idx as u64
         });
         __bindgen_bitfield_unit
@@ -25519,7 +27652,13 @@ pub mod bpf_return_type {
 #[derive(Copy, Clone)]
 pub struct bpf_func_proto {
     pub func: ::core::option::Option<
-        unsafe extern "C" fn(arg1: u64_, arg2: u64_, arg3: u64_, arg4: u64_, arg5: u64_) -> u64_,
+        unsafe extern "C" fn(
+            arg1: u64_,
+            arg2: u64_,
+            arg3: u64_,
+            arg4: u64_,
+            arg5: u64_,
+        ) -> u64_,
     >,
     pub gpl_only: bool_,
     pub pkt_access: bool_,
@@ -25527,7 +27666,9 @@ pub struct bpf_func_proto {
     pub __bindgen_anon_1: bpf_func_proto__bindgen_ty_1,
     pub __bindgen_anon_2: bpf_func_proto__bindgen_ty_2,
     pub ret_btf_id: *mut ::aya_bpf::cty::c_int,
-    pub allowed: ::core::option::Option<unsafe extern "C" fn(arg1: *const bpf_prog) -> bool_>,
+    pub allowed: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *const bpf_prog) -> bool_,
+    >,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -25609,7 +27750,10 @@ pub struct bpf_verifier_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub gen_ld_abs: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const bpf_insn, arg2: *mut bpf_insn) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *const bpf_insn,
+            arg2: *mut bpf_insn,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub convert_ctx_access: ::core::option::Option<
         unsafe extern "C" fn(
@@ -25631,7 +27775,8 @@ pub struct bpf_verifier_ops {
             arg7: *mut u32_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub check_kfunc_call: ::core::option::Option<unsafe extern "C" fn(arg1: u32_) -> bool_>,
+    pub check_kfunc_call:
+        ::core::option::Option<unsafe extern "C" fn(arg1: u32_) -> bool_>,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -25693,7 +27838,8 @@ pub struct bucket_table {
 impl bucket_table {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -25935,7 +28081,8 @@ pub struct bpf_insn_aux_data__bindgen_ty_1__bindgen_ty_1 {
 #[derive(Copy, Clone)]
 pub struct bpf_insn_aux_data__bindgen_ty_1__bindgen_ty_2 {
     pub reg_type: bpf_reg_type::Type,
-    pub __bindgen_anon_1: bpf_insn_aux_data__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1,
+    pub __bindgen_anon_1:
+        bpf_insn_aux_data__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -25945,7 +28092,8 @@ pub union bpf_insn_aux_data__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct bpf_insn_aux_data__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1__bindgen_ty_1 {
+pub struct bpf_insn_aux_data__bindgen_ty_1__bindgen_ty_2__bindgen_ty_1__bindgen_ty_1
+{
     pub btf: *mut btf,
     pub btf_id: u32_,
 }
@@ -25984,7 +28132,8 @@ pub struct bpf_cgroup_storage_map {
 impl bpf_cgroup_storage_map {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -26020,7 +28169,8 @@ pub struct inet_hashinfo {
 impl inet_hashinfo {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -26035,7 +28185,8 @@ pub struct ip_ra_chain {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union ip_ra_chain__bindgen_ty_1 {
-    pub destructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub destructor:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub saved_sk: *mut sock,
 }
 #[repr(C)]
@@ -26076,8 +28227,9 @@ pub struct lwtunnel_state {
             arg3: *mut sk_buff,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub orig_input:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sk_buff) -> ::aya_bpf::cty::c_int>,
+    pub orig_input: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+    >,
     pub rcu: callback_head,
     pub data: __IncompleteArrayField<__u8>,
 }
@@ -26098,7 +28250,9 @@ pub struct sock_reuseport {
 impl sock_reuseport {
     #[inline]
     pub fn bind_inany(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_bind_inany(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -26109,7 +28263,9 @@ impl sock_reuseport {
     }
     #[inline]
     pub fn has_conns(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_has_conns(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -26123,7 +28279,8 @@ impl sock_reuseport {
         bind_inany: ::aya_bpf::cty::c_uint,
         has_conns: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let bind_inany: u32 = unsafe { ::core::mem::transmute(bind_inany) };
             bind_inany as u64
@@ -26158,10 +28315,14 @@ pub struct strp_stats {
 #[derive(Debug, Copy, Clone)]
 pub struct strp_callbacks {
     pub parse_msg: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut strparser, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut strparser,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub rcv_msg:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut strparser, arg2: *mut sk_buff)>,
+    pub rcv_msg: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut strparser, arg2: *mut sk_buff),
+    >,
     pub read_sock_done: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut strparser,
@@ -26171,8 +28332,10 @@ pub struct strp_callbacks {
     pub abort_parser: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut strparser, arg2: ::aya_bpf::cty::c_int),
     >,
-    pub lock: ::core::option::Option<unsafe extern "C" fn(arg1: *mut strparser)>,
-    pub unlock: ::core::option::Option<unsafe extern "C" fn(arg1: *mut strparser)>,
+    pub lock:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut strparser)>,
+    pub unlock:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut strparser)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -26191,7 +28354,9 @@ pub struct strparser {
 impl strparser {
     #[inline]
     pub fn stopped(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_stopped(&mut self, val: u32_) {
@@ -26202,7 +28367,9 @@ impl strparser {
     }
     #[inline]
     pub fn paused(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_paused(&mut self, val: u32_) {
@@ -26213,7 +28380,9 @@ impl strparser {
     }
     #[inline]
     pub fn aborted(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_aborted(&mut self, val: u32_) {
@@ -26224,7 +28393,9 @@ impl strparser {
     }
     #[inline]
     pub fn interrupted(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_interrupted(&mut self, val: u32_) {
@@ -26235,7 +28406,9 @@ impl strparser {
     }
     #[inline]
     pub fn unrecov_intr(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_unrecov_intr(&mut self, val: u32_) {
@@ -26252,7 +28425,8 @@ impl strparser {
         interrupted: u32_,
         unrecov_intr: u32_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let stopped: u32 = unsafe { ::core::mem::transmute(stopped) };
             stopped as u64
@@ -26266,11 +28440,13 @@ impl strparser {
             aborted as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let interrupted: u32 = unsafe { ::core::mem::transmute(interrupted) };
+            let interrupted: u32 =
+                unsafe { ::core::mem::transmute(interrupted) };
             interrupted as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let unrecov_intr: u32 = unsafe { ::core::mem::transmute(unrecov_intr) };
+            let unrecov_intr: u32 =
+                unsafe { ::core::mem::transmute(unrecov_intr) };
             unrecov_intr as u64
         });
         __bindgen_bitfield_unit
@@ -26301,11 +28477,15 @@ pub struct sk_psock {
     pub link: list_head,
     pub link_lock: spinlock_t,
     pub refcnt: refcount_t,
-    pub saved_unhash: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub saved_close:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_long)>,
-    pub saved_write_space: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
-    pub saved_data_ready: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub saved_unhash:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub saved_close: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_long),
+    >,
+    pub saved_write_space:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub saved_data_ready:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub psock_update_sk_prot: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut sock,
@@ -26406,7 +28586,9 @@ pub struct bpf_prog_offload_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub finalize: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut bpf_verifier_env) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut bpf_verifier_env,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub replace_insn: ::core::option::Option<
         unsafe extern "C" fn(
@@ -26422,11 +28604,14 @@ pub struct bpf_prog_offload_ops {
             arg3: u32_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub prepare:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_prog) -> ::aya_bpf::cty::c_int>,
-    pub translate:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_prog) -> ::aya_bpf::cty::c_int>,
-    pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_prog)>,
+    pub prepare: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bpf_prog) -> ::aya_bpf::cty::c_int,
+    >,
+    pub translate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut bpf_prog) -> ::aya_bpf::cty::c_int,
+    >,
+    pub destroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut bpf_prog)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -26472,7 +28657,9 @@ pub struct perf_buffer {
     pub aux_overwrite: ::aya_bpf::cty::c_int,
     pub aux_mmap_count: atomic_t,
     pub aux_mmap_locked: ::aya_bpf::cty::c_ulong,
-    pub free_aux: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub free_aux: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub aux_refcount: refcount_t,
     pub aux_in_sampling: ::aya_bpf::cty::c_int,
     pub aux_pages: *mut *mut ::aya_bpf::cty::c_void,
@@ -26554,7 +28741,8 @@ pub struct static_key_mod {
 pub struct watch_list {
     pub rcu: callback_head,
     pub watchers: hlist_head,
-    pub release_watch: ::core::option::Option<unsafe extern "C" fn(arg1: *mut watch)>,
+    pub release_watch:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut watch)>,
     pub lock: spinlock_t,
 }
 pub mod watch_notification_type {
@@ -26682,7 +28870,9 @@ pub struct kmem_cache {
     pub min: kmem_cache_order_objects,
     pub allocflags: gfp_t,
     pub refcount: ::aya_bpf::cty::c_int,
-    pub ctor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub ctor: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub inuse: ::aya_bpf::cty::c_uint,
     pub align: ::aya_bpf::cty::c_uint,
     pub red_left_pad: ::aya_bpf::cty::c_uint,
@@ -26723,7 +28913,10 @@ pub struct simple_xattrs {
     pub lock: spinlock_t,
 }
 pub type crypto_completion_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: *mut crypto_async_request, arg2: ::aya_bpf::cty::c_int),
+    unsafe extern "C" fn(
+        arg1: *mut crypto_async_request,
+        arg2: ::aya_bpf::cty::c_int,
+    ),
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -26947,7 +29140,9 @@ pub struct fileattr {
 impl fileattr {
     #[inline]
     pub fn flags_valid(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_flags_valid(&mut self, val: bool_) {
@@ -26958,7 +29153,9 @@ impl fileattr {
     }
     #[inline]
     pub fn fsx_valid(&self) -> bool_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fsx_valid(&mut self, val: bool_) {
@@ -26972,9 +29169,11 @@ impl fileattr {
         flags_valid: bool_,
         fsx_valid: bool_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let flags_valid: u8 = unsafe { ::core::mem::transmute(flags_valid) };
+            let flags_valid: u8 =
+                unsafe { ::core::mem::transmute(flags_valid) };
             flags_valid as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -27136,7 +29335,8 @@ pub struct kioctx__bindgen_ty_3 {
 impl kioctx__bindgen_ty_3 {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -27152,7 +29352,8 @@ pub struct kioctx__bindgen_ty_4 {
 impl kioctx {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -27332,7 +29533,8 @@ pub struct io_rings {
 impl io_rings {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -27379,8 +29581,9 @@ pub struct io_rsrc_node {
     pub llist: llist_node,
     pub done: bool_,
 }
-pub type rsrc_put_fn =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut io_ring_ctx, arg2: *mut io_rsrc_put)>;
+pub type rsrc_put_fn = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut io_ring_ctx, arg2: *mut io_rsrc_put),
+>;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct io_rsrc_data {
@@ -27454,7 +29657,9 @@ pub struct io_ring_ctx__bindgen_ty_1 {
 impl io_ring_ctx__bindgen_ty_1 {
     #[inline]
     pub fn compat(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_compat(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -27465,7 +29670,9 @@ impl io_ring_ctx__bindgen_ty_1 {
     }
     #[inline]
     pub fn drain_next(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_drain_next(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -27476,7 +29683,9 @@ impl io_ring_ctx__bindgen_ty_1 {
     }
     #[inline]
     pub fn eventfd_async(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_eventfd_async(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -27487,7 +29696,9 @@ impl io_ring_ctx__bindgen_ty_1 {
     }
     #[inline]
     pub fn restricted(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_restricted(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -27498,7 +29709,9 @@ impl io_ring_ctx__bindgen_ty_1 {
     }
     #[inline]
     pub fn off_timeout_used(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_off_timeout_used(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -27509,7 +29722,9 @@ impl io_ring_ctx__bindgen_ty_1 {
     }
     #[inline]
     pub fn drain_active(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_drain_active(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -27547,7 +29762,8 @@ pub struct io_ring_ctx__bindgen_ty_2 {
 impl io_ring_ctx__bindgen_ty_2 {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -27580,7 +29796,8 @@ pub struct io_ring_ctx__bindgen_ty_4 {
 impl io_ring_ctx__bindgen_ty_4 {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -27866,8 +30083,9 @@ pub struct io_completion {
     pub file: *mut file,
     pub cflags: u32_,
 }
-pub type io_req_tw_func_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut io_kiocb, arg2: *mut bool_)>;
+pub type io_req_tw_func_t = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut io_kiocb, arg2: *mut bool_),
+>;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct io_task_work {
@@ -28239,7 +30457,8 @@ pub struct rpc_rqst {
     pub rq_seqno: u32_,
     pub rq_enc_pages_num: ::aya_bpf::cty::c_int,
     pub rq_enc_pages: *mut *mut page,
-    pub rq_release_snd_buf: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_rqst)>,
+    pub rq_release_snd_buf:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_rqst)>,
     pub __bindgen_anon_1: rpc_rqst__bindgen_ty_1,
     pub rq_xmit: list_head,
     pub rq_xmit2: list_head,
@@ -28317,8 +30536,10 @@ pub struct rpc_task {
     pub tk_count: atomic_t,
     pub tk_status: ::aya_bpf::cty::c_int,
     pub tk_task: list_head,
-    pub tk_callback: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
-    pub tk_action: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
+    pub tk_callback:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
+    pub tk_action:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
     pub tk_timeout: ::aya_bpf::cty::c_ulong,
     pub tk_runstate: ::aya_bpf::cty::c_ulong,
     pub tk_waitqueue: *mut rpc_wait_queue,
@@ -28350,7 +30571,9 @@ pub union rpc_task__bindgen_ty_1 {
 impl rpc_task {
     #[inline]
     pub fn tk_priority(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_tk_priority(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -28361,7 +30584,9 @@ impl rpc_task {
     }
     #[inline]
     pub fn tk_garb_retry(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_tk_garb_retry(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -28372,7 +30597,9 @@ impl rpc_task {
     }
     #[inline]
     pub fn tk_cred_retry(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_tk_cred_retry(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -28383,7 +30610,9 @@ impl rpc_task {
     }
     #[inline]
     pub fn tk_rebind_retry(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_tk_rebind_retry(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -28399,21 +30628,26 @@ impl rpc_task {
         tk_cred_retry: ::aya_bpf::cty::c_uchar,
         tk_rebind_retry: ::aya_bpf::cty::c_uchar,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 2u8, {
-            let tk_priority: u8 = unsafe { ::core::mem::transmute(tk_priority) };
+            let tk_priority: u8 =
+                unsafe { ::core::mem::transmute(tk_priority) };
             tk_priority as u64
         });
         __bindgen_bitfield_unit.set(2usize, 2u8, {
-            let tk_garb_retry: u8 = unsafe { ::core::mem::transmute(tk_garb_retry) };
+            let tk_garb_retry: u8 =
+                unsafe { ::core::mem::transmute(tk_garb_retry) };
             tk_garb_retry as u64
         });
         __bindgen_bitfield_unit.set(4usize, 2u8, {
-            let tk_cred_retry: u8 = unsafe { ::core::mem::transmute(tk_cred_retry) };
+            let tk_cred_retry: u8 =
+                unsafe { ::core::mem::transmute(tk_cred_retry) };
             tk_cred_retry as u64
         });
         __bindgen_bitfield_unit.set(6usize, 2u8, {
-            let tk_rebind_retry: u8 = unsafe { ::core::mem::transmute(tk_rebind_retry) };
+            let tk_rebind_retry: u8 =
+                unsafe { ::core::mem::transmute(tk_rebind_retry) };
             tk_rebind_retry as u64
         });
         __bindgen_bitfield_unit
@@ -28423,16 +30657,26 @@ impl rpc_task {
 #[derive(Debug, Copy, Clone)]
 pub struct rpc_call_ops {
     pub rpc_call_prepare: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub rpc_call_done: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
     pub rpc_count_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut ::aya_bpf::cty::c_void),
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut ::aya_bpf::cty::c_void,
+        ),
     >,
-    pub rpc_release:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub rpc_release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -28518,7 +30762,9 @@ pub union rpc_clnt__bindgen_ty_1 {
 impl rpc_clnt {
     #[inline]
     pub fn cl_softrtry(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_cl_softrtry(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -28529,7 +30775,9 @@ impl rpc_clnt {
     }
     #[inline]
     pub fn cl_softerr(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_cl_softerr(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -28540,7 +30788,9 @@ impl rpc_clnt {
     }
     #[inline]
     pub fn cl_discrtry(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_cl_discrtry(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -28551,7 +30801,9 @@ impl rpc_clnt {
     }
     #[inline]
     pub fn cl_noretranstimeo(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_cl_noretranstimeo(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -28562,7 +30814,9 @@ impl rpc_clnt {
     }
     #[inline]
     pub fn cl_autobind(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_cl_autobind(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -28573,7 +30827,9 @@ impl rpc_clnt {
     }
     #[inline]
     pub fn cl_chatty(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_cl_chatty(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -28591,9 +30847,11 @@ impl rpc_clnt {
         cl_autobind: ::aya_bpf::cty::c_uint,
         cl_chatty: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let cl_softrtry: u32 = unsafe { ::core::mem::transmute(cl_softrtry) };
+            let cl_softrtry: u32 =
+                unsafe { ::core::mem::transmute(cl_softrtry) };
             cl_softrtry as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -28601,15 +30859,18 @@ impl rpc_clnt {
             cl_softerr as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let cl_discrtry: u32 = unsafe { ::core::mem::transmute(cl_discrtry) };
+            let cl_discrtry: u32 =
+                unsafe { ::core::mem::transmute(cl_discrtry) };
             cl_discrtry as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let cl_noretranstimeo: u32 = unsafe { ::core::mem::transmute(cl_noretranstimeo) };
+            let cl_noretranstimeo: u32 =
+                unsafe { ::core::mem::transmute(cl_noretranstimeo) };
             cl_noretranstimeo as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let cl_autobind: u32 = unsafe { ::core::mem::transmute(cl_autobind) };
+            let cl_autobind: u32 =
+                unsafe { ::core::mem::transmute(cl_autobind) };
             cl_autobind as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
@@ -28710,7 +30971,9 @@ pub struct rpc_xprt__bindgen_ty_1 {
 impl rpc_xprt {
     #[inline]
     pub fn resvport(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_resvport(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -28721,7 +30984,9 @@ impl rpc_xprt {
     }
     #[inline]
     pub fn reuseport(&self) -> ::aya_bpf::cty::c_uchar {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reuseport(&mut self, val: ::aya_bpf::cty::c_uchar) {
@@ -28735,7 +31000,8 @@ impl rpc_xprt {
         resvport: ::aya_bpf::cty::c_uchar,
         reuseport: ::aya_bpf::cty::c_uchar,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let resvport: u8 = unsafe { ::core::mem::transmute(resvport) };
             resvport as u64
@@ -28790,9 +31056,13 @@ pub struct rpc_auth {
 pub struct rpc_credops {
     pub cr_name: *const ::aya_bpf::cty::c_char,
     pub cr_init: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_auth, arg2: *mut rpc_cred) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_auth,
+            arg2: *mut rpc_cred,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub crdestroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_cred)>,
+    pub crdestroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_cred)>,
     pub crmatch: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut auth_cred,
@@ -28801,25 +31071,43 @@ pub struct rpc_credops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub crmarshal: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut xdr_stream) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut xdr_stream,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub crrefresh:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task) -> ::aya_bpf::cty::c_int>,
+    pub crrefresh: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_task) -> ::aya_bpf::cty::c_int,
+    >,
     pub crvalidate: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut xdr_stream) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut xdr_stream,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub crwrap_req: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut xdr_stream) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut xdr_stream,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub crunwrap_resp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut xdr_stream) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut xdr_stream,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub crkey_timeout:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_cred) -> ::aya_bpf::cty::c_int>,
+    pub crkey_timeout: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_cred) -> ::aya_bpf::cty::c_int,
+    >,
     pub crstringify_acceptor: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_cred) -> *mut ::aya_bpf::cty::c_char,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_cred,
+        ) -> *mut ::aya_bpf::cty::c_char,
     >,
-    pub crneed_reencode: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task) -> bool_>,
+    pub crneed_reencode: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_task) -> bool_,
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -28833,7 +31121,8 @@ pub struct rpc_authops {
             arg2: *mut rpc_clnt,
         ) -> *mut rpc_auth,
     >,
-    pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_auth)>,
+    pub destroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_auth)>,
     pub hash_cred: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut auth_cred,
@@ -28865,7 +31154,10 @@ pub struct rpc_authops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub key_timeout: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_auth, arg2: *mut rpc_cred) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_auth,
+            arg2: *mut rpc_cred,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -28894,32 +31186,52 @@ pub struct rpc_xprt_ops {
         unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: size_t, arg3: size_t),
     >,
     pub reserve_xprt: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_xprt,
+            arg2: *mut rpc_task,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub release_xprt:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task)>,
-    pub alloc_slot:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task)>,
-    pub free_slot:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_rqst)>,
-    pub rpcbind: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
+    pub release_xprt: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task),
+    >,
+    pub alloc_slot: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task),
+    >,
+    pub free_slot: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_rqst),
+    >,
+    pub rpcbind:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
     pub set_port: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: ::aya_bpf::cty::c_ushort),
+        unsafe extern "C" fn(
+            arg1: *mut rpc_xprt,
+            arg2: ::aya_bpf::cty::c_ushort,
+        ),
     >,
-    pub connect:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task)>,
-    pub buf_alloc:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task) -> ::aya_bpf::cty::c_int>,
-    pub buf_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
-    pub prepare_request: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_rqst)>,
-    pub send_request:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_rqst) -> ::aya_bpf::cty::c_int>,
-    pub wait_for_reply_request: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
-    pub timer:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task)>,
-    pub release_request: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
-    pub close: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
-    pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
+    pub connect: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task),
+    >,
+    pub buf_alloc: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_task) -> ::aya_bpf::cty::c_int,
+    >,
+    pub buf_free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
+    pub prepare_request:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_rqst)>,
+    pub send_request: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_rqst) -> ::aya_bpf::cty::c_int,
+    >,
+    pub wait_for_reply_request:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
+    pub timer: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut rpc_task),
+    >,
+    pub release_request:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_task)>,
+    pub close:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
+    pub destroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
     pub set_connect_timeout: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut rpc_xprt,
@@ -28927,22 +31239,30 @@ pub struct rpc_xprt_ops {
             arg3: ::aya_bpf::cty::c_ulong,
         ),
     >,
-    pub print_stats:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut seq_file)>,
-    pub enable_swap:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt) -> ::aya_bpf::cty::c_int>,
-    pub disable_swap: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
-    pub inject_disconnect: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
+    pub print_stats: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: *mut seq_file),
+    >,
+    pub enable_swap: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt) -> ::aya_bpf::cty::c_int,
+    >,
+    pub disable_swap:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
+    pub inject_disconnect:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt)>,
     pub bc_setup: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut rpc_xprt,
             arg2: ::aya_bpf::cty::c_uint,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub bc_maxpayload: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt) -> size_t>,
-    pub bc_num_slots:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt) -> ::aya_bpf::cty::c_uint>,
-    pub bc_free_rqst: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_rqst)>,
+    pub bc_maxpayload: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt) -> size_t,
+    >,
+    pub bc_num_slots: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt) -> ::aya_bpf::cty::c_uint,
+    >,
+    pub bc_free_rqst:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_rqst)>,
     pub bc_destroy: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut rpc_xprt, arg2: ::aya_bpf::cty::c_uint),
     >,
@@ -28976,8 +31296,9 @@ pub struct svc_serv {
 pub struct xprt_class {
     pub list: list_head,
     pub ident: ::aya_bpf::cty::c_int,
-    pub setup:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut xprt_create) -> *mut rpc_xprt>,
+    pub setup: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut xprt_create) -> *mut rpc_xprt,
+    >,
     pub owner: *mut module,
     pub name: [::aya_bpf::cty::c_char; 32usize],
     pub netid: __IncompleteArrayField<*const ::aya_bpf::cty::c_char>,
@@ -29065,8 +31386,9 @@ pub struct svc_program {
     pub pg_name: *mut ::aya_bpf::cty::c_char,
     pub pg_class: *mut ::aya_bpf::cty::c_char,
     pub pg_stats: *mut svc_stat,
-    pub pg_authenticate:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int>,
+    pub pg_authenticate: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int,
+    >,
     pub pg_init_request: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut svc_rqst,
@@ -29088,11 +31410,14 @@ pub struct svc_program {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct rpc_xprt_iter_ops {
-    pub xpi_rewind: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt_iter)>,
-    pub xpi_xprt:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt_iter) -> *mut rpc_xprt>,
-    pub xpi_next:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt_iter) -> *mut rpc_xprt>,
+    pub xpi_rewind:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rpc_xprt_iter)>,
+    pub xpi_xprt: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt_iter) -> *mut rpc_xprt,
+    >,
+    pub xpi_next: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rpc_xprt_iter) -> *mut rpc_xprt,
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -29189,10 +31514,18 @@ pub struct gss_api_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub gss_get_mic: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut gss_ctx, arg2: *mut xdr_buf, arg3: *mut xdr_netobj) -> u32_,
+        unsafe extern "C" fn(
+            arg1: *mut gss_ctx,
+            arg2: *mut xdr_buf,
+            arg3: *mut xdr_netobj,
+        ) -> u32_,
     >,
     pub gss_verify_mic: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut gss_ctx, arg2: *mut xdr_buf, arg3: *mut xdr_netobj) -> u32_,
+        unsafe extern "C" fn(
+            arg1: *mut gss_ctx,
+            arg2: *mut xdr_buf,
+            arg3: *mut xdr_netobj,
+        ) -> u32_,
     >,
     pub gss_wrap: ::core::option::Option<
         unsafe extern "C" fn(
@@ -29210,8 +31543,9 @@ pub struct gss_api_ops {
             arg4: *mut xdr_buf,
         ) -> u32_,
     >,
-    pub gss_delete_sec_context:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub gss_delete_sec_context: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -29343,7 +31677,9 @@ pub struct nfs4_sequence_args {
 impl nfs4_sequence_args {
     #[inline]
     pub fn sa_cache_this(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sa_cache_this(&mut self, val: u8_) {
@@ -29354,7 +31690,9 @@ impl nfs4_sequence_args {
     }
     #[inline]
     pub fn sa_privileged(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sa_privileged(&mut self, val: u8_) {
@@ -29368,13 +31706,16 @@ impl nfs4_sequence_args {
         sa_cache_this: u8_,
         sa_privileged: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let sa_cache_this: u8 = unsafe { ::core::mem::transmute(sa_cache_this) };
+            let sa_cache_this: u8 =
+                unsafe { ::core::mem::transmute(sa_cache_this) };
             sa_cache_this as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let sa_privileged: u8 = unsafe { ::core::mem::transmute(sa_privileged) };
+            let sa_privileged: u8 =
+                unsafe { ::core::mem::transmute(sa_privileged) };
             sa_privileged as u64
         });
         __bindgen_bitfield_unit
@@ -29508,7 +31849,8 @@ pub struct nfs_server {
     pub ss_copies: list_head,
     pub mig_gen: ::aya_bpf::cty::c_ulong,
     pub mig_status: ::aya_bpf::cty::c_ulong,
-    pub destroy: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_server)>,
+    pub destroy:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_server)>,
     pub active: atomic_t,
     pub mountd_address: __kernel_sockaddr_storage,
     pub mountd_addrlen: size_t,
@@ -29851,7 +32193,9 @@ pub struct nfs_pgio_header {
     pub lseg: *mut pnfs_layout_segment,
     pub io_start: loff_t,
     pub mds_ops: *const rpc_call_ops,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_pgio_header)>,
+    pub release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut nfs_pgio_header),
+    >,
     pub completion_ops: *const nfs_pgio_completion_ops,
     pub rw_ops: *const nfs_rw_ops,
     pub io_completion: *mut nfs_io_completion,
@@ -29883,9 +32227,15 @@ pub struct nfs_pgio_completion_ops {
     pub error_cleanup: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut list_head, arg2: ::aya_bpf::cty::c_int),
     >,
-    pub init_hdr: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_pgio_header)>,
-    pub completion: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_pgio_header)>,
-    pub reschedule_io: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_pgio_header)>,
+    pub init_hdr: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut nfs_pgio_header),
+    >,
+    pub completion: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut nfs_pgio_header),
+    >,
+    pub reschedule_io: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut nfs_pgio_header),
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -29897,7 +32247,9 @@ pub struct nfs_mds_commit_info {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct nfs_commit_completion_ops {
-    pub completion: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_commit_data)>,
+    pub completion: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut nfs_commit_data),
+    >,
     pub resched_write: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut nfs_commit_info, arg2: *mut nfs_page),
     >,
@@ -29995,7 +32347,10 @@ pub struct nfs_rpc_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub submount: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut fs_context, arg2: *mut nfs_server) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut fs_context,
+            arg2: *mut nfs_server,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub try_get_tree: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut fs_context) -> ::aya_bpf::cty::c_int,
@@ -30056,19 +32411,33 @@ pub struct nfs_rpc_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub remove: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *mut dentry) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *mut dentry,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub unlink_setup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_message, arg2: *mut dentry, arg3: *mut inode),
+        unsafe extern "C" fn(
+            arg1: *mut rpc_message,
+            arg2: *mut dentry,
+            arg3: *mut inode,
+        ),
     >,
     pub unlink_rpc_prepare: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut nfs_unlinkdata),
     >,
     pub unlink_done: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut inode) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut rpc_task,
+            arg2: *mut inode,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub rename_setup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rpc_message, arg2: *mut dentry, arg3: *mut dentry),
+        unsafe extern "C" fn(
+            arg1: *mut rpc_message,
+            arg2: *mut dentry,
+            arg3: *mut dentry,
+        ),
     >,
     pub rename_rpc_prepare: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut rpc_task, arg2: *mut nfs_renamedata),
@@ -30104,7 +32473,10 @@ pub struct nfs_rpc_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub rmdir: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *const qstr) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *const qstr,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub readdir: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30142,7 +32514,10 @@ pub struct nfs_rpc_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub set_capabilities: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_server, arg2: *mut nfs_fh) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut nfs_server,
+            arg2: *mut nfs_fh,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub decode_dirent: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30158,7 +32533,10 @@ pub struct nfs_rpc_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub read_setup: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_pgio_header, arg2: *mut rpc_message),
+        unsafe extern "C" fn(
+            arg1: *mut nfs_pgio_header,
+            arg2: *mut rpc_message,
+        ),
     >,
     pub read_done: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30205,9 +32583,13 @@ pub struct nfs_rpc_ops {
     pub lock_check_bounds: ::core::option::Option<
         unsafe extern "C" fn(arg1: *const file_lock) -> ::aya_bpf::cty::c_int,
     >,
-    pub clear_acl_cache: ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
+    pub clear_acl_cache:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut inode)>,
     pub close_context: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_open_context, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut nfs_open_context,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub open_context: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30219,10 +32601,15 @@ pub struct nfs_rpc_ops {
         ) -> *mut inode,
     >,
     pub have_delegation: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: fmode_t) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: fmode_t,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub alloc_client: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const nfs_client_initdata) -> *mut nfs_client,
+        unsafe extern "C" fn(
+            arg1: *const nfs_client_initdata,
+        ) -> *mut nfs_client,
     >,
     pub init_client: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30230,9 +32617,11 @@ pub struct nfs_rpc_ops {
             arg2: *const nfs_client_initdata,
         ) -> *mut nfs_client,
     >,
-    pub free_client: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_client)>,
-    pub create_server:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut fs_context) -> *mut nfs_server>,
+    pub free_client:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_client)>,
+    pub create_server: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut fs_context) -> *mut nfs_server,
+    >,
     pub clone_server: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut nfs_server,
@@ -30242,7 +32631,10 @@ pub struct nfs_rpc_ops {
         ) -> *mut nfs_server,
     >,
     pub discover_trunking: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_server, arg2: *mut nfs_fh) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut nfs_server,
+            arg2: *mut nfs_fh,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -30262,9 +32654,13 @@ pub struct nfs4_minor_version_ops {
     pub init_client: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut nfs_client) -> ::aya_bpf::cty::c_int,
     >,
-    pub shutdown_client: ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_client)>,
+    pub shutdown_client:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_client)>,
     pub match_stateid: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const nfs4_stateid, arg2: *const nfs4_stateid) -> bool_,
+        unsafe extern "C" fn(
+            arg1: *const nfs4_stateid,
+            arg2: *const nfs4_stateid,
+        ) -> bool_,
     >,
     pub find_root_sec: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30284,7 +32680,10 @@ pub struct nfs4_minor_version_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub alloc_seqid: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_seqid_counter, arg2: gfp_t) -> *mut nfs_seqid,
+        unsafe extern "C" fn(
+            arg1: *mut nfs_seqid_counter,
+            arg2: gfp_t,
+        ) -> *mut nfs_seqid,
     >,
     pub session_trunk: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30345,7 +32744,10 @@ pub struct cache_deferred_req {
     pub item: *mut cache_head,
     pub owner: *mut ::aya_bpf::cty::c_void,
     pub revisit: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cache_deferred_req, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut cache_deferred_req,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
 }
 #[repr(C)]
@@ -30366,13 +32768,17 @@ pub struct auth_ops {
     pub name: *mut ::aya_bpf::cty::c_char,
     pub owner: *mut module,
     pub flavour: ::aya_bpf::cty::c_int,
-    pub accept:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int>,
-    pub release:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int>,
-    pub domain_release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut auth_domain)>,
-    pub set_client:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int>,
+    pub accept: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int,
+    >,
+    pub release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int,
+    >,
+    pub domain_release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut auth_domain)>,
+    pub set_client: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut svc_rqst) -> ::aya_bpf::cty::c_int,
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -30457,12 +32863,16 @@ pub struct svc_pool {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct svc_serv_ops {
-    pub svo_shutdown:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_serv, arg2: *mut net)>,
-    pub svo_function: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> ::aya_bpf::cty::c_int,
+    pub svo_shutdown: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut svc_serv, arg2: *mut net),
     >,
-    pub svo_enqueue_xprt: ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_xprt)>,
+    pub svo_function: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut ::aya_bpf::cty::c_void,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub svo_enqueue_xprt:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_xprt)>,
     pub svo_setup: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut svc_serv,
@@ -30475,14 +32885,23 @@ pub struct svc_serv_ops {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct svc_procedure {
-    pub pc_func: ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_rqst) -> __be32>,
+    pub pc_func: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut svc_rqst) -> __be32,
+    >,
     pub pc_decode: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut svc_rqst, arg2: *mut __be32) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut svc_rqst,
+            arg2: *mut __be32,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub pc_encode: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut svc_rqst, arg2: *mut __be32) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut svc_rqst,
+            arg2: *mut __be32,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub pc_release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_rqst)>,
+    pub pc_release:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut svc_rqst)>,
     pub pc_argsize: ::aya_bpf::cty::c_uint,
     pub pc_ressize: ::aya_bpf::cty::c_uint,
     pub pc_cachetype: ::aya_bpf::cty::c_uint,
@@ -30511,7 +32930,10 @@ pub struct svc_process_info {
 #[derive(Copy, Clone)]
 pub union svc_process_info__bindgen_ty_1 {
     pub dispatch: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut svc_rqst, arg2: *mut __be32) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut svc_rqst,
+            arg2: *mut __be32,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub mismatch: svc_process_info__bindgen_ty_1__bindgen_ty_1,
 }
@@ -30533,7 +32955,10 @@ pub struct svc_version {
     pub vs_rpcb_optnl: bool_,
     pub vs_need_cong_ctrl: bool_,
     pub vs_dispatch: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut svc_rqst, arg2: *mut __be32) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut svc_rqst,
+            arg2: *mut __be32,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -30548,13 +32973,22 @@ pub struct nfs4_state_recovery_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub recover_lock: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs4_state, arg2: *mut file_lock) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut nfs4_state,
+            arg2: *mut file_lock,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub establish_clid: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_client, arg2: *const cred) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut nfs_client,
+            arg2: *const cred,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub reclaim_complete: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_client, arg2: *const cred) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut nfs_client,
+            arg2: *const cred,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub detect_trunking: ::core::option::Option<
         unsafe extern "C" fn(
@@ -30574,10 +33008,14 @@ pub struct nfs4_state_maintenance_ops {
             arg3: ::aya_bpf::cty::c_uint,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_state_renewal_cred:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut nfs_client) -> *const cred>,
+    pub get_state_renewal_cred: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut nfs_client) -> *const cred,
+    >,
     pub renew_lease: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nfs_client, arg2: *const cred) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut nfs_client,
+            arg2: *const cred,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -30593,7 +33031,10 @@ pub struct nfs4_mig_recovery_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub fsid_present: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut inode, arg2: *const cred) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut inode,
+            arg2: *const cred,
+        ) -> ::aya_bpf::cty::c_int,
     >,
 }
 #[repr(C)]
@@ -30809,8 +33250,10 @@ pub mod ethtool_link_ext_substate_autoneg {
     pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_NO_PARTNER_DETECTED: Type = 1;
     pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_ACK_NOT_RECEIVED: Type = 2;
     pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_NEXT_PAGE_EXCHANGE_FAILED: Type = 3;
-    pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_NO_PARTNER_DETECTED_FORCE_MODE: Type = 4;
-    pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_FEC_MISMATCH_DURING_OVERRIDE: Type = 5;
+    pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_NO_PARTNER_DETECTED_FORCE_MODE:
+        Type = 4;
+    pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_FEC_MISMATCH_DURING_OVERRIDE: Type =
+        5;
     pub const ETHTOOL_LINK_EXT_SUBSTATE_AN_NO_HCD: Type = 6;
 }
 pub mod ethtool_link_ext_substate_link_training {
@@ -30822,17 +33265,22 @@ pub mod ethtool_link_ext_substate_link_training {
 }
 pub mod ethtool_link_ext_substate_link_logical_mismatch {
     pub type Type = ::aya_bpf::cty::c_uint;
-    pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_PCS_DID_NOT_ACQUIRE_BLOCK_LOCK: Type = 1;
-    pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_PCS_DID_NOT_ACQUIRE_AM_LOCK: Type = 2;
-    pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_PCS_DID_NOT_GET_ALIGN_STATUS: Type = 3;
+    pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_PCS_DID_NOT_ACQUIRE_BLOCK_LOCK:
+        Type = 1;
+    pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_PCS_DID_NOT_ACQUIRE_AM_LOCK: Type =
+        2;
+    pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_PCS_DID_NOT_GET_ALIGN_STATUS: Type =
+        3;
     pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_FC_FEC_IS_NOT_LOCKED: Type = 4;
     pub const ETHTOOL_LINK_EXT_SUBSTATE_LLM_RS_FEC_IS_NOT_LOCKED: Type = 5;
 }
 pub mod ethtool_link_ext_substate_bad_signal_integrity {
     pub type Type = ::aya_bpf::cty::c_uint;
-    pub const ETHTOOL_LINK_EXT_SUBSTATE_BSI_LARGE_NUMBER_OF_PHYSICAL_ERRORS: Type = 1;
+    pub const ETHTOOL_LINK_EXT_SUBSTATE_BSI_LARGE_NUMBER_OF_PHYSICAL_ERRORS:
+        Type = 1;
     pub const ETHTOOL_LINK_EXT_SUBSTATE_BSI_UNSUPPORTED_RATE: Type = 2;
-    pub const ETHTOOL_LINK_EXT_SUBSTATE_BSI_SERDES_REFERENCE_CLOCK_LOST: Type = 3;
+    pub const ETHTOOL_LINK_EXT_SUBSTATE_BSI_SERDES_REFERENCE_CLOCK_LOST: Type =
+        3;
     pub const ETHTOOL_LINK_EXT_SUBSTATE_BSI_SERDES_ALOS: Type = 4;
 }
 pub mod ethtool_link_ext_substate_cable_issue {
@@ -31028,8 +33476,10 @@ pub struct ethtool_link_ext_state_info {
 pub union ethtool_link_ext_state_info__bindgen_ty_1 {
     pub autoneg: ethtool_link_ext_substate_autoneg::Type,
     pub link_training: ethtool_link_ext_substate_link_training::Type,
-    pub link_logical_mismatch: ethtool_link_ext_substate_link_logical_mismatch::Type,
-    pub bad_signal_integrity: ethtool_link_ext_substate_bad_signal_integrity::Type,
+    pub link_logical_mismatch:
+        ethtool_link_ext_substate_link_logical_mismatch::Type,
+    pub bad_signal_integrity:
+        ethtool_link_ext_substate_bad_signal_integrity::Type,
     pub cable_issue: ethtool_link_ext_substate_cable_issue::Type,
     pub __link_ext_substate: u8_,
 }
@@ -31196,7 +33646,9 @@ pub struct iphdr {
 impl iphdr {
     #[inline]
     pub fn ihl(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_ihl(&mut self, val: __u8) {
@@ -31207,7 +33659,9 @@ impl iphdr {
     }
     #[inline]
     pub fn version(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_version(&mut self, val: __u8) {
@@ -31217,8 +33671,12 @@ impl iphdr {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(ihl: __u8, version: __u8) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        ihl: __u8,
+        version: __u8,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 4u8, {
             let ihl: u8 = unsafe { ::core::mem::transmute(ihl) };
             ihl as u64
@@ -31302,7 +33760,9 @@ pub union fib6_info__bindgen_ty_1 {
 impl fib6_info {
     #[inline]
     pub fn should_flush(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_should_flush(&mut self, val: u8_) {
@@ -31313,7 +33773,9 @@ impl fib6_info {
     }
     #[inline]
     pub fn dst_nocount(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_dst_nocount(&mut self, val: u8_) {
@@ -31324,7 +33786,9 @@ impl fib6_info {
     }
     #[inline]
     pub fn dst_nopolicy(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_dst_nopolicy(&mut self, val: u8_) {
@@ -31335,7 +33799,9 @@ impl fib6_info {
     }
     #[inline]
     pub fn fib6_destroying(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fib6_destroying(&mut self, val: u8_) {
@@ -31346,7 +33812,9 @@ impl fib6_info {
     }
     #[inline]
     pub fn unused(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_unused(&mut self, val: u8_) {
@@ -31363,21 +33831,26 @@ impl fib6_info {
         fib6_destroying: u8_,
         unused: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let should_flush: u8 = unsafe { ::core::mem::transmute(should_flush) };
+            let should_flush: u8 =
+                unsafe { ::core::mem::transmute(should_flush) };
             should_flush as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let dst_nocount: u8 = unsafe { ::core::mem::transmute(dst_nocount) };
+            let dst_nocount: u8 =
+                unsafe { ::core::mem::transmute(dst_nocount) };
             dst_nocount as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let dst_nopolicy: u8 = unsafe { ::core::mem::transmute(dst_nopolicy) };
+            let dst_nopolicy: u8 =
+                unsafe { ::core::mem::transmute(dst_nopolicy) };
             dst_nopolicy as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let fib6_destroying: u8 = unsafe { ::core::mem::transmute(fib6_destroying) };
+            let fib6_destroying: u8 =
+                unsafe { ::core::mem::transmute(fib6_destroying) };
             fib6_destroying as u64
         });
         __bindgen_bitfield_unit.set(4usize, 4u8, {
@@ -31784,7 +34257,9 @@ pub union rtable__bindgen_ty_1 {
 impl rtable {
     #[inline]
     pub fn rt_mtu_locked(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_rt_mtu_locked(&mut self, val: u32_) {
@@ -31795,7 +34270,9 @@ impl rtable {
     }
     #[inline]
     pub fn rt_pmtu(&self) -> u32_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 31u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 31u8) as u32)
+        }
     }
     #[inline]
     pub fn set_rt_pmtu(&mut self, val: u32_) {
@@ -31809,9 +34286,11 @@ impl rtable {
         rt_mtu_locked: u32_,
         rt_pmtu: u32_,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let rt_mtu_locked: u32 = unsafe { ::core::mem::transmute(rt_mtu_locked) };
+            let rt_mtu_locked: u32 =
+                unsafe { ::core::mem::transmute(rt_mtu_locked) };
             rt_mtu_locked as u64
         });
         __bindgen_bitfield_unit.set(1usize, 31u8, {
@@ -31841,12 +34320,19 @@ pub struct xfrm_type {
     pub init_state: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut xfrm_state) -> ::aya_bpf::cty::c_int,
     >,
-    pub destructor: ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state)>,
+    pub destructor:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state)>,
     pub input: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut xfrm_state, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut xfrm_state,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub output: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut xfrm_state, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut xfrm_state,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub reject: ::core::option::Option<
         unsafe extern "C" fn(
@@ -31861,10 +34347,14 @@ pub struct xfrm_type {
 pub struct xfrm_type_offload {
     pub owner: *mut module,
     pub proto: u8_,
-    pub encap:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut xfrm_state, arg2: *mut sk_buff)>,
+    pub encap: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut xfrm_state, arg2: *mut sk_buff),
+    >,
     pub input_tail: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut xfrm_state, arg2: *mut sk_buff) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut xfrm_state,
+            arg2: *mut sk_buff,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub xmit: ::core::option::Option<
         unsafe extern "C" fn(
@@ -31912,20 +34402,40 @@ pub struct rq_qos {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct rq_qos_ops {
-    pub throttle: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut bio)>,
+    pub throttle: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut bio),
+    >,
     pub track: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request, arg3: *mut bio),
+        unsafe extern "C" fn(
+            arg1: *mut rq_qos,
+            arg2: *mut request,
+            arg3: *mut bio,
+        ),
     >,
     pub merge: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request, arg3: *mut bio),
+        unsafe extern "C" fn(
+            arg1: *mut rq_qos,
+            arg2: *mut request,
+            arg3: *mut bio,
+        ),
     >,
-    pub issue: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request)>,
-    pub requeue:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request)>,
-    pub done: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request)>,
-    pub done_bio: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut bio)>,
-    pub cleanup: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut bio)>,
-    pub queue_depth_changed: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos)>,
+    pub issue: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request),
+    >,
+    pub requeue: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request),
+    >,
+    pub done: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut request),
+    >,
+    pub done_bio: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut bio),
+    >,
+    pub cleanup: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut rq_qos, arg2: *mut bio),
+    >,
+    pub queue_depth_changed:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos)>,
     pub exit: ::core::option::Option<unsafe extern "C" fn(arg1: *mut rq_qos)>,
     pub debugfs_attrs: *const blk_mq_debugfs_attr,
 }
@@ -31949,8 +34459,10 @@ pub struct hd_geometry {
 pub struct klist {
     pub k_lock: spinlock_t,
     pub k_list: list_head,
-    pub get: ::core::option::Option<unsafe extern "C" fn(arg1: *mut klist_node)>,
-    pub put: ::core::option::Option<unsafe extern "C" fn(arg1: *mut klist_node)>,
+    pub get:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut klist_node)>,
+    pub put:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut klist_node)>,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -32143,7 +34655,9 @@ pub struct tty_audit_buf {
 impl tty_audit_buf {
     #[inline]
     pub fn icanon(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_icanon(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32153,8 +34667,11 @@ impl tty_audit_buf {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(icanon: ::aya_bpf::cty::c_uint) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        icanon: ::aya_bpf::cty::c_uint,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let icanon: u32 = unsafe { ::core::mem::transmute(icanon) };
             icanon as u64
@@ -32184,7 +34701,8 @@ pub struct iova_rcache {
     pub depot: [*mut iova_magazine; 32usize],
     pub cpu_rcaches: *mut iova_cpu_rcache,
 }
-pub type iova_flush_cb = ::core::option::Option<unsafe extern "C" fn(arg1: *mut iova_domain)>;
+pub type iova_flush_cb =
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut iova_domain)>;
 pub type iova_entry_dtor =
     ::core::option::Option<unsafe extern "C" fn(arg1: ::aya_bpf::cty::c_ulong)>;
 #[repr(C)]
@@ -32234,8 +34752,9 @@ pub struct iommu_group {
     pub mutex: mutex,
     pub notifier: blocking_notifier_head,
     pub iommu_data: *mut ::aya_bpf::cty::c_void,
-    pub iommu_data_release:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub iommu_data_release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub name: *mut ::aya_bpf::cty::c_char,
     pub id: ::aya_bpf::cty::c_int,
     pub default_domain: *mut iommu_domain,
@@ -32317,7 +34836,9 @@ pub struct subsys_private {
 impl subsys_private {
     #[inline]
     pub fn drivers_autoprobe(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_drivers_autoprobe(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32330,9 +34851,11 @@ impl subsys_private {
     pub fn new_bitfield_1(
         drivers_autoprobe: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let drivers_autoprobe: u32 = unsafe { ::core::mem::transmute(drivers_autoprobe) };
+            let drivers_autoprobe: u32 =
+                unsafe { ::core::mem::transmute(drivers_autoprobe) };
             drivers_autoprobe as u64
         });
         __bindgen_bitfield_unit
@@ -32366,7 +34889,9 @@ pub struct device_private {
 impl device_private {
     #[inline]
     pub fn dead(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_dead(&mut self, val: u8_) {
@@ -32377,7 +34902,8 @@ impl device_private {
     }
     #[inline]
     pub fn new_bitfield_1(dead: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let dead: u8 = unsafe { ::core::mem::transmute(dead) };
             dead as u64
@@ -32392,10 +34918,15 @@ pub struct mdio_device {
     pub bus: *mut mii_bus,
     pub modalias: [::aya_bpf::cty::c_char; 32usize],
     pub bus_match: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut device, arg2: *mut device_driver) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut device,
+            arg2: *mut device_driver,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub device_free: ::core::option::Option<unsafe extern "C" fn(arg1: *mut mdio_device)>,
-    pub device_remove: ::core::option::Option<unsafe extern "C" fn(arg1: *mut mdio_device)>,
+    pub device_free:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut mdio_device)>,
+    pub device_remove:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut mdio_device)>,
     pub addr: ::aya_bpf::cty::c_int,
     pub flags: ::aya_bpf::cty::c_int,
     pub reset_gpio: *mut gpio_desc,
@@ -32508,15 +35039,19 @@ pub struct phy_device {
     pub mii_ts: *mut mii_timestamper,
     pub mdix: u8_,
     pub mdix_ctrl: u8_,
-    pub phy_link_change:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut phy_device, arg2: bool_)>,
-    pub adjust_link: ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
+    pub phy_link_change: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut phy_device, arg2: bool_),
+    >,
+    pub adjust_link:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut net_device)>,
     pub macsec_ops: *const macsec_ops,
 }
 impl phy_device {
     #[inline]
     pub fn is_c45(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_c45(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32527,7 +35062,9 @@ impl phy_device {
     }
     #[inline]
     pub fn is_internal(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_internal(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32538,7 +35075,9 @@ impl phy_device {
     }
     #[inline]
     pub fn is_pseudo_fixed_link(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_pseudo_fixed_link(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32549,7 +35088,9 @@ impl phy_device {
     }
     #[inline]
     pub fn is_gigabit_capable(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_gigabit_capable(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32560,7 +35101,9 @@ impl phy_device {
     }
     #[inline]
     pub fn has_fixups(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_has_fixups(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32571,7 +35114,9 @@ impl phy_device {
     }
     #[inline]
     pub fn suspended(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_suspended(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32582,7 +35127,9 @@ impl phy_device {
     }
     #[inline]
     pub fn suspended_by_mdio_bus(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_suspended_by_mdio_bus(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32593,7 +35140,9 @@ impl phy_device {
     }
     #[inline]
     pub fn sysfs_links(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_sysfs_links(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32604,7 +35153,9 @@ impl phy_device {
     }
     #[inline]
     pub fn loopback_enabled(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_loopback_enabled(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32615,7 +35166,9 @@ impl phy_device {
     }
     #[inline]
     pub fn downshifted_rate(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_downshifted_rate(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32626,7 +35179,9 @@ impl phy_device {
     }
     #[inline]
     pub fn is_on_sfp_module(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_is_on_sfp_module(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32637,7 +35192,9 @@ impl phy_device {
     }
     #[inline]
     pub fn mac_managed_pm(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_mac_managed_pm(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32648,7 +35205,9 @@ impl phy_device {
     }
     #[inline]
     pub fn autoneg(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_autoneg(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32659,7 +35218,9 @@ impl phy_device {
     }
     #[inline]
     pub fn link(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(13usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(13usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_link(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32670,7 +35231,9 @@ impl phy_device {
     }
     #[inline]
     pub fn autoneg_complete(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_autoneg_complete(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32681,7 +35244,9 @@ impl phy_device {
     }
     #[inline]
     pub fn interrupts(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_interrupts(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -32709,21 +35274,25 @@ impl phy_device {
         autoneg_complete: ::aya_bpf::cty::c_uint,
         interrupts: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let is_c45: u32 = unsafe { ::core::mem::transmute(is_c45) };
             is_c45 as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let is_internal: u32 = unsafe { ::core::mem::transmute(is_internal) };
+            let is_internal: u32 =
+                unsafe { ::core::mem::transmute(is_internal) };
             is_internal as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let is_pseudo_fixed_link: u32 = unsafe { ::core::mem::transmute(is_pseudo_fixed_link) };
+            let is_pseudo_fixed_link: u32 =
+                unsafe { ::core::mem::transmute(is_pseudo_fixed_link) };
             is_pseudo_fixed_link as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let is_gigabit_capable: u32 = unsafe { ::core::mem::transmute(is_gigabit_capable) };
+            let is_gigabit_capable: u32 =
+                unsafe { ::core::mem::transmute(is_gigabit_capable) };
             is_gigabit_capable as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
@@ -32740,23 +35309,28 @@ impl phy_device {
             suspended_by_mdio_bus as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
-            let sysfs_links: u32 = unsafe { ::core::mem::transmute(sysfs_links) };
+            let sysfs_links: u32 =
+                unsafe { ::core::mem::transmute(sysfs_links) };
             sysfs_links as u64
         });
         __bindgen_bitfield_unit.set(8usize, 1u8, {
-            let loopback_enabled: u32 = unsafe { ::core::mem::transmute(loopback_enabled) };
+            let loopback_enabled: u32 =
+                unsafe { ::core::mem::transmute(loopback_enabled) };
             loopback_enabled as u64
         });
         __bindgen_bitfield_unit.set(9usize, 1u8, {
-            let downshifted_rate: u32 = unsafe { ::core::mem::transmute(downshifted_rate) };
+            let downshifted_rate: u32 =
+                unsafe { ::core::mem::transmute(downshifted_rate) };
             downshifted_rate as u64
         });
         __bindgen_bitfield_unit.set(10usize, 1u8, {
-            let is_on_sfp_module: u32 = unsafe { ::core::mem::transmute(is_on_sfp_module) };
+            let is_on_sfp_module: u32 =
+                unsafe { ::core::mem::transmute(is_on_sfp_module) };
             is_on_sfp_module as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
-            let mac_managed_pm: u32 = unsafe { ::core::mem::transmute(mac_managed_pm) };
+            let mac_managed_pm: u32 =
+                unsafe { ::core::mem::transmute(mac_managed_pm) };
             mac_managed_pm as u64
         });
         __bindgen_bitfield_unit.set(12usize, 1u8, {
@@ -32768,7 +35342,8 @@ impl phy_device {
             link as u64
         });
         __bindgen_bitfield_unit.set(14usize, 1u8, {
-            let autoneg_complete: u32 = unsafe { ::core::mem::transmute(autoneg_complete) };
+            let autoneg_complete: u32 =
+                unsafe { ::core::mem::transmute(autoneg_complete) };
             autoneg_complete as u64
         });
         __bindgen_bitfield_unit.set(15usize, 1u8, {
@@ -32817,8 +35392,9 @@ pub struct mii_bus {
             arg4: u16_,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub reset:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut mii_bus) -> ::aya_bpf::cty::c_int>,
+    pub reset: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut mii_bus) -> ::aya_bpf::cty::c_int,
+    >,
     pub stats: [mdio_bus_stats; 32usize],
     pub mdio_lock: mutex,
     pub parent: *mut device,
@@ -32873,7 +35449,10 @@ pub struct mii_timestamper {
         ),
     >,
     pub hwtstamp: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut mii_timestamper, arg2: *mut ifreq) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut mii_timestamper,
+            arg2: *mut ifreq,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub link_state: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut mii_timestamper, arg2: *mut phy_device),
@@ -32935,9 +35514,11 @@ pub struct phy_driver {
     pub config_intr: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut phy_device) -> ::aya_bpf::cty::c_int,
     >,
-    pub handle_interrupt:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut phy_device) -> irqreturn_t>,
-    pub remove: ::core::option::Option<unsafe extern "C" fn(arg1: *mut phy_device)>,
+    pub handle_interrupt: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut phy_device) -> irqreturn_t,
+    >,
+    pub remove:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut phy_device)>,
     pub match_phy_device: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut phy_device) -> ::aya_bpf::cty::c_int,
     >,
@@ -32950,7 +35531,8 @@ pub struct phy_driver {
     pub get_wol: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut phy_device, arg2: *mut ethtool_wolinfo),
     >,
-    pub link_change_notify: ::core::option::Option<unsafe extern "C" fn(arg1: *mut phy_device)>,
+    pub link_change_notify:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut phy_device)>,
     pub read_mmd: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut phy_device,
@@ -32998,15 +35580,23 @@ pub struct phy_driver {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub cable_test_get_status: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut phy_device, arg2: *mut bool_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut phy_device,
+            arg2: *mut bool_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_sset_count: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut phy_device) -> ::aya_bpf::cty::c_int,
     >,
-    pub get_strings:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut phy_device, arg2: *mut u8_)>,
+    pub get_strings: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut phy_device, arg2: *mut u8_),
+    >,
     pub get_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut phy_device, arg2: *mut ethtool_stats, arg3: *mut u64_),
+        unsafe extern "C" fn(
+            arg1: *mut phy_device,
+            arg2: *mut ethtool_stats,
+            arg3: *mut u64_,
+        ),
     >,
     pub get_tunable: ::core::option::Option<
         unsafe extern "C" fn(
@@ -33023,7 +35613,10 @@ pub struct phy_driver {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub set_loopback: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut phy_device, arg2: bool_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut phy_device,
+            arg2: bool_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_sqi: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut phy_device) -> ::aya_bpf::cty::c_int,
@@ -33032,8 +35625,9 @@ pub struct phy_driver {
         unsafe extern "C" fn(arg1: *mut phy_device) -> ::aya_bpf::cty::c_int,
     >,
 }
-pub type irq_write_msi_msg_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut msi_desc, arg2: *mut msi_msg)>;
+pub type irq_write_msi_msg_t = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut msi_desc, arg2: *mut msi_msg),
+>;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct platform_msi_priv_data {
@@ -33080,14 +35674,18 @@ pub struct cdrom_device_info {
     pub mmc3_profile: ::aya_bpf::cty::c_ushort,
     pub for_data: ::aya_bpf::cty::c_int,
     pub exit: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cdrom_device_info) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut cdrom_device_info,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub mrw_mode_page: ::aya_bpf::cty::c_int,
 }
 impl cdrom_device_info {
     #[inline]
     pub fn options(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 30u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 30u8) as u32)
+        }
     }
     #[inline]
     pub fn set_options(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -33098,7 +35696,9 @@ impl cdrom_device_info {
     }
     #[inline]
     pub fn mc_flags(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(30usize, 2u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(30usize, 2u8) as u32)
+        }
     }
     #[inline]
     pub fn set_mc_flags(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -33112,7 +35712,8 @@ impl cdrom_device_info {
         options: ::aya_bpf::cty::c_uint,
         mc_flags: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 30u8, {
             let options: u32 = unsafe { ::core::mem::transmute(options) };
             options as u64
@@ -33125,7 +35726,9 @@ impl cdrom_device_info {
     }
     #[inline]
     pub fn sanyo_slot(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(0usize, 2u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(0usize, 2u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sanyo_slot(&mut self, val: __u8) {
@@ -33136,7 +35739,9 @@ impl cdrom_device_info {
     }
     #[inline]
     pub fn keeplocked(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_keeplocked(&mut self, val: __u8) {
@@ -33147,7 +35752,9 @@ impl cdrom_device_info {
     }
     #[inline]
     pub fn reserved(&self) -> __u8 {
-        unsafe { ::core::mem::transmute(self._bitfield_2.get(3usize, 5u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_2.get(3usize, 5u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reserved(&mut self, val: __u8) {
@@ -33162,7 +35769,8 @@ impl cdrom_device_info {
         keeplocked: __u8,
         reserved: __u8,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 2u8, {
             let sanyo_slot: u8 = unsafe { ::core::mem::transmute(sanyo_slot) };
             sanyo_slot as u64
@@ -33225,7 +35833,9 @@ pub struct cdrom_device_ops {
             arg2: ::aya_bpf::cty::c_int,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub release: ::core::option::Option<unsafe extern "C" fn(arg1: *mut cdrom_device_info)>,
+    pub release: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut cdrom_device_info),
+    >,
     pub drive_status: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut cdrom_device_info,
@@ -33276,7 +35886,9 @@ pub struct cdrom_device_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub reset: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut cdrom_device_info) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut cdrom_device_info,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub audio_ioctl: ::core::option::Option<
         unsafe extern "C" fn(
@@ -33361,7 +35973,9 @@ pub struct sfp_eeprom_base__bindgen_ty_1__bindgen_ty_1 {
 impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_1 {
     #[inline]
     pub fn sff8431_app_e(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sff8431_app_e(&mut self, val: u8_) {
@@ -33372,7 +35986,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn fc_pi_4_app_h(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_pi_4_app_h(&mut self, val: u8_) {
@@ -33383,7 +35999,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn reserved60_2(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 6u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 6u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reserved60_2(&mut self, val: u8_) {
@@ -33394,7 +36012,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_1 {
     }
     #[inline]
     pub fn reserved61(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reserved61(&mut self, val: u8_) {
@@ -33410,17 +36030,21 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_1 {
         reserved60_2: u8_,
         reserved61: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let sff8431_app_e: u8 = unsafe { ::core::mem::transmute(sff8431_app_e) };
+            let sff8431_app_e: u8 =
+                unsafe { ::core::mem::transmute(sff8431_app_e) };
             sff8431_app_e as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let fc_pi_4_app_h: u8 = unsafe { ::core::mem::transmute(fc_pi_4_app_h) };
+            let fc_pi_4_app_h: u8 =
+                unsafe { ::core::mem::transmute(fc_pi_4_app_h) };
             fc_pi_4_app_h as u64
         });
         __bindgen_bitfield_unit.set(2usize, 6u8, {
-            let reserved60_2: u8 = unsafe { ::core::mem::transmute(reserved60_2) };
+            let reserved60_2: u8 =
+                unsafe { ::core::mem::transmute(reserved60_2) };
             reserved60_2 as u64
         });
         __bindgen_bitfield_unit.set(8usize, 8u8, {
@@ -33439,7 +36063,9 @@ pub struct sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
 impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
     #[inline]
     pub fn sff8431_app_e(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sff8431_app_e(&mut self, val: u8_) {
@@ -33450,7 +36076,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn fc_pi_4_app_h(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_pi_4_app_h(&mut self, val: u8_) {
@@ -33461,7 +36089,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn sff8431_lim(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sff8431_lim(&mut self, val: u8_) {
@@ -33472,7 +36102,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn fc_pi_4_lim(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_pi_4_lim(&mut self, val: u8_) {
@@ -33483,7 +36115,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn reserved60_4(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 4u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reserved60_4(&mut self, val: u8_) {
@@ -33494,7 +36128,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
     }
     #[inline]
     pub fn reserved61(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 8u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reserved61(&mut self, val: u8_) {
@@ -33512,25 +36148,31 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
         reserved60_4: u8_,
         reserved61: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let sff8431_app_e: u8 = unsafe { ::core::mem::transmute(sff8431_app_e) };
+            let sff8431_app_e: u8 =
+                unsafe { ::core::mem::transmute(sff8431_app_e) };
             sff8431_app_e as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let fc_pi_4_app_h: u8 = unsafe { ::core::mem::transmute(fc_pi_4_app_h) };
+            let fc_pi_4_app_h: u8 =
+                unsafe { ::core::mem::transmute(fc_pi_4_app_h) };
             fc_pi_4_app_h as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let sff8431_lim: u8 = unsafe { ::core::mem::transmute(sff8431_lim) };
+            let sff8431_lim: u8 =
+                unsafe { ::core::mem::transmute(sff8431_lim) };
             sff8431_lim as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let fc_pi_4_lim: u8 = unsafe { ::core::mem::transmute(fc_pi_4_lim) };
+            let fc_pi_4_lim: u8 =
+                unsafe { ::core::mem::transmute(fc_pi_4_lim) };
             fc_pi_4_lim as u64
         });
         __bindgen_bitfield_unit.set(4usize, 4u8, {
-            let reserved60_4: u8 = unsafe { ::core::mem::transmute(reserved60_4) };
+            let reserved60_4: u8 =
+                unsafe { ::core::mem::transmute(reserved60_4) };
             reserved60_4 as u64
         });
         __bindgen_bitfield_unit.set(8usize, 8u8, {
@@ -33543,7 +36185,9 @@ impl sfp_eeprom_base__bindgen_ty_1__bindgen_ty_2 {
 impl sfp_eeprom_base {
     #[inline]
     pub fn if_1x_copper_passive(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_if_1x_copper_passive(&mut self, val: u8_) {
@@ -33554,7 +36198,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn if_1x_copper_active(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_if_1x_copper_active(&mut self, val: u8_) {
@@ -33565,7 +36211,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn if_1x_lx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_if_1x_lx(&mut self, val: u8_) {
@@ -33576,7 +36224,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn if_1x_sx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_if_1x_sx(&mut self, val: u8_) {
@@ -33587,7 +36237,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e10g_base_sr(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e10g_base_sr(&mut self, val: u8_) {
@@ -33598,7 +36250,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e10g_base_lr(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e10g_base_lr(&mut self, val: u8_) {
@@ -33609,7 +36263,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e10g_base_lrm(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e10g_base_lrm(&mut self, val: u8_) {
@@ -33620,7 +36276,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e10g_base_er(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(7usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e10g_base_er(&mut self, val: u8_) {
@@ -33631,7 +36289,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc3_short_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(8usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc3_short_reach(&mut self, val: u8_) {
@@ -33642,7 +36302,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc3_smf_intermediate_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(9usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc3_smf_intermediate_reach(&mut self, val: u8_) {
@@ -33653,7 +36315,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc3_smf_long_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(10usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc3_smf_long_reach(&mut self, val: u8_) {
@@ -33664,7 +36328,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn unallocated_5_3(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(11usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_unallocated_5_3(&mut self, val: u8_) {
@@ -33675,7 +36341,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc12_short_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(12usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc12_short_reach(&mut self, val: u8_) {
@@ -33686,7 +36354,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc12_smf_intermediate_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(13usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(13usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc12_smf_intermediate_reach(&mut self, val: u8_) {
@@ -33697,7 +36367,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc12_smf_long_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(14usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc12_smf_long_reach(&mut self, val: u8_) {
@@ -33708,7 +36380,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn unallocated_5_7(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(15usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_unallocated_5_7(&mut self, val: u8_) {
@@ -33719,7 +36393,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc48_short_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(16usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(16usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc48_short_reach(&mut self, val: u8_) {
@@ -33730,7 +36406,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc48_intermediate_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(17usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(17usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc48_intermediate_reach(&mut self, val: u8_) {
@@ -33741,7 +36419,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc48_long_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(18usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(18usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc48_long_reach(&mut self, val: u8_) {
@@ -33752,7 +36432,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_reach_bit2(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(19usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(19usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_reach_bit2(&mut self, val: u8_) {
@@ -33763,7 +36445,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_reach_bit1(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(20usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(20usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_reach_bit1(&mut self, val: u8_) {
@@ -33774,7 +36458,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sonet_oc192_short_reach(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(21usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(21usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sonet_oc192_short_reach(&mut self, val: u8_) {
@@ -33785,7 +36471,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn escon_smf_1310_laser(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(22usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(22usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_escon_smf_1310_laser(&mut self, val: u8_) {
@@ -33796,7 +36484,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn escon_mmf_1310_led(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(23usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(23usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_escon_mmf_1310_led(&mut self, val: u8_) {
@@ -33807,7 +36497,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e1000_base_sx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(24usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(24usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e1000_base_sx(&mut self, val: u8_) {
@@ -33818,7 +36510,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e1000_base_lx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(25usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(25usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e1000_base_lx(&mut self, val: u8_) {
@@ -33829,7 +36523,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e1000_base_cx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(26usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(26usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e1000_base_cx(&mut self, val: u8_) {
@@ -33840,7 +36536,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e1000_base_t(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(27usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(27usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e1000_base_t(&mut self, val: u8_) {
@@ -33851,7 +36549,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e100_base_lx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(28usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(28usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e100_base_lx(&mut self, val: u8_) {
@@ -33862,7 +36562,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e100_base_fx(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(29usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(29usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e100_base_fx(&mut self, val: u8_) {
@@ -33873,7 +36575,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e_base_bx10(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(30usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(30usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e_base_bx10(&mut self, val: u8_) {
@@ -33884,7 +36588,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn e_base_px(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(31usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(31usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_e_base_px(&mut self, val: u8_) {
@@ -33895,7 +36601,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_tech_electrical_inter_enclosure(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(32usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(32usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_tech_electrical_inter_enclosure(&mut self, val: u8_) {
@@ -33906,7 +36614,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_tech_lc(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(33usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(33usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_tech_lc(&mut self, val: u8_) {
@@ -33917,7 +36627,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_tech_sa(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(34usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(34usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_tech_sa(&mut self, val: u8_) {
@@ -33928,7 +36640,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_ll_m(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(35usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(35usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_ll_m(&mut self, val: u8_) {
@@ -33939,7 +36653,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_ll_l(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(36usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(36usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_ll_l(&mut self, val: u8_) {
@@ -33950,7 +36666,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_ll_i(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(37usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(37usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_ll_i(&mut self, val: u8_) {
@@ -33961,7 +36679,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_ll_s(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(38usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(38usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_ll_s(&mut self, val: u8_) {
@@ -33972,7 +36692,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_ll_v(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(39usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(39usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_ll_v(&mut self, val: u8_) {
@@ -33983,7 +36705,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn unallocated_8_0(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(40usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(40usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_unallocated_8_0(&mut self, val: u8_) {
@@ -33994,7 +36718,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn unallocated_8_1(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(41usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(41usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_unallocated_8_1(&mut self, val: u8_) {
@@ -34005,7 +36731,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sfp_ct_passive(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(42usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(42usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sfp_ct_passive(&mut self, val: u8_) {
@@ -34016,7 +36744,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn sfp_ct_active(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(43usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(43usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sfp_ct_active(&mut self, val: u8_) {
@@ -34027,7 +36757,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_tech_ll(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(44usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(44usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_tech_ll(&mut self, val: u8_) {
@@ -34038,7 +36770,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_tech_sl(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(45usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(45usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_tech_sl(&mut self, val: u8_) {
@@ -34049,7 +36783,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_tech_sn(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(46usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(46usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_tech_sn(&mut self, val: u8_) {
@@ -34060,7 +36796,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_tech_electrical_intra_enclosure(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(47usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(47usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_tech_electrical_intra_enclosure(&mut self, val: u8_) {
@@ -34071,7 +36809,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_media_sm(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(48usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(48usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_media_sm(&mut self, val: u8_) {
@@ -34082,7 +36822,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn unallocated_9_1(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(49usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(49usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_unallocated_9_1(&mut self, val: u8_) {
@@ -34093,7 +36835,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_media_m5(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(50usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(50usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_media_m5(&mut self, val: u8_) {
@@ -34104,7 +36848,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_media_m6(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(51usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(51usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_media_m6(&mut self, val: u8_) {
@@ -34115,7 +36861,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_media_tv(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(52usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(52usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_media_tv(&mut self, val: u8_) {
@@ -34126,7 +36874,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_media_mi(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(53usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(53usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_media_mi(&mut self, val: u8_) {
@@ -34137,7 +36887,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_media_tp(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(54usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(54usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_media_tp(&mut self, val: u8_) {
@@ -34148,7 +36900,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_media_tw(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(55usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(55usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_media_tw(&mut self, val: u8_) {
@@ -34159,7 +36913,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_speed_100(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(56usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(56usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_speed_100(&mut self, val: u8_) {
@@ -34170,7 +36926,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn unallocated_10_1(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(57usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(57usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_unallocated_10_1(&mut self, val: u8_) {
@@ -34181,7 +36939,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_speed_200(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(58usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(58usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_speed_200(&mut self, val: u8_) {
@@ -34192,7 +36952,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_speed_3200(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(59usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(59usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_speed_3200(&mut self, val: u8_) {
@@ -34203,7 +36965,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_speed_400(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(60usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(60usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_speed_400(&mut self, val: u8_) {
@@ -34214,7 +36978,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_speed_1600(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(61usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(61usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_speed_1600(&mut self, val: u8_) {
@@ -34225,7 +36991,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_speed_800(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(62usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(62usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_speed_800(&mut self, val: u8_) {
@@ -34236,7 +37004,9 @@ impl sfp_eeprom_base {
     }
     #[inline]
     pub fn fc_speed_1200(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(63usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(63usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_fc_speed_1200(&mut self, val: u8_) {
@@ -34312,13 +37082,16 @@ impl sfp_eeprom_base {
         fc_speed_800: u8_,
         fc_speed_1200: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 8usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 8usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let if_1x_copper_passive: u8 = unsafe { ::core::mem::transmute(if_1x_copper_passive) };
+            let if_1x_copper_passive: u8 =
+                unsafe { ::core::mem::transmute(if_1x_copper_passive) };
             if_1x_copper_passive as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let if_1x_copper_active: u8 = unsafe { ::core::mem::transmute(if_1x_copper_active) };
+            let if_1x_copper_active: u8 =
+                unsafe { ::core::mem::transmute(if_1x_copper_active) };
             if_1x_copper_active as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
@@ -34330,19 +37103,23 @@ impl sfp_eeprom_base {
             if_1x_sx as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let e10g_base_sr: u8 = unsafe { ::core::mem::transmute(e10g_base_sr) };
+            let e10g_base_sr: u8 =
+                unsafe { ::core::mem::transmute(e10g_base_sr) };
             e10g_base_sr as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let e10g_base_lr: u8 = unsafe { ::core::mem::transmute(e10g_base_lr) };
+            let e10g_base_lr: u8 =
+                unsafe { ::core::mem::transmute(e10g_base_lr) };
             e10g_base_lr as u64
         });
         __bindgen_bitfield_unit.set(6usize, 1u8, {
-            let e10g_base_lrm: u8 = unsafe { ::core::mem::transmute(e10g_base_lrm) };
+            let e10g_base_lrm: u8 =
+                unsafe { ::core::mem::transmute(e10g_base_lrm) };
             e10g_base_lrm as u64
         });
         __bindgen_bitfield_unit.set(7usize, 1u8, {
-            let e10g_base_er: u8 = unsafe { ::core::mem::transmute(e10g_base_er) };
+            let e10g_base_er: u8 =
+                unsafe { ::core::mem::transmute(e10g_base_er) };
             e10g_base_er as u64
         });
         __bindgen_bitfield_unit.set(8usize, 1u8, {
@@ -34351,8 +37128,9 @@ impl sfp_eeprom_base {
             sonet_oc3_short_reach as u64
         });
         __bindgen_bitfield_unit.set(9usize, 1u8, {
-            let sonet_oc3_smf_intermediate_reach: u8 =
-                unsafe { ::core::mem::transmute(sonet_oc3_smf_intermediate_reach) };
+            let sonet_oc3_smf_intermediate_reach: u8 = unsafe {
+                ::core::mem::transmute(sonet_oc3_smf_intermediate_reach)
+            };
             sonet_oc3_smf_intermediate_reach as u64
         });
         __bindgen_bitfield_unit.set(10usize, 1u8, {
@@ -34361,7 +37139,8 @@ impl sfp_eeprom_base {
             sonet_oc3_smf_long_reach as u64
         });
         __bindgen_bitfield_unit.set(11usize, 1u8, {
-            let unallocated_5_3: u8 = unsafe { ::core::mem::transmute(unallocated_5_3) };
+            let unallocated_5_3: u8 =
+                unsafe { ::core::mem::transmute(unallocated_5_3) };
             unallocated_5_3 as u64
         });
         __bindgen_bitfield_unit.set(12usize, 1u8, {
@@ -34370,8 +37149,9 @@ impl sfp_eeprom_base {
             sonet_oc12_short_reach as u64
         });
         __bindgen_bitfield_unit.set(13usize, 1u8, {
-            let sonet_oc12_smf_intermediate_reach: u8 =
-                unsafe { ::core::mem::transmute(sonet_oc12_smf_intermediate_reach) };
+            let sonet_oc12_smf_intermediate_reach: u8 = unsafe {
+                ::core::mem::transmute(sonet_oc12_smf_intermediate_reach)
+            };
             sonet_oc12_smf_intermediate_reach as u64
         });
         __bindgen_bitfield_unit.set(14usize, 1u8, {
@@ -34380,7 +37160,8 @@ impl sfp_eeprom_base {
             sonet_oc12_smf_long_reach as u64
         });
         __bindgen_bitfield_unit.set(15usize, 1u8, {
-            let unallocated_5_7: u8 = unsafe { ::core::mem::transmute(unallocated_5_7) };
+            let unallocated_5_7: u8 =
+                unsafe { ::core::mem::transmute(unallocated_5_7) };
             unallocated_5_7 as u64
         });
         __bindgen_bitfield_unit.set(16usize, 1u8, {
@@ -34389,8 +37170,9 @@ impl sfp_eeprom_base {
             sonet_oc48_short_reach as u64
         });
         __bindgen_bitfield_unit.set(17usize, 1u8, {
-            let sonet_oc48_intermediate_reach: u8 =
-                unsafe { ::core::mem::transmute(sonet_oc48_intermediate_reach) };
+            let sonet_oc48_intermediate_reach: u8 = unsafe {
+                ::core::mem::transmute(sonet_oc48_intermediate_reach)
+            };
             sonet_oc48_intermediate_reach as u64
         });
         __bindgen_bitfield_unit.set(18usize, 1u8, {
@@ -34399,11 +37181,13 @@ impl sfp_eeprom_base {
             sonet_oc48_long_reach as u64
         });
         __bindgen_bitfield_unit.set(19usize, 1u8, {
-            let sonet_reach_bit2: u8 = unsafe { ::core::mem::transmute(sonet_reach_bit2) };
+            let sonet_reach_bit2: u8 =
+                unsafe { ::core::mem::transmute(sonet_reach_bit2) };
             sonet_reach_bit2 as u64
         });
         __bindgen_bitfield_unit.set(20usize, 1u8, {
-            let sonet_reach_bit1: u8 = unsafe { ::core::mem::transmute(sonet_reach_bit1) };
+            let sonet_reach_bit1: u8 =
+                unsafe { ::core::mem::transmute(sonet_reach_bit1) };
             sonet_reach_bit1 as u64
         });
         __bindgen_bitfield_unit.set(21usize, 1u8, {
@@ -34412,39 +37196,48 @@ impl sfp_eeprom_base {
             sonet_oc192_short_reach as u64
         });
         __bindgen_bitfield_unit.set(22usize, 1u8, {
-            let escon_smf_1310_laser: u8 = unsafe { ::core::mem::transmute(escon_smf_1310_laser) };
+            let escon_smf_1310_laser: u8 =
+                unsafe { ::core::mem::transmute(escon_smf_1310_laser) };
             escon_smf_1310_laser as u64
         });
         __bindgen_bitfield_unit.set(23usize, 1u8, {
-            let escon_mmf_1310_led: u8 = unsafe { ::core::mem::transmute(escon_mmf_1310_led) };
+            let escon_mmf_1310_led: u8 =
+                unsafe { ::core::mem::transmute(escon_mmf_1310_led) };
             escon_mmf_1310_led as u64
         });
         __bindgen_bitfield_unit.set(24usize, 1u8, {
-            let e1000_base_sx: u8 = unsafe { ::core::mem::transmute(e1000_base_sx) };
+            let e1000_base_sx: u8 =
+                unsafe { ::core::mem::transmute(e1000_base_sx) };
             e1000_base_sx as u64
         });
         __bindgen_bitfield_unit.set(25usize, 1u8, {
-            let e1000_base_lx: u8 = unsafe { ::core::mem::transmute(e1000_base_lx) };
+            let e1000_base_lx: u8 =
+                unsafe { ::core::mem::transmute(e1000_base_lx) };
             e1000_base_lx as u64
         });
         __bindgen_bitfield_unit.set(26usize, 1u8, {
-            let e1000_base_cx: u8 = unsafe { ::core::mem::transmute(e1000_base_cx) };
+            let e1000_base_cx: u8 =
+                unsafe { ::core::mem::transmute(e1000_base_cx) };
             e1000_base_cx as u64
         });
         __bindgen_bitfield_unit.set(27usize, 1u8, {
-            let e1000_base_t: u8 = unsafe { ::core::mem::transmute(e1000_base_t) };
+            let e1000_base_t: u8 =
+                unsafe { ::core::mem::transmute(e1000_base_t) };
             e1000_base_t as u64
         });
         __bindgen_bitfield_unit.set(28usize, 1u8, {
-            let e100_base_lx: u8 = unsafe { ::core::mem::transmute(e100_base_lx) };
+            let e100_base_lx: u8 =
+                unsafe { ::core::mem::transmute(e100_base_lx) };
             e100_base_lx as u64
         });
         __bindgen_bitfield_unit.set(29usize, 1u8, {
-            let e100_base_fx: u8 = unsafe { ::core::mem::transmute(e100_base_fx) };
+            let e100_base_fx: u8 =
+                unsafe { ::core::mem::transmute(e100_base_fx) };
             e100_base_fx as u64
         });
         __bindgen_bitfield_unit.set(30usize, 1u8, {
-            let e_base_bx10: u8 = unsafe { ::core::mem::transmute(e_base_bx10) };
+            let e_base_bx10: u8 =
+                unsafe { ::core::mem::transmute(e_base_bx10) };
             e_base_bx10 as u64
         });
         __bindgen_bitfield_unit.set(31usize, 1u8, {
@@ -34452,8 +37245,9 @@ impl sfp_eeprom_base {
             e_base_px as u64
         });
         __bindgen_bitfield_unit.set(32usize, 1u8, {
-            let fc_tech_electrical_inter_enclosure: u8 =
-                unsafe { ::core::mem::transmute(fc_tech_electrical_inter_enclosure) };
+            let fc_tech_electrical_inter_enclosure: u8 = unsafe {
+                ::core::mem::transmute(fc_tech_electrical_inter_enclosure)
+            };
             fc_tech_electrical_inter_enclosure as u64
         });
         __bindgen_bitfield_unit.set(33usize, 1u8, {
@@ -34485,19 +37279,23 @@ impl sfp_eeprom_base {
             fc_ll_v as u64
         });
         __bindgen_bitfield_unit.set(40usize, 1u8, {
-            let unallocated_8_0: u8 = unsafe { ::core::mem::transmute(unallocated_8_0) };
+            let unallocated_8_0: u8 =
+                unsafe { ::core::mem::transmute(unallocated_8_0) };
             unallocated_8_0 as u64
         });
         __bindgen_bitfield_unit.set(41usize, 1u8, {
-            let unallocated_8_1: u8 = unsafe { ::core::mem::transmute(unallocated_8_1) };
+            let unallocated_8_1: u8 =
+                unsafe { ::core::mem::transmute(unallocated_8_1) };
             unallocated_8_1 as u64
         });
         __bindgen_bitfield_unit.set(42usize, 1u8, {
-            let sfp_ct_passive: u8 = unsafe { ::core::mem::transmute(sfp_ct_passive) };
+            let sfp_ct_passive: u8 =
+                unsafe { ::core::mem::transmute(sfp_ct_passive) };
             sfp_ct_passive as u64
         });
         __bindgen_bitfield_unit.set(43usize, 1u8, {
-            let sfp_ct_active: u8 = unsafe { ::core::mem::transmute(sfp_ct_active) };
+            let sfp_ct_active: u8 =
+                unsafe { ::core::mem::transmute(sfp_ct_active) };
             sfp_ct_active as u64
         });
         __bindgen_bitfield_unit.set(44usize, 1u8, {
@@ -34513,72 +37311,89 @@ impl sfp_eeprom_base {
             fc_tech_sn as u64
         });
         __bindgen_bitfield_unit.set(47usize, 1u8, {
-            let fc_tech_electrical_intra_enclosure: u8 =
-                unsafe { ::core::mem::transmute(fc_tech_electrical_intra_enclosure) };
+            let fc_tech_electrical_intra_enclosure: u8 = unsafe {
+                ::core::mem::transmute(fc_tech_electrical_intra_enclosure)
+            };
             fc_tech_electrical_intra_enclosure as u64
         });
         __bindgen_bitfield_unit.set(48usize, 1u8, {
-            let fc_media_sm: u8 = unsafe { ::core::mem::transmute(fc_media_sm) };
+            let fc_media_sm: u8 =
+                unsafe { ::core::mem::transmute(fc_media_sm) };
             fc_media_sm as u64
         });
         __bindgen_bitfield_unit.set(49usize, 1u8, {
-            let unallocated_9_1: u8 = unsafe { ::core::mem::transmute(unallocated_9_1) };
+            let unallocated_9_1: u8 =
+                unsafe { ::core::mem::transmute(unallocated_9_1) };
             unallocated_9_1 as u64
         });
         __bindgen_bitfield_unit.set(50usize, 1u8, {
-            let fc_media_m5: u8 = unsafe { ::core::mem::transmute(fc_media_m5) };
+            let fc_media_m5: u8 =
+                unsafe { ::core::mem::transmute(fc_media_m5) };
             fc_media_m5 as u64
         });
         __bindgen_bitfield_unit.set(51usize, 1u8, {
-            let fc_media_m6: u8 = unsafe { ::core::mem::transmute(fc_media_m6) };
+            let fc_media_m6: u8 =
+                unsafe { ::core::mem::transmute(fc_media_m6) };
             fc_media_m6 as u64
         });
         __bindgen_bitfield_unit.set(52usize, 1u8, {
-            let fc_media_tv: u8 = unsafe { ::core::mem::transmute(fc_media_tv) };
+            let fc_media_tv: u8 =
+                unsafe { ::core::mem::transmute(fc_media_tv) };
             fc_media_tv as u64
         });
         __bindgen_bitfield_unit.set(53usize, 1u8, {
-            let fc_media_mi: u8 = unsafe { ::core::mem::transmute(fc_media_mi) };
+            let fc_media_mi: u8 =
+                unsafe { ::core::mem::transmute(fc_media_mi) };
             fc_media_mi as u64
         });
         __bindgen_bitfield_unit.set(54usize, 1u8, {
-            let fc_media_tp: u8 = unsafe { ::core::mem::transmute(fc_media_tp) };
+            let fc_media_tp: u8 =
+                unsafe { ::core::mem::transmute(fc_media_tp) };
             fc_media_tp as u64
         });
         __bindgen_bitfield_unit.set(55usize, 1u8, {
-            let fc_media_tw: u8 = unsafe { ::core::mem::transmute(fc_media_tw) };
+            let fc_media_tw: u8 =
+                unsafe { ::core::mem::transmute(fc_media_tw) };
             fc_media_tw as u64
         });
         __bindgen_bitfield_unit.set(56usize, 1u8, {
-            let fc_speed_100: u8 = unsafe { ::core::mem::transmute(fc_speed_100) };
+            let fc_speed_100: u8 =
+                unsafe { ::core::mem::transmute(fc_speed_100) };
             fc_speed_100 as u64
         });
         __bindgen_bitfield_unit.set(57usize, 1u8, {
-            let unallocated_10_1: u8 = unsafe { ::core::mem::transmute(unallocated_10_1) };
+            let unallocated_10_1: u8 =
+                unsafe { ::core::mem::transmute(unallocated_10_1) };
             unallocated_10_1 as u64
         });
         __bindgen_bitfield_unit.set(58usize, 1u8, {
-            let fc_speed_200: u8 = unsafe { ::core::mem::transmute(fc_speed_200) };
+            let fc_speed_200: u8 =
+                unsafe { ::core::mem::transmute(fc_speed_200) };
             fc_speed_200 as u64
         });
         __bindgen_bitfield_unit.set(59usize, 1u8, {
-            let fc_speed_3200: u8 = unsafe { ::core::mem::transmute(fc_speed_3200) };
+            let fc_speed_3200: u8 =
+                unsafe { ::core::mem::transmute(fc_speed_3200) };
             fc_speed_3200 as u64
         });
         __bindgen_bitfield_unit.set(60usize, 1u8, {
-            let fc_speed_400: u8 = unsafe { ::core::mem::transmute(fc_speed_400) };
+            let fc_speed_400: u8 =
+                unsafe { ::core::mem::transmute(fc_speed_400) };
             fc_speed_400 as u64
         });
         __bindgen_bitfield_unit.set(61usize, 1u8, {
-            let fc_speed_1600: u8 = unsafe { ::core::mem::transmute(fc_speed_1600) };
+            let fc_speed_1600: u8 =
+                unsafe { ::core::mem::transmute(fc_speed_1600) };
             fc_speed_1600 as u64
         });
         __bindgen_bitfield_unit.set(62usize, 1u8, {
-            let fc_speed_800: u8 = unsafe { ::core::mem::transmute(fc_speed_800) };
+            let fc_speed_800: u8 =
+                unsafe { ::core::mem::transmute(fc_speed_800) };
             fc_speed_800 as u64
         });
         __bindgen_bitfield_unit.set(63usize, 1u8, {
-            let fc_speed_1200: u8 = unsafe { ::core::mem::transmute(fc_speed_1200) };
+            let fc_speed_1200: u8 =
+                unsafe { ::core::mem::transmute(fc_speed_1200) };
             fc_speed_1200 as u64
         });
         __bindgen_bitfield_unit
@@ -34607,10 +37422,16 @@ pub struct sfp_eeprom_id {
 #[derive(Debug, Copy, Clone)]
 pub struct sfp_upstream_ops {
     pub attach: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void, arg2: *mut sfp_bus),
+        unsafe extern "C" fn(
+            arg1: *mut ::aya_bpf::cty::c_void,
+            arg2: *mut sfp_bus,
+        ),
     >,
     pub detach: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void, arg2: *mut sfp_bus),
+        unsafe extern "C" fn(
+            arg1: *mut ::aya_bpf::cty::c_void,
+            arg2: *mut sfp_bus,
+        ),
     >,
     pub module_insert: ::core::option::Option<
         unsafe extern "C" fn(
@@ -34618,23 +37439,32 @@ pub struct sfp_upstream_ops {
             arg2: *const sfp_eeprom_id,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub module_remove:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
-    pub module_start: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void) -> ::aya_bpf::cty::c_int,
+    pub module_remove: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
     >,
-    pub module_stop:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
-    pub link_down: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
-    pub link_up: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub module_start: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut ::aya_bpf::cty::c_void,
+        ) -> ::aya_bpf::cty::c_int,
+    >,
+    pub module_stop: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
+    pub link_down: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
+    pub link_up: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
     pub connect_phy: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut ::aya_bpf::cty::c_void,
             arg2: *mut phy_device,
         ) -> ::aya_bpf::cty::c_int,
     >,
-    pub disconnect_phy:
-        ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>,
+    pub disconnect_phy: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+    >,
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -34644,7 +37474,10 @@ pub struct sfp_socket_ops {
     pub start: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sfp)>,
     pub stop: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sfp)>,
     pub module_info: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sfp, arg2: *mut ethtool_modinfo) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sfp,
+            arg2: *mut ethtool_modinfo,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub module_eeprom: ::core::option::Option<
         unsafe extern "C" fn(
@@ -34667,7 +37500,10 @@ pub struct sfp_quirk {
     pub vendor: *const ::aya_bpf::cty::c_char,
     pub part: *const ::aya_bpf::cty::c_char,
     pub modes: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *const sfp_eeprom_id, arg2: *mut ::aya_bpf::cty::c_ulong),
+        unsafe extern "C" fn(
+            arg1: *const sfp_eeprom_id,
+            arg2: *mut ::aya_bpf::cty::c_ulong,
+        ),
     >,
 }
 #[repr(C)]
@@ -34973,7 +37809,9 @@ pub struct devlink_port_pci_pf_attrs {
 impl devlink_port_pci_pf_attrs {
     #[inline]
     pub fn external(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_external(&mut self, val: u8_) {
@@ -34983,8 +37821,11 @@ impl devlink_port_pci_pf_attrs {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(external: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        external: u8_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let external: u8 = unsafe { ::core::mem::transmute(external) };
             external as u64
@@ -35005,7 +37846,9 @@ pub struct devlink_port_pci_vf_attrs {
 impl devlink_port_pci_vf_attrs {
     #[inline]
     pub fn external(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_external(&mut self, val: u8_) {
@@ -35015,8 +37858,11 @@ impl devlink_port_pci_vf_attrs {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(external: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        external: u8_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let external: u8 = unsafe { ::core::mem::transmute(external) };
             external as u64
@@ -35037,7 +37883,9 @@ pub struct devlink_port_pci_sf_attrs {
 impl devlink_port_pci_sf_attrs {
     #[inline]
     pub fn external(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_external(&mut self, val: u8_) {
@@ -35047,8 +37895,11 @@ impl devlink_port_pci_sf_attrs {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(external: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        external: u8_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let external: u8 = unsafe { ::core::mem::transmute(external) };
             external as u64
@@ -35077,7 +37928,9 @@ pub union devlink_port_attrs__bindgen_ty_1 {
 impl devlink_port_attrs {
     #[inline]
     pub fn split(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_split(&mut self, val: u8_) {
@@ -35088,7 +37941,9 @@ impl devlink_port_attrs {
     }
     #[inline]
     pub fn splittable(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_splittable(&mut self, val: u8_) {
@@ -35098,8 +37953,12 @@ impl devlink_port_attrs {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(split: u8_, splittable: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        split: u8_,
+        splittable: u8_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let split: u8 = unsafe { ::core::mem::transmute(split) };
             split as u64
@@ -35134,7 +37993,9 @@ pub struct devlink_port {
 impl devlink_port {
     #[inline]
     pub fn attrs_set(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_attrs_set(&mut self, val: u8_) {
@@ -35145,7 +38006,9 @@ impl devlink_port {
     }
     #[inline]
     pub fn switch_port(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_switch_port(&mut self, val: u8_) {
@@ -35155,14 +38018,19 @@ impl devlink_port {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(attrs_set: u8_, switch_port: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        attrs_set: u8_,
+        switch_port: u8_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let attrs_set: u8 = unsafe { ::core::mem::transmute(attrs_set) };
             attrs_set as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let switch_port: u8 = unsafe { ::core::mem::transmute(switch_port) };
+            let switch_port: u8 =
+                unsafe { ::core::mem::transmute(switch_port) };
             switch_port as u64
         });
         __bindgen_bitfield_unit
@@ -35193,7 +38061,10 @@ pub struct phylink_config {
     pub poll_fixed_state: bool_,
     pub ovr_an_inband: bool_,
     pub get_fixed_state: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut phylink_config, arg2: *mut phylink_link_state),
+        unsafe extern "C" fn(
+            arg1: *mut phylink_config,
+            arg2: *mut phylink_link_state,
+        ),
     >,
 }
 #[repr(C)]
@@ -35203,7 +38074,10 @@ pub struct dsa_port {
     pub tag_ops: *const dsa_device_ops,
     pub dst: *mut dsa_switch_tree,
     pub rcv: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *mut net_device) -> *mut sk_buff,
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *mut net_device,
+        ) -> *mut sk_buff,
     >,
     pub type_: dsa_port__bindgen_ty_2::Type,
     pub ds: *mut dsa_switch,
@@ -35339,8 +38213,9 @@ pub mod flow_action_hw_stats {
     pub const FLOW_ACTION_HW_STATS_DISABLED: Type = 4;
     pub const FLOW_ACTION_HW_STATS_DONT_CARE: Type = 7;
 }
-pub type action_destr =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void)>;
+pub type action_destr = ::core::option::Option<
+    unsafe extern "C" fn(arg1: *mut ::aya_bpf::cty::c_void),
+>;
 #[repr(C)]
 #[derive(Debug)]
 pub struct flow_action_cookie {
@@ -35604,7 +38479,9 @@ pub struct phylink_link_state {
 impl phylink_link_state {
     #[inline]
     pub fn link(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_link(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -35615,7 +38492,9 @@ impl phylink_link_state {
     }
     #[inline]
     pub fn an_enabled(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_an_enabled(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -35626,7 +38505,9 @@ impl phylink_link_state {
     }
     #[inline]
     pub fn an_complete(&self) -> ::aya_bpf::cty::c_uint {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u32)
+        }
     }
     #[inline]
     pub fn set_an_complete(&mut self, val: ::aya_bpf::cty::c_uint) {
@@ -35641,7 +38522,8 @@ impl phylink_link_state {
         an_enabled: ::aya_bpf::cty::c_uint,
         an_complete: ::aya_bpf::cty::c_uint,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let link: u32 = unsafe { ::core::mem::transmute(link) };
             link as u64
@@ -35651,7 +38533,8 @@ impl phylink_link_state {
             an_enabled as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let an_complete: u32 = unsafe { ::core::mem::transmute(an_complete) };
+            let an_complete: u32 =
+                unsafe { ::core::mem::transmute(an_complete) };
             an_complete as u64
         });
         __bindgen_bitfield_unit
@@ -35764,7 +38647,9 @@ pub struct devlink {
 impl devlink {
     #[inline]
     pub fn reload_failed(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reload_failed(&mut self, val: u8_) {
@@ -35775,7 +38660,9 @@ impl devlink {
     }
     #[inline]
     pub fn reload_enabled(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_reload_enabled(&mut self, val: u8_) {
@@ -35789,13 +38676,16 @@ impl devlink {
         reload_failed: u8_,
         reload_enabled: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let reload_failed: u8 = unsafe { ::core::mem::transmute(reload_failed) };
+            let reload_failed: u8 =
+                unsafe { ::core::mem::transmute(reload_failed) };
             reload_failed as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let reload_enabled: u8 = unsafe { ::core::mem::transmute(reload_enabled) };
+            let reload_enabled: u8 =
+                unsafe { ::core::mem::transmute(reload_enabled) };
             reload_enabled as u64
         });
         __bindgen_bitfield_unit
@@ -35940,7 +38830,10 @@ pub struct devlink_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub eswitch_mode_get: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut devlink, arg2: *mut u16_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut devlink,
+            arg2: *mut u16_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub eswitch_mode_set: ::core::option::Option<
         unsafe extern "C" fn(
@@ -35950,7 +38843,10 @@ pub struct devlink_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub eswitch_inline_mode_get: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut devlink, arg2: *mut u8_) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut devlink,
+            arg2: *mut u8_,
+        ) -> ::aya_bpf::cty::c_int,
     >,
     pub eswitch_inline_mode_set: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36044,7 +38940,10 @@ pub struct devlink_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub trap_policer_fini: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut devlink, arg2: *const devlink_trap_policer),
+        unsafe extern "C" fn(
+            arg1: *mut devlink,
+            arg2: *const devlink_trap_policer,
+        ),
     >,
     pub trap_policer_set: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36212,7 +39111,9 @@ pub struct devlink_port_new_attrs {
 impl devlink_port_new_attrs {
     #[inline]
     pub fn port_index_valid(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_port_index_valid(&mut self, val: u8_) {
@@ -36223,7 +39124,9 @@ impl devlink_port_new_attrs {
     }
     #[inline]
     pub fn controller_valid(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_controller_valid(&mut self, val: u8_) {
@@ -36234,7 +39137,9 @@ impl devlink_port_new_attrs {
     }
     #[inline]
     pub fn sfnum_valid(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_sfnum_valid(&mut self, val: u8_) {
@@ -36249,17 +39154,21 @@ impl devlink_port_new_attrs {
         controller_valid: u8_,
         sfnum_valid: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let port_index_valid: u8 = unsafe { ::core::mem::transmute(port_index_valid) };
+            let port_index_valid: u8 =
+                unsafe { ::core::mem::transmute(port_index_valid) };
             port_index_valid as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let controller_valid: u8 = unsafe { ::core::mem::transmute(controller_valid) };
+            let controller_valid: u8 =
+                unsafe { ::core::mem::transmute(controller_valid) };
             controller_valid as u64
         });
         __bindgen_bitfield_unit.set(2usize, 1u8, {
-            let sfnum_valid: u8 = unsafe { ::core::mem::transmute(sfnum_valid) };
+            let sfnum_valid: u8 =
+                unsafe { ::core::mem::transmute(sfnum_valid) };
             sfnum_valid as u64
         });
         __bindgen_bitfield_unit
@@ -36497,10 +39406,16 @@ pub mod dsa_tag_protocol {
 #[derive(Debug, Copy, Clone)]
 pub struct dsa_device_ops {
     pub xmit: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *mut net_device) -> *mut sk_buff,
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *mut net_device,
+        ) -> *mut sk_buff,
     >,
     pub rcv: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sk_buff, arg2: *mut net_device) -> *mut sk_buff,
+        unsafe extern "C" fn(
+            arg1: *mut sk_buff,
+            arg2: *mut net_device,
+        ) -> *mut sk_buff,
     >,
     pub flow_dissect: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36623,7 +39538,8 @@ pub struct dsa_switch_ops {
     pub setup: ::core::option::Option<
         unsafe extern "C" fn(arg1: *mut dsa_switch) -> ::aya_bpf::cty::c_int,
     >,
-    pub teardown: ::core::option::Option<unsafe extern "C" fn(arg1: *mut dsa_switch)>,
+    pub teardown:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut dsa_switch)>,
     pub port_setup: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut dsa_switch,
@@ -36631,10 +39547,16 @@ pub struct dsa_switch_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub port_teardown: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub get_phy_flags: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int) -> u32_,
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> u32_,
     >,
     pub phy_read: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36689,7 +39611,10 @@ pub struct dsa_switch_ops {
         ),
     >,
     pub phylink_mac_an_restart: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub phylink_mac_link_down: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36728,7 +39653,11 @@ pub struct dsa_switch_ops {
         ),
     >,
     pub get_ethtool_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int, arg3: *mut u64),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: *mut u64,
+        ),
     >,
     pub get_sset_count: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36738,7 +39667,11 @@ pub struct dsa_switch_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub get_ethtool_phy_stats: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int, arg3: *mut u64),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: *mut u64,
+        ),
     >,
     pub get_stats64: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36790,7 +39723,10 @@ pub struct dsa_switch_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub port_disable: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub set_mac_eee: ::core::option::Option<
         unsafe extern "C" fn(
@@ -36881,10 +39817,17 @@ pub struct dsa_switch_ops {
         ),
     >,
     pub port_stp_state_set: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int, arg3: u8_),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+            arg3: u8_,
+        ),
     >,
     pub port_fast_age: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub port_pre_bridge_flags: ::core::option::Option<
         unsafe extern "C" fn(
@@ -37025,7 +39968,10 @@ pub struct dsa_switch_ops {
         ) -> ::aya_bpf::cty::c_int,
     >,
     pub port_policer_del: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut dsa_switch, arg2: ::aya_bpf::cty::c_int),
+        unsafe extern "C" fn(
+            arg1: *mut dsa_switch,
+            arg2: ::aya_bpf::cty::c_int,
+        ),
     >,
     pub port_setup_tc: ::core::option::Option<
         unsafe extern "C" fn(
@@ -37540,7 +40486,10 @@ pub struct nf_conntrack_expect {
     pub tuple: nf_conntrack_tuple,
     pub mask: nf_conntrack_tuple_mask,
     pub expectfn: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut nf_conn, arg2: *mut nf_conntrack_expect),
+        unsafe extern "C" fn(
+            arg1: *mut nf_conn,
+            arg2: *mut nf_conntrack_expect,
+        ),
     >,
     pub helper: *mut nf_conntrack_helper,
     pub master: *mut nf_conn,
@@ -37764,7 +40713,8 @@ pub struct tls_crypto_context {
 pub struct tls_crypto_context__bindgen_ty_1 {
     pub aes_gcm_128: __BindgenUnionField<tls12_crypto_info_aes_gcm_128>,
     pub aes_gcm_256: __BindgenUnionField<tls12_crypto_info_aes_gcm_256>,
-    pub chacha20_poly1305: __BindgenUnionField<tls12_crypto_info_chacha20_poly1305>,
+    pub chacha20_poly1305:
+        __BindgenUnionField<tls12_crypto_info_chacha20_poly1305>,
     pub bindgen_union_field: [u16; 28usize],
 }
 #[repr(C)]
@@ -37787,9 +40737,13 @@ pub struct tls_context {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
     pub push_pending_record: ::core::option::Option<
-        unsafe extern "C" fn(arg1: *mut sock, arg2: ::aya_bpf::cty::c_int) -> ::aya_bpf::cty::c_int,
+        unsafe extern "C" fn(
+            arg1: *mut sock,
+            arg2: ::aya_bpf::cty::c_int,
+        ) -> ::aya_bpf::cty::c_int,
     >,
-    pub sk_write_space: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sk_write_space:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub priv_ctx_tx: *mut ::aya_bpf::cty::c_void,
     pub priv_ctx_rx: *mut ::aya_bpf::cty::c_void,
     pub netdev: *mut net_device,
@@ -37803,7 +40757,8 @@ pub struct tls_context {
     pub flags: ::aya_bpf::cty::c_ulong,
     pub sk_proto: *mut proto,
     pub sk: *mut sock,
-    pub sk_destruct: ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
+    pub sk_destruct:
+        ::core::option::Option<unsafe extern "C" fn(arg1: *mut sock)>,
     pub crypto_send: tls_crypto_context,
     pub crypto_recv: tls_crypto_context,
     pub list: list_head,
@@ -37813,7 +40768,9 @@ pub struct tls_context {
 impl tls_context {
     #[inline]
     pub fn tx_conf(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 3u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 3u8) as u8)
+        }
     }
     #[inline]
     pub fn set_tx_conf(&mut self, val: u8_) {
@@ -37824,7 +40781,9 @@ impl tls_context {
     }
     #[inline]
     pub fn rx_conf(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 3u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 3u8) as u8)
+        }
     }
     #[inline]
     pub fn set_rx_conf(&mut self, val: u8_) {
@@ -37834,8 +40793,12 @@ impl tls_context {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(tx_conf: u8_, rx_conf: u8_) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+    pub fn new_bitfield_1(
+        tx_conf: u8_,
+        rx_conf: u8_,
+    ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 3u8, {
             let tx_conf: u8 = unsafe { ::core::mem::transmute(tx_conf) };
             tx_conf as u64
@@ -37886,12 +40849,14 @@ pub struct xsk_buff_pool {
 impl xsk_buff_pool {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 32usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 32usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -38161,7 +41126,8 @@ pub struct wpan_phy {
 impl wpan_phy {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 24usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 24usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -38342,12 +41308,14 @@ pub struct cfg80211_ibss_params {
 impl cfg80211_ibss_params {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 3usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -38503,37 +41471,44 @@ pub struct cfg80211_connect_params {
 impl cfg80211_connect_params {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_2() -> __BindgenBitfieldUnit<[u8; 3usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_3() -> __BindgenBitfieldUnit<[u8; 2usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 2usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_4() -> __BindgenBitfieldUnit<[u8; 3usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_5() -> __BindgenBitfieldUnit<[u8; 6usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 6usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 6usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_6() -> __BindgenBitfieldUnit<[u8; 3usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 3usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
     #[inline]
     pub fn new_bitfield_7() -> __BindgenBitfieldUnit<[u8; 4usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -38610,7 +41585,9 @@ pub struct wireless_dev__bindgen_ty_1 {
 impl wireless_dev {
     #[inline]
     pub fn mgmt_registrations_need_update(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_mgmt_registrations_need_update(&mut self, val: u8_) {
@@ -38623,10 +41600,12 @@ impl wireless_dev {
     pub fn new_bitfield_1(
         mgmt_registrations_need_update: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let mgmt_registrations_need_update: u8 =
-                unsafe { ::core::mem::transmute(mgmt_registrations_need_update) };
+            let mgmt_registrations_need_update: u8 = unsafe {
+                ::core::mem::transmute(mgmt_registrations_need_update)
+            };
             mgmt_registrations_need_update as u64
         });
         __bindgen_bitfield_unit
@@ -38837,7 +41816,8 @@ pub struct ieee80211_sta_ht_cap {
 impl ieee80211_sta_ht_cap {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -38875,7 +41855,8 @@ pub struct ieee80211_sband_iftype_data__bindgen_ty_1 {
 impl ieee80211_sband_iftype_data {
     #[inline]
     pub fn new_bitfield_1() -> __BindgenBitfieldUnit<[u8; 5usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 5usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 5usize]> =
+            Default::default();
         __bindgen_bitfield_unit
     }
 }
@@ -39042,7 +42023,9 @@ pub struct wiphy__bindgen_ty_1 {
 impl wiphy {
     #[inline]
     pub fn support_mbssid(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_support_mbssid(&mut self, val: u8_) {
@@ -39053,7 +42036,9 @@ impl wiphy {
     }
     #[inline]
     pub fn support_only_he_mbssid(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_support_only_he_mbssid(&mut self, val: u8_) {
@@ -39067,9 +42052,11 @@ impl wiphy {
         support_mbssid: u8_,
         support_only_he_mbssid: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let support_mbssid: u8 = unsafe { ::core::mem::transmute(support_mbssid) };
+            let support_mbssid: u8 =
+                unsafe { ::core::mem::transmute(support_mbssid) };
             support_mbssid as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
@@ -39278,7 +42265,9 @@ pub struct cfg80211_pmsr_capabilities__bindgen_ty_1 {
 impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
     #[inline]
     pub fn supported(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_supported(&mut self, val: u8_) {
@@ -39289,7 +42278,9 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
     }
     #[inline]
     pub fn asap(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_asap(&mut self, val: u8_) {
@@ -39300,7 +42291,9 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
     }
     #[inline]
     pub fn non_asap(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(2usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_non_asap(&mut self, val: u8_) {
@@ -39311,7 +42304,9 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
     }
     #[inline]
     pub fn request_lci(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(3usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_request_lci(&mut self, val: u8_) {
@@ -39322,7 +42317,9 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
     }
     #[inline]
     pub fn request_civicloc(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(4usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_request_civicloc(&mut self, val: u8_) {
@@ -39333,7 +42330,9 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
     }
     #[inline]
     pub fn trigger_based(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(5usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_trigger_based(&mut self, val: u8_) {
@@ -39344,7 +42343,9 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
     }
     #[inline]
     pub fn non_trigger_based(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(6usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_non_trigger_based(&mut self, val: u8_) {
@@ -39363,7 +42364,8 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
         trigger_based: u8_,
         non_trigger_based: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let supported: u8 = unsafe { ::core::mem::transmute(supported) };
             supported as u64
@@ -39377,19 +42379,23 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
             non_asap as u64
         });
         __bindgen_bitfield_unit.set(3usize, 1u8, {
-            let request_lci: u8 = unsafe { ::core::mem::transmute(request_lci) };
+            let request_lci: u8 =
+                unsafe { ::core::mem::transmute(request_lci) };
             request_lci as u64
         });
         __bindgen_bitfield_unit.set(4usize, 1u8, {
-            let request_civicloc: u8 = unsafe { ::core::mem::transmute(request_civicloc) };
+            let request_civicloc: u8 =
+                unsafe { ::core::mem::transmute(request_civicloc) };
             request_civicloc as u64
         });
         __bindgen_bitfield_unit.set(5usize, 1u8, {
-            let trigger_based: u8 = unsafe { ::core::mem::transmute(trigger_based) };
+            let trigger_based: u8 =
+                unsafe { ::core::mem::transmute(trigger_based) };
             trigger_based as u64
         });
         __bindgen_bitfield_unit.set(6usize, 1u8, {
-            let non_trigger_based: u8 = unsafe { ::core::mem::transmute(non_trigger_based) };
+            let non_trigger_based: u8 =
+                unsafe { ::core::mem::transmute(non_trigger_based) };
             non_trigger_based as u64
         });
         __bindgen_bitfield_unit
@@ -39398,7 +42404,9 @@ impl cfg80211_pmsr_capabilities__bindgen_ty_1 {
 impl cfg80211_pmsr_capabilities {
     #[inline]
     pub fn report_ap_tsf(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(0usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_report_ap_tsf(&mut self, val: u8_) {
@@ -39409,7 +42417,9 @@ impl cfg80211_pmsr_capabilities {
     }
     #[inline]
     pub fn randomize_mac_addr(&self) -> u8_ {
-        unsafe { ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8) }
+        unsafe {
+            ::core::mem::transmute(self._bitfield_1.get(1usize, 1u8) as u8)
+        }
     }
     #[inline]
     pub fn set_randomize_mac_addr(&mut self, val: u8_) {
@@ -39423,13 +42433,16 @@ impl cfg80211_pmsr_capabilities {
         report_ap_tsf: u8_,
         randomize_mac_addr: u8_,
     ) -> __BindgenBitfieldUnit<[u8; 1usize]> {
-        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> = Default::default();
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 1usize]> =
+            Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
-            let report_ap_tsf: u8 = unsafe { ::core::mem::transmute(report_ap_tsf) };
+            let report_ap_tsf: u8 =
+                unsafe { ::core::mem::transmute(report_ap_tsf) };
             report_ap_tsf as u64
         });
         __bindgen_bitfield_unit.set(1usize, 1u8, {
-            let randomize_mac_addr: u8 = unsafe { ::core::mem::transmute(randomize_mac_addr) };
+            let randomize_mac_addr: u8 =
+                unsafe { ::core::mem::transmute(randomize_mac_addr) };
             randomize_mac_addr as u64
         });
         __bindgen_bitfield_unit
@@ -39478,4 +42491,3 @@ pub struct xdp_ring {
 pub struct mptcp_mib {
     pub mibs: [::aya_bpf::cty::c_ulong; 41usize],
 }
-
