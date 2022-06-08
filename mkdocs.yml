@@ -1,6 +1,6 @@
 site_name: Aya
 repo_url: https://github.com/aya-rs/aya
-site_url: https://aya-rs.github.io/
+site_url: https://aya-rs.dev
 edit_uri: ../book/main/docs
 extra_css:
   - stylesheets/extra.css
