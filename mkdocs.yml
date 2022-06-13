@@ -9,7 +9,8 @@ theme:
   name: material
   custom_dir: overrides
   language: en
-  logo: img/crabby.svg
+  logo: assets/images/crabby.svg
+  favicon: assets/images/crabby.svg
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
