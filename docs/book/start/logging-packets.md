@@ -42,6 +42,11 @@ The two structs in the kernel for this are `ethhdr` from `uapi/linux/if_ether.h`
 If I were to use bindgen to generate Rust bindings for those headers, I'd be tied to the kernel version of the system that I'm developing on.
 This is where `aya-gen` comes in to play. It can easily generate bindings for using the BTF information in `/sys/kernel/btf/vmlinux`.
 
+First, we must make sure that `bindgen` is installed.
+```sh
+cargo install bindgen
+```
+
 Once the bindings are generated and checked in to our repository they shouldn't need to be regenerated again unless we need to add a new struct.
 
 Lets use `xtask` to automate this so we can easily reproduce this file in future.

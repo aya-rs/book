@@ -92,7 +92,7 @@ pub type __u32 = ::aya_bpf::cty::c_uint;
 pub type __be16 = __u16;
 pub type __be32 = __u32;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct ethhdr {
     pub h_dest: [::aya_bpf::cty::c_uchar; 6usize],
     pub h_source: [::aya_bpf::cty::c_uchar; 6usize],
@@ -100,7 +100,7 @@ pub struct ethhdr {
 }
 pub type __sum16 = __u16;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct iphdr {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -157,47 +157,5 @@ impl iphdr {
             version as u64
         });
         __bindgen_bitfield_unit
-    }
-}
-
-impl<Storage> __BindgenBitfieldUnit<Storage> {}
-impl ethhdr {
-    pub fn h_dest(&self) -> Option<[::aya_bpf::cty::c_uchar; 6usize]> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.h_dest) }.ok()
-    }
-    pub fn h_source(&self) -> Option<[::aya_bpf::cty::c_uchar; 6usize]> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.h_source) }.ok()
-    }
-    pub fn h_proto(&self) -> Option<__be16> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.h_proto) }.ok()
-    }
-}
-impl iphdr {
-    pub fn tos(&self) -> Option<__u8> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.tos) }.ok()
-    }
-    pub fn tot_len(&self) -> Option<__be16> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.tot_len) }.ok()
-    }
-    pub fn id(&self) -> Option<__be16> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.id) }.ok()
-    }
-    pub fn frag_off(&self) -> Option<__be16> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.frag_off) }.ok()
-    }
-    pub fn ttl(&self) -> Option<__u8> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.ttl) }.ok()
-    }
-    pub fn protocol(&self) -> Option<__u8> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.protocol) }.ok()
-    }
-    pub fn check(&self) -> Option<__sum16> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.check) }.ok()
-    }
-    pub fn saddr(&self) -> Option<__be32> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.saddr) }.ok()
-    }
-    pub fn daddr(&self) -> Option<__be32> {
-        unsafe { ::aya_bpf::helpers::bpf_probe_read(&self.daddr) }.ok()
     }
 }
