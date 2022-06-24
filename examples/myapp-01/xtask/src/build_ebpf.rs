@@ -1,6 +1,7 @@
-use std::{path::PathBuf, process::Command};
+use std::path::PathBuf;
+use std::process::Command;
 
-use structopt::StructOpt;
+use clap::Parser;
 
 #[derive(Debug, Copy, Clone)]
 pub enum Architecture {
@@ -29,29 +30,30 @@ impl std::fmt::Display for Architecture {
     }
 }
 
-#[derive(StructOpt)]
+#[derive(Debug, Parser)]
 pub struct Options {
     /// Set the endianness of the BPF target
-    #[structopt(default_value = "bpfel-unknown-none", long)]
+    #[clap(default_value = "bpfel-unknown-none", long)]
     pub target: Architecture,
-    /// Build profile for eBPF programs
-    #[structopt(default_value = "release", long)]
-    pub profile: String,
+    /// Build the release target
+    #[clap(long)]
+    pub release: bool,
 }
 
 pub fn build_ebpf(opts: Options) -> Result<(), anyhow::Error> {
     let dir = PathBuf::from("myapp-ebpf");
     let target = format!("--target={}", opts.target);
-    let args = vec![
+    let mut args = vec![
         "+nightly",
         "build",
         "--verbose",
         target.as_str(),
         "-Z",
         "build-std=core",
-        "--profile",
-        opts.profile.as_str(),
     ];
+    if opts.release {
+        args.push("--release")
+    }
     let status = Command::new("cargo")
         .current_dir(&dir)
         .args(&args)

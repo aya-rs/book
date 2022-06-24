@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 aya-bpf = { git = "https://github.com/aya-rs/aya", branch = "main" }
-aya-bpf-cty = { git = "https://github.com/aya-rs/aya", branch = "main" }
+aya-log-ebpf = { git = "https://github.com/aya-rs/aya-log", branch = "main" }
 myapp-common = { path = "../myapp-common" }
 memoffset = "0.6"
 
@@ -14,11 +14,20 @@ name = "myapp"
 path = "src/main.rs"
 
 [profile.dev]
-panic = "abort"
+opt-level = 3
+debug = false
+debug-assertions = false
 overflow-checks = false
+lto = true
+panic = "abort"
+incremental = false
+codegen-units = 1
+rpath = false
 
 [profile.release]
+lto = true
 panic = "abort"
+codegen-units = 1
 
 [workspace]
 members = []

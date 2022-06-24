@@ -1,7 +1,7 @@
 # Dropping Packets
 
 In the previous chapter, our XDP logged traffic. In this chapter we're going to extend it
-to allow the dropping of traffic
+to allow the dropping of traffic.
 
 !!! example "Source Code"
 

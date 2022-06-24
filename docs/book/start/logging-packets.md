@@ -1,7 +1,8 @@
 # Logging Packets
 
 In the previous chapter, our XDP application ran until Ctrl-C was hit and permitted all the traffic.
-There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted.
+Each time a packet was received, the BPF program created a log entry.
+Let's expand this program to log the traffic that is being permitted in the user-space application instead of the BPF program.
 
 !!! example "Source Code"
 
@@ -84,7 +85,7 @@ With our helper function in place, we can:
 1. Read the Ethertype field to check if we have an IPv4 packet.
 1. Read the IPv4 Source Address from the IP header
 
-To do this efficiently we'll add a dependency on `memoffset = "0.6"` in our `Cargo.toml`
+To do this efficiently we'll add a dependency on `memoffset = "0.6"` in our `myapp-ebpf/Cargo.toml`
 
 !!! tip "Reading Fields Using `offset_of!`"
 
@@ -103,6 +104,8 @@ The resulting code looks like this:
 2. Here's `ptr_at`, which gives ensures packet access is bounds checked
 3. Using `ptr_at` to read our ethernet header
 4. Outputting the event to the `PerfEventArray`
+
+Don't forget to rebuild your eBPF program!
 
 ## Reading Data
 

@@ -18,7 +18,7 @@ use bindings::{ethhdr, iphdr};
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unreachable!()
+    unsafe { core::hint::unreachable_unchecked() }
 }
 
 #[map(name = "EVENTS")]
@@ -56,8 +56,9 @@ fn block_ip(address: u32) -> bool {
 }
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
-    let h_proto =
-        u16::from_be(unsafe { *ptr_at(&ctx, offset_of!(ethhdr, h_proto))? });
+    let h_proto = u16::from_be(unsafe {
+        *ptr_at(&ctx, offset_of!(ethhdr, h_proto))?
+    });
     if h_proto != ETH_P_IP {
         return Ok(xdp_action::XDP_PASS);
     }
@@ -76,11 +77,9 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
         ipv4_address: source,
         action: action,
     };
-
     unsafe {
         EVENTS.output(&ctx, &log_entry, 0);
     }
-
     Ok(action)
 }
 

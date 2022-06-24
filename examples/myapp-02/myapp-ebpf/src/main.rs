@@ -18,7 +18,7 @@ use bindings::{ethhdr, iphdr};
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unreachable!()
+    unsafe { core::hint::unreachable_unchecked() }
 }
 
 #[map(name = "EVENTS")] // (1)

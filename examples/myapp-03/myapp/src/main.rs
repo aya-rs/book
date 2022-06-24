@@ -1,16 +1,10 @@
+use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
-use aya::{
-    maps::{perf::AsyncPerfEventArray, HashMap},
-    include_bytes_aligned,
-    programs::{Xdp, XdpFlags},
-    util::online_cpus,
-    Bpf,
-};
+use aya::programs::{Xdp, XdpFlags};
+use aya::maps::{perf::AsyncPerfEventArray, HashMap};
+use aya::util::online_cpus;
 use bytes::BytesMut;
-use std::{
-    env,
-    net::{self, Ipv4Addr},
-};
+use std::{env, net::{self, Ipv4Addr}};
 use tokio::{signal, task};
 
 use myapp_common::PacketLog;
@@ -22,9 +16,14 @@ async fn main() -> Result<(), anyhow::Error> {
         None => "eth0".to_string(),
     };
 
-    let bytes =
-        include_bytes_aligned!("../../target/bpfel-unknown-none/release/myapp");
-    let mut bpf = Bpf::load(&bytes)?;
+    #[cfg(debug_assertions)]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/debug/myapp"
+    ))?;
+    #[cfg(not(debug_assertions))]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/release/myapp"
+    ))?;
     let probe: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
     probe.load()?;
     probe.attach(&iface, XdpFlags::default())

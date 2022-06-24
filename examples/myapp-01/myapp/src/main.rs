@@ -1,25 +1,21 @@
+use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
-use aya::{
-    include_bytes_aligned,
-    programs::{Xdp, XdpFlags},
-    Bpf,
-};
+use aya::programs::{Xdp, XdpFlags};
+use aya_log::BpfLogger;
+use clap::Parser;
 use log::info;
-use simplelog::{
-    ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode,
-};
-use structopt::StructOpt;
+use simplelog::{ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode};
 use tokio::signal; // (1)
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 struct Opt {
-    #[structopt(short, long, default_value = "eth0")]
+    #[clap(short, long, default_value = "eth0")]
     iface: String, // (2)
 }
 
 #[tokio::main] // (3)
 async fn main() -> Result<(), anyhow::Error> {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
 
     TermLogger::init(
         LevelFilter::Debug,
@@ -36,10 +32,16 @@ async fn main() -> Result<(), anyhow::Error> {
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
     // (4)
-    let bytes =
-        include_bytes_aligned!("../../target/bpfel-unknown-none/release/myapp");
     // (5)
-    let mut bpf = Bpf::load(bytes)?;
+    #[cfg(debug_assertions)]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/debug/myapp"
+    ))?;
+    #[cfg(not(debug_assertions))]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/release/myapp"
+    ))?;
+    BpfLogger::init(&mut bpf)?;
     // (6)
     let program: &mut Xdp = bpf.program_mut("myapp").unwrap().try_into()?;
     program.load()?; // (7)
