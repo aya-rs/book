@@ -109,12 +109,12 @@ The resulting code looks like this:
 In order to read from the `AsyncPerfEventArray`, we have to call `AsyncPerfEventArray::open()` for each online CPU, then we have to poll the file descriptor for events.
 While this is do-able using `PerfEventArray` and `mio` or `epoll`, the code is much less easy to follow. Instead, we'll use `tokio`, which was added to our template for us.
 
-Well need to add a dependency on `bytes = "1"` to `myapp/src/Cargo.toml` since this will make it easier
+Well need to add a dependency on `bytes = "1"` to `myapp/Cargo.toml` since this will make it easier
 to deal with the chunks of bytes yielded by the `AsyncPerfEventArray`.
 
 Here's the code:
 
-```rust linenums="1"
+```rust linenums="1" title="myapp/src/main.rs"
 --8<-- "examples/myapp-02/myapp/src/main.rs"
 ```
 
@@ -127,6 +127,10 @@ Here's the code:
 7. Log the event to the console.
 
 ## Running the program
+
+If you notice in `myapp/src/main.rs`, at the beginning of `main()`, the input parameters are handled differently from the previous example.
+This command still assumes the interface is `eth0` by default.
+It can be overwritten by providing the interface name as a parameter, for example, `cargo xtask run -- wlp2s0`.
 
 ```console
 $ cargo xtask run

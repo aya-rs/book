@@ -1,13 +1,14 @@
 use anyhow::Context;
 use aya::{
     maps::{perf::AsyncPerfEventArray, HashMap},
+    include_bytes_aligned,
     programs::{Xdp, XdpFlags},
     util::online_cpus,
     Bpf,
 };
 use bytes::BytesMut;
 use std::{
-    env, fs,
+    env,
     net::{self, Ipv4Addr},
 };
 use tokio::{signal, task};
@@ -16,18 +17,14 @@ use myapp_common::PacketLog;
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
-    let path = match env::args().nth(1) {
-        Some(path) => path,
-        None => panic!("no path provided"),
-    };
-    let iface = match env::args().nth(2) {
+    let iface = match env::args().nth(1) {
         Some(iface) => iface,
         None => "eth0".to_string(),
     };
 
-    let data = fs::read(path)?;
-    let mut bpf = Bpf::load(&data)?;
-
+    let bytes =
+        include_bytes_aligned!("../../target/bpfel-unknown-none/release/myapp");
+    let mut bpf = Bpf::load(&bytes)?;
     let probe: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
     probe.load()?;
     probe.attach(&iface, XdpFlags::default())

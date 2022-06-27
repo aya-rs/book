@@ -1,5 +1,6 @@
 #![no_std]
 #![no_main]
+#![allow(nonstandard_style, dead_code)]
 
 use aya_bpf::{
     bindings::xdp_action,
