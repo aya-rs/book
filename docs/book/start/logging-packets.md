@@ -121,19 +121,18 @@ Here's the code:
 --8<-- "examples/myapp-02/myapp/src/main.rs"
 ```
 
-1. Define our map
-2. Call `open()` for each online CPU
-3. Spawn a `tokio::task`
-4. Create buffers
-5. Read events in to buffers
-6. Use `read_unaligned` to read our data into a `PacketLog`.
-7. Log the event to the console.
+1. Name was not defined in `myapp-ebpf/src/main.rs`, so use `xdp` instead of `myapp`
+2. Define our map
+3. Call `open()` for each online CPU
+4. Spawn a `tokio::task`
+5. Create buffers
+6. Read events in to buffers
+7. Use `read_unaligned` to read our data into a `PacketLog`.
+8. Log the event to the console.
 
 ## Running the program
 
-If you notice in `myapp/src/main.rs`, at the beginning of `main()`, the input parameters are handled differently from the previous example.
-This command still assumes the interface is `eth0` by default.
-It can be overwritten by providing the interface name as a parameter, for example, `cargo xtask run -- wlp2s0`.
+As before, the interface can be overwritten by providing the interface name as a parameter, for example, `cargo xtask run -- iface wlp2s0`.
 
 ```console
 $ cargo xtask run
