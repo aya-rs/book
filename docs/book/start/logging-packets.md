@@ -1,7 +1,8 @@
 # Logging Packets
 
 In the previous chapter, our XDP application ran until Ctrl-C was hit and permitted all the traffic.
-There was however no output on the console, so you just have to trust that it was working correctly. Let's expand this program to log the traffic that is being permitted.
+Each time a packet was received, the BPF program created a log entry.
+Let's expand this program to log the traffic that is being permitted in the user-space application instead of the BPF program.
 
 !!! example "Source Code"
 
@@ -84,7 +85,7 @@ With our helper function in place, we can:
 1. Read the Ethertype field to check if we have an IPv4 packet.
 1. Read the IPv4 Source Address from the IP header
 
-To do this efficiently we'll add a dependency on `memoffset = "0.6"` in our `Cargo.toml`
+To do this efficiently we'll add a dependency on `memoffset = "0.6"` in our `myapp-ebpf/Cargo.toml`
 
 !!! tip "Reading Fields Using `offset_of!`"
 
@@ -104,6 +105,8 @@ The resulting code looks like this:
 3. Using `ptr_at` to read our ethernet header
 4. Outputting the event to the `PerfEventArray`
 
+Don't forget to rebuild your eBPF program!
+
 ## Reading Data
 
 In order to read from the `AsyncPerfEventArray`, we have to call `AsyncPerfEventArray::open()` for each online CPU, then we have to poll the file descriptor for events.
@@ -118,19 +121,18 @@ Here's the code:
 --8<-- "examples/myapp-02/myapp/src/main.rs"
 ```
 
-1. Define our map
-2. Call `open()` for each online CPU
-3. Spawn a `tokio::task`
-4. Create buffers
-5. Read events in to buffers
-6. Use `read_unaligned` to read our data into a `PacketLog`.
-7. Log the event to the console.
+1. Name was not defined in `myapp-ebpf/src/main.rs`, so use `xdp` instead of `myapp`
+2. Define our map
+3. Call `open()` for each online CPU
+4. Spawn a `tokio::task`
+5. Create buffers
+6. Read events in to buffers
+7. Use `read_unaligned` to read our data into a `PacketLog`.
+8. Log the event to the console.
 
 ## Running the program
 
-If you notice in `myapp/src/main.rs`, at the beginning of `main()`, the input parameters are handled differently from the previous example.
-This command still assumes the interface is `eth0` by default.
-It can be overwritten by providing the interface name as a parameter, for example, `cargo xtask run -- wlp2s0`.
+As before, the interface can be overwritten by providing the interface name as a parameter, for example, `cargo xtask run -- iface wlp2s0`.
 
 ```console
 $ cargo xtask run

@@ -1,33 +1,40 @@
+use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
-use aya::{
-    maps::{perf::AsyncPerfEventArray, HashMap},
-    include_bytes_aligned,
-    programs::{Xdp, XdpFlags},
-    util::online_cpus,
-    Bpf,
-};
+use aya::programs::{Xdp, XdpFlags};
+use aya::maps::{perf::AsyncPerfEventArray, HashMap};
+use aya::util::online_cpus;
 use bytes::BytesMut;
-use std::{
-    env,
-    net::{self, Ipv4Addr},
-};
+use std::net::{self, Ipv4Addr};
+use clap::Parser;
 use tokio::{signal, task};
 
 use myapp_common::PacketLog;
 
+#[derive(Debug, Parser)]
+struct Opt {
+    #[clap(short, long, default_value = "eth0")]
+    iface: String,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
-    let iface = match env::args().nth(1) {
-        Some(iface) => iface,
-        None => "eth0".to_string(),
-    };
+    let opt = Opt::parse();
 
-    let bytes =
-        include_bytes_aligned!("../../target/bpfel-unknown-none/release/myapp");
-    let mut bpf = Bpf::load(&bytes)?;
-    let probe: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
-    probe.load()?;
-    probe.attach(&iface, XdpFlags::default())
+    // This will include your eBPF object file as raw bytes at compile-time and load it at
+    // runtime. This approach is recommended for most real-world use cases. If you would
+    // like to specify the eBPF program at runtime rather than at compile-time, you can
+    // reach for `Bpf::load_file` instead.
+    #[cfg(debug_assertions)]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/debug/myapp"
+    ))?;
+    #[cfg(not(debug_assertions))]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/release/myapp"
+    ))?;
+    let program: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
+    program.load()?;
+    program.attach(&opt.iface, XdpFlags::default())
         .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
     // (1)
