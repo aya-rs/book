@@ -32,6 +32,7 @@ The data structure that we'll need to send information to user-space will need t
     **Example:**
 
     ```rust
+    #[repr(C)]
     struct SourceInfo {
         source_port: u16,
         source_ip: u32,
@@ -50,14 +51,15 @@ The data structure that we'll need to send information to user-space will need t
     error.
 
     To avoid the error, you can either manually ensure that all the fields in
-    your types are correctly aligned (eg by adding "manual padding" or by making
-    field types larger) or use `#[repr(packed)]`. Since the latter comes with
-    its own footguns and can perform less efficiently, manual padding or
-    alignment is recommended.
+    your types are correctly aligned (eg by explicitly adding padding or by
+    making field types larger to enforce alignment) or use `#[repr(packed)]`.
+    Since the latter comes with its own footguns and can perform less
+    efficiently, explicitly adding padding or tweaking alignment is recommended.
 
-    **Solution with manual alignment:**
+    **Solution ensuring alignment using larger types:**
 
     ```rust
+    #[repr(C)]
     struct SourceInfo {
         source_port: u32,
         source_ip: u32,
@@ -68,9 +70,10 @@ The data structure that we'll need to send information to user-space will need t
     let si = SourceInfo { source_port: port, source_ip: ip };
     ```
 
-    **Solution with manual padding:**
+    **Solution with explicit padding:**
 
     ```rust
+    #[repr(C)]
     struct SourceInfo {
         source_port: u16,
         padding: u16,
