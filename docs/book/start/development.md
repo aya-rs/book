@@ -35,7 +35,7 @@ cargo install cargo-generate
 
 And finally to generate bindings for kernel data structures, you must install
 `bpftool`, either from your distribution or building it from
-(source)[https://github.com/libbpf/bpftool].
+[source](https://github.com/libbpf/bpftool).
 
 !!! bug "Running on Ubuntu 20.04 LTS (Focal)?"
 
