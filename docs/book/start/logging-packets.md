@@ -23,11 +23,64 @@ The data structure that we'll need to send information to user-space will need t
 
 1. We implement the `aya::Pod` trait for our struct since it is Plain Old Data as can be safely converted to a byte-slice and back.
 
-!!! tip "Struct Alignment"
+!!! tip "Alignment, padding and verifier errors"
 
-    Structs must be aligned to 8 byte boundaries.
-    You can do this manually, or alternatively you may use `#[repr(packed)]`.
-    If you do not do this, the eBPF verifier will get upset and emit an `invalid indirect read from stack` error.
+    At program load time, the eBPF verifier checks that all the memory used is
+    properly initialized. This can be a problem if - to ensure alignment - the
+    compiler inserts padding bytes between fields in your types.
+
+    **Example:**
+
+    ```rust
+    struct SourceInfo {
+        source_port: u16,
+        source_ip: u32,
+    }
+
+    let port = ...;
+    let ip = ...;
+    let si = SourceInfo { source_port: port, source_ip: ip };
+    ```
+
+    In the example above, the compiler will insert two extra bytes between the
+    struct fields `source_port` and `source_ip` to make sure that `source_ip` is
+    correctly aligned to a 4 bytes address (assuming `mem::align_of::<u32>() ==
+    4`).  Since padding bytes are typically not initialized by the compiler,
+    this will result in the infamous `invalid indirect read from stack` verifier
+    error.
+
+    To avoid the error, you can either manually ensure that all the fields in
+    your types are correctly aligned (eg by adding "manual padding" or by making
+    field types larger) or use `#[repr(packed)]`. Since the latter comes with
+    its own footguns and can perform less efficiently, manual padding or
+    alignment is recommended.
+
+    **Solution with manual alignment:**
+
+    ```rust
+    struct SourceInfo {
+        source_port: u32,
+        source_ip: u32,
+    }
+
+    let port = ...;
+    let ip = ...;
+    let si = SourceInfo { source_port: port, source_ip: ip };
+    ```
+
+    **Solution with manual padding:**
+
+    ```rust
+    struct SourceInfo {
+        source_port: u16,
+        padding: u16,
+        source_ip: u32,
+    }
+
+    let port = ...;
+    let ip = ...;
+    let si = SourceInfo { source_port: port, padding: 0, source_ip: ip };
+    ```
 
 ## Writing Data
 
