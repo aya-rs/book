@@ -165,7 +165,7 @@ Don't forget to rebuild your eBPF program!
 In order to read from the `AsyncPerfEventArray`, we have to call `AsyncPerfEventArray::open()` for each online CPU, then we have to poll the file descriptor for events.
 While this is do-able using `PerfEventArray` and `mio` or `epoll`, the code is much less easy to follow. Instead, we'll use `tokio`, which was added to our template for us.
 
-Well need to add a dependency on `bytes = "1"` to `myapp/Cargo.toml` since this will make it easier
+We'll need to add a dependency on `bytes = "1"` to `myapp/Cargo.toml` since this will make it easier
 to deal with the chunks of bytes yielded by the `AsyncPerfEventArray`.
 
 Here's the code:
