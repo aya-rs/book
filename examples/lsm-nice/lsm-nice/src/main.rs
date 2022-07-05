@@ -28,14 +28,14 @@ async fn main() -> Result<(), anyhow::Error> {
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Ebpf::load_file` instead.
     // (2)
-    let mut bpf = EbpfLoader::new().set_global("PID", &pid).load(
+    let mut ebpf = EbpfLoader::new().set_global("PID", &pid).load(
         include_bytes_aligned!(
             "../../target/bpfel-unknown-none/release/lsm-nice"
         ),
     )?;
     let btf = Btf::from_sys_fs()?;
     let program: &mut Lsm =
-        bpf.program_mut("task_setnice").unwrap().try_into()?;
+        ebpf.program_mut("task_setnice").unwrap().try_into()?;
     program.load("task_setnice", &btf)?;
     program.attach()?;
 

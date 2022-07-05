@@ -1,11 +1,11 @@
-use aya::{include_bytes_aligned, Ebpf};
 use anyhow::Context;
-use aya::programs::{Xdp, XdpFlags};
 use aya::maps::{perf::AsyncPerfEventArray, HashMap};
+use aya::programs::{Xdp, XdpFlags};
 use aya::util::online_cpus;
+use aya::{include_bytes_aligned, Ebpf};
 use bytes::BytesMut;
-use std::net::{self, Ipv4Addr};
 use clap::Parser;
+use std::net::{self, Ipv4Addr};
 use tokio::{signal, task};
 
 use myapp_common::PacketLog;
@@ -25,21 +25,21 @@ async fn main() -> Result<(), anyhow::Error> {
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Ebpf::load_file` instead.
     #[cfg(debug_assertions)]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
+    let mut ebpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/myapp"
     ))?;
     #[cfg(not(debug_assertions))]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
+    let mut ebpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/myapp"
     ))?;
-    let program: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
+    let program: &mut Xdp = ebpf.program_mut("xdp").unwrap().try_into()?;
     program.load()?;
     program.attach(&opt.iface, XdpFlags::default())
         .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
     // (1)
     let mut blocklist: HashMap<_, u32, u32> =
-        HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
+        HashMap::try_from(ebpf.map_mut("BLOCKLIST")?)?;
 
     // (2)
     let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
@@ -47,7 +47,8 @@ async fn main() -> Result<(), anyhow::Error> {
     // (3)
     blocklist.insert(block_addr, 0, 0)?;
 
-    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut("EVENTS")?)?;
+    let mut perf_array =
+        AsyncPerfEventArray::try_from(ebpf.map_mut("EVENTS")?)?;
 
     for cpu_id in online_cpus()? {
         let mut buf = perf_array.open(cpu_id, None)?;

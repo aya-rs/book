@@ -34,16 +34,16 @@ async fn main() -> Result<(), anyhow::Error> {
     // (4)
     // (5)
     #[cfg(debug_assertions)]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
+    let mut ebpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/myapp"
     ))?;
     #[cfg(not(debug_assertions))]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
+    let mut ebpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/myapp"
     ))?;
-    BpfLogger::init(&mut bpf)?;
+    BpfLogger::init(&mut ebpf)?;
     // (6)
-    let program: &mut Xdp = bpf.program_mut("myapp").unwrap().try_into()?;
+    let program: &mut Xdp = ebpf.program_mut("myapp").unwrap().try_into()?;
     program.load()?; // (7)
                      // (8)
     program.attach(&opt.iface, XdpFlags::default())
