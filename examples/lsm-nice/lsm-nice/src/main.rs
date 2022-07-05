@@ -1,6 +1,6 @@
 use std::process;
 
-use aya::{include_bytes_aligned, programs::Lsm, BpfLoader, Btf};
+use aya::{include_bytes_aligned, programs::Lsm, EbpfLoader, Btf};
 use log::info;
 use simplelog::{
     ColorChoice, ConfigBuilder, LevelFilter, TermLogger, TerminalMode,
@@ -26,9 +26,9 @@ async fn main() -> Result<(), anyhow::Error> {
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
-    // reach for `Bpf::load_file` instead.
+    // reach for `Ebpf::load_file` instead.
     // (2)
-    let mut bpf = BpfLoader::new().set_global("PID", &pid).load(
+    let mut bpf = EbpfLoader::new().set_global("PID", &pid).load(
         include_bytes_aligned!(
             "../../target/bpfel-unknown-none/release/lsm-nice"
         ),
