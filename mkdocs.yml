@@ -60,9 +60,9 @@ nav:
     - index.md
   - Getting Started:
     - book/index.md
+    - Development Environment: book/start/development.md
     - A Simple XDP Program:
       - book/start/index.md
-      - Development Environment: book/start/development.md
       - Hello XDP!: book/start/hello-xdp.md
       - Logging Packets: book/start/logging-packets.md
       - Dropping Packets: book/start/dropping-packets.md
