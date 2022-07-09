@@ -1,4 +1,4 @@
-use aya::{include_bytes_aligned, Bpf};
+use aya::{include_bytes_aligned, Ebpf};
 use anyhow::Context;
 use aya::programs::{Xdp, XdpFlags};
 use aya_log::BpfLogger;
@@ -30,20 +30,20 @@ async fn main() -> Result<(), anyhow::Error> {
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
-    // reach for `Bpf::load_file` instead.
+    // reach for `Ebpf::load_file` instead.
     // (4)
     // (5)
     #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut ebpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/myapp"
     ))?;
     #[cfg(not(debug_assertions))]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut ebpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/myapp"
     ))?;
-    BpfLogger::init(&mut bpf)?;
+    BpfLogger::init(&mut ebpf)?;
     // (6)
-    let program: &mut Xdp = bpf.program_mut("myapp").unwrap().try_into()?;
+    let program: &mut Xdp = ebpf.program_mut("myapp").unwrap().try_into()?;
     program.load()?; // (7)
                      // (8)
     program.attach(&opt.iface, XdpFlags::default())
