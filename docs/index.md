@@ -31,27 +31,16 @@ Some of the major features provided include:
 [tokio]: https://docs.rs/tokio
 [async-std]: https://docs.rs/async-std
 
-## Example
+## Who's Using Aya
 
-Aya supports a large chunk of the eBPF API. The following example shows how to use a
-`BPF_PROG_TYPE_CGROUP_SKB` program with aya:
+### [![Deepfence](https://deepfence.io/wp-content/themes/deepfence/public/img/logo.svg){ width="150"}](https://deepfence.io/)
+Deepfence are using Aya with XDP/TC as their packet filtering stack. See more [here](https://deepfence.io/aya-your-trusty-ebpf-companion/).
 
-```rust linenums="1"
-use std::fs::File;
-use std::convert::TryInto;
-use aya::Bpf;
-use aya::programs::{CgroupSkb, CgroupSkbAttachType};
+### [![Exein](https://blog.exein.io/img/exein.gif){ width="150"}](https://exein.io)
+Exein are using Aya in [Pulsar](https://pulsar.sh/), a Runtime Security Observability Tool for IoT. See more [here](https://blog.exein.io/pulsar).
 
-// load the BPF code
-let mut bpf = Bpf::load_file("bpf.o")?;
-// get the `ingress_filter` program compiled into `bpf.o`.
-let ingress: &mut CgroupSkb = bpf.program_mut("ingress_filter")?.try_into()?;
+### [![Parca](https://www.parca.dev/docs/img/logo.svg){ width="150"}](https://www.parca.dev/)
+Parca are using Aya to write the BPF component of their profiler. See more [here](https://github.com/parca-dev/parca-agent/blob/main/bpf/cpu-profiler/src/main.rs).
 
-// load the program into the kernel
-ingress.load()?;
-
-// attach the program to the root cgroup. `ingress_filter` will be called for all
-// incoming packets.
-let cgroup = File::open("/sys/fs/cgroup/unified")?;
-ingress.attach(cgroup, CgroupSkbAttachType::Ingress)?;
-```
+### [![Red Hat](https://www.redhat.com/cms/managed-files/Asset-Red_Hat-Logo_page-Logo-RGB.svg?itok=yWDK-rRz){ width="150"}](https://redhat.com)
+Red Hat are using Aya to develop [bpfd](https://github.com/redhat-et/bpfd), an eBPF program loading daemon.
