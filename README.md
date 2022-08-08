@@ -4,6 +4,14 @@
 
 This book is a living document, and is updated continuously.
 
+## Local Render
+```
+virtualenv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+mkdocs serve
+```
+
 ## License
 
 The Aya Book (this project) is distributed under the following licenses:
