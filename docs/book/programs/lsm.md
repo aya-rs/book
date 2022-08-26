@@ -60,6 +60,38 @@ In addition to the arguments found in the hook definition, eBPF programs have
 access to one extra argument - `ret` - which is a return value of potential
 previous eBPF LSM programs.
 
+## Ensure that BPF LSM is enabled
+
+Before proceeding further and trying to write a BPF LSM program, please make
+sure that:
+
+* Your kernel version is at least 5.7.
+* BPF LSM is enabled.
+
+The second point can be checked with:
+
+```console
+$ cat /sys/kernel/security/lsm
+capability,lockdown,landlock,yama,apparmor,bpf
+```
+
+The correct output should contain `bpf`. If it doesn't, BPF LSM has to be
+manually enabled by adding it to kernel config parameters. It can be achieved
+by editing the GRUB config in `/etc/default/grub` and adding the following to
+the kernel parameters:
+
+```console
+GRUB_CMDLINE_LINUX="lsm=[YOUR CURRENTLY ENABLED LSMs],bpf"
+```
+
+Then rebuilding the grub configuration with:
+
+```console
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+And finally, rebooting the system.
+
 ## Writing LSM BPF program
 
 Let's try to create an LSM eBPF program which which is triggered by
