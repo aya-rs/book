@@ -1,0 +1,2 @@
+[workspace]
+members = ["cgroup-skb-egress", "cgroup-skb-egress-common", "xtask"]

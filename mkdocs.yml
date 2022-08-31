@@ -79,6 +79,7 @@ nav:
       - Socket Programs: book/programs/sockets.md
       - Classifiers: book/programs/classifiers.md
       - Cgroups: book/programs/cgroups.md
+      - Cgroup SKB: book/programs/cgroup-skb.md
       - XDP: book/programs/xdp.md
       - LSM: book/programs/lsm.md
   - Community:

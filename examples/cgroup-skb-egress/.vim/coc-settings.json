@@ -1,0 +1,3 @@
+{
+  "rust-analyzer.linkedProjects": ["Cargo.toml", "cgroup-skb-egress-ebpf/Cargo.toml"]
+}
