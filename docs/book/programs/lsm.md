@@ -125,13 +125,13 @@ cd lsm-nice
 ```
 One of the arguments passed to the `task_setnice` hook is a pointer to a
 [task_struct type](https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723).
-Therefore we need to generate a binding to `task_struct` with aya-gen.
+Therefore we need to generate a binding to `task_struct` with aya-tool.
 
-> If you are not familiar with aya-gen, please refer to
-> [this section](../aya/aya-gen.md).
+> If you are not familiar with aya-tool, please refer to
+> [this section](../aya/aya-tool.md).
 
 ```console
-aya-gen generate task_struct > lsm-nice-ebpf/src/vmlinux.rs
+aya-tool generate task_struct > lsm-nice-ebpf/src/vmlinux.rs
 ```
 
 Now it's time to modify the `lsm-nice-ebpf` project and write an actual program
