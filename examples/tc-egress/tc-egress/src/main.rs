@@ -46,7 +46,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let _ = tc::qdisc_add_clsact(&opt.iface);
     let program: &mut SchedClassifier = bpf.program_mut("tc_egress").unwrap().try_into()?;
     program.load()?;
-    program.attach(&opt.iface, TcAttachType::Egress)?;
+    program.attach(&opt.iface, TcAttachType::Egress, 0)?;
 
     // (1)
     let mut blocklist: HashMap<_, u32, u32> =
