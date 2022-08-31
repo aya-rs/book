@@ -121,7 +121,7 @@ That command should create a new Aya project with an empty program attaching to
 the `task_setnice` hook. Let's go to its directory:
 
 ```console
-cd lsm-mount
+cd lsm-nice
 ```
 One of the arguments passed to the `task_setnice` hook is a pointer to a
 [task_struct type](https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723).
