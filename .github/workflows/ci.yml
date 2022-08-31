@@ -50,9 +50,9 @@ jobs:
 
       - name: Check Examples
         run: |
-          for example in "aya-gen" "myapp-01" "myapp-02" "myapp-03" "lsm-nice"; do
-            pushd "examples/${example}"
-            echo "Example: ${example}."
+          for dir in ./examples/*/ ; do
+            pushd "${dir}"
+            echo "Example: ${dir}."
             cargo xtask build-ebpf
             cargo build
             popd
