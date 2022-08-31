@@ -97,7 +97,7 @@ We want to log the Source IP Address of incoming traffic, so we'll need to:
 
 The two structs in the kernel for this are `ethhdr` from `uapi/linux/if_ether.h` and `iphdr` from `uapi/linux/ip.h`.
 If I were to use bindgen to generate Rust bindings for those headers, I'd be tied to the kernel version of the system that I'm developing on.
-This is where `aya-gen` comes in to play. It can easily generate bindings for using the BTF information in `/sys/kernel/btf/vmlinux`.
+This is where `aya-tool` comes in to play. It can easily generate bindings for using the BTF information in `/sys/kernel/btf/vmlinux`.
 
 First, we must make sure that `bindgen` is installed.
 ```sh

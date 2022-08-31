@@ -71,7 +71,7 @@ nav:
       - book/aya/index.md
       - Program Lifecycle: book/aya/lifecycle.md 
       - Reading Values From A Context: book/aya/context.md
-      - Using aya-gen: book/aya/aya-gen.md
+      - Using aya-tool: book/aya/aya-tool.md
       - Using aya-log: book/aya/aya-log.md
     - Program Types:
       - book/programs/index.md
