@@ -1,2 +1,5 @@
 [workspace]
 members = ["lsm-nice", "lsm-nice-common", "xtask"]
+
+[patch.crates-io]
+aya = { git = "https://github.com/aya-rs/aya", branch = "main" }
