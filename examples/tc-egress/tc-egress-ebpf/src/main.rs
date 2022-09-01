@@ -65,7 +65,7 @@ fn try_tc_egress(ctx: SkBuffContext) -> Result<i32, i64> {
     unsafe {
         EVENTS.output(&ctx, &log_entry, 0);
     }
-    Ok(0)
+    Ok(action)
 }
 
 const ETH_P_IP: u16 = 0x0800;
