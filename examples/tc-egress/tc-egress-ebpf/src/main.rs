@@ -7,7 +7,7 @@ use aya_bpf::{
     bindings::{TC_ACT_PIPE, TC_ACT_SHOT},
     macros::{classifier, map},
     maps::{HashMap, PerfEventArray},
-    programs::SkBuffContext,
+    programs::TcContext,
 };
 use memoffset::offset_of;
 
@@ -28,7 +28,7 @@ static mut EVENTS: PerfEventArray<PacketLog> =
 static mut BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
 
 #[classifier(name = "tc_egress")]
-pub fn tc_egress(ctx: SkBuffContext) -> i32 {
+pub fn tc_egress(ctx: TcContext) -> i32 {
     match try_tc_egress(ctx) {
         Ok(ret) => ret,
         Err(_) => TC_ACT_SHOT,
@@ -40,7 +40,7 @@ fn block_ip(address: u32) -> bool {
     unsafe { BLOCKLIST.get(&address).is_some() }
 }
 
-fn try_tc_egress(ctx: SkBuffContext) -> Result<i32, i64> {
+fn try_tc_egress(ctx: TcContext) -> Result<i32, i64> {
     let h_proto = u16::from_be(
         ctx.load(offset_of!(ethhdr, h_proto))
             .map_err(|_| TC_ACT_PIPE)?,
