@@ -38,7 +38,7 @@ fn block_ip(address: u32) -> bool {
 }
 
 fn try_cgroup_skb_egress(ctx: SkBuffContext) -> Result<i32, i64> {
-    let protocol = unsafe { (*ctx.skb).protocol };
+    let protocol = unsafe { (*(ctx.skb)).protocol };
     if protocol != ETH_P_IP {
         return Ok(1);
     }
