@@ -23,7 +23,7 @@ If you are running **macos, or linux on any other architecture**, you need to
 install LLVM 14 first, then install the linker with:
 
 ```console
-cargo install --git https://github.com/aya-rs/bpf-linker --tag v0.9.4 --no-default-features --features system-llvm -- bpf-linker
+cargo install --no-default-features --features system-llvm bpf-linker
 ```
 
 To generate the scaffolding for your project, you're going to need
