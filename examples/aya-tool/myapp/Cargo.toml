@@ -5,14 +5,15 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya = "0.11"
+aya = { version = ">=0.11" }
 aya-log = "0.1"
 myapp-common = { path = "../myapp-common", features=["userspace"] }
 anyhow = "1.0.42"
+env_logger = "0.9"
+log = "0.4"
 ctrlc = "3.2"
-simplelog = "0.11"
-structopt = { version = "0.3"}
-tokio = { version = "1.14", features = ["full"] }
+structopt = "0.3"
+tokio = { version = "1.18", features = ["full"] }
 
 [[bin]]
 name = "myapp"
