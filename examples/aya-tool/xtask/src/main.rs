@@ -1,6 +1,8 @@
 mod build_ebpf;
 mod run;
 
+use log::error;
+
 use std::process::exit;
 
 use structopt::StructOpt;
@@ -17,6 +19,7 @@ enum Command {
 }
 
 fn main() {
+    env_logger::init();
     let opts = Options::from_args();
 
     use Command::*;
@@ -26,7 +29,7 @@ fn main() {
     };
 
     if let Err(e) = ret {
-        eprintln!("{:#}", e);
+        error!("{:#}", e);
         exit(1);
     }
 }
