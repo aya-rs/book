@@ -8,10 +8,12 @@ use std::{
     time::Duration,
 };
 use structopt::StructOpt;
+use log::{info,error};
 
 fn main() {
+    env_logger::init();
     if let Err(e) = try_main() {
-        eprintln!("error: {:#}", e);
+        error!("error: {:#}", e);
     }
 }
 
@@ -26,6 +28,11 @@ fn try_main() -> Result<(), anyhow::Error> {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
+    #[cfg(debug_assertions)]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/debug/myapp"
+    ))?;
+    #[cfg(not(debug_assertions))]
     let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/myapp"
     ))?;
@@ -43,11 +50,11 @@ fn try_main() -> Result<(), anyhow::Error> {
     })
     .expect("Error setting Ctrl-C handler");
 
-    println!("Waiting for Ctrl-C...");
+    info!("Waiting for Ctrl-C...");
     while running.load(Ordering::SeqCst) {
         thread::sleep(Duration::from_millis(500))
     }
-    println!("Exiting...");
+    info!("Exiting...");
 
     Ok(())
 }
