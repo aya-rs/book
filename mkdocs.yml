@@ -47,7 +47,7 @@ markdown_extensions:
   - admonition
   - attr_list
   - pymdownx.highlight:
-        anchor_linenums: true
+      anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
@@ -62,14 +62,9 @@ nav:
   - Getting Started:
     - book/index.md
     - Development Environment: book/start/development.md
-    - A Simple XDP Program:
-      - book/start/index.md
-      - Hello XDP!: book/start/hello-xdp.md
-      - Logging Packets: book/start/logging-packets.md
-      - Dropping Packets: book/start/dropping-packets.md
     - Working With Aya:
       - book/aya/index.md
-      - Program Lifecycle: book/aya/lifecycle.md 
+      - Program Lifecycle: book/aya/lifecycle.md
       - Reading Values From A Context: book/aya/context.md
       - Using aya-tool: book/aya/aya-tool.md
       - Using aya-log: book/aya/aya-log.md
@@ -81,7 +76,11 @@ nav:
       - Classifiers: book/programs/classifiers.md
       - Cgroups: book/programs/cgroups.md
       - Cgroup SKB: book/programs/cgroup-skb.md
-      - XDP: book/programs/xdp.md
+      - XDP:
+        - book/programs/xdp/index.md
+        - Hello XDP!: book/programs/xdp/hello-xdp.md
+        - Logging Packets: book/programs/xdp/logging-packets.md
+        - Dropping Packets: book/programs/xdp/dropping-packets.md
       - LSM: book/programs/lsm.md
   - Community:
     - community/index.md
