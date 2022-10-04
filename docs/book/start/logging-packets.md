@@ -188,15 +188,15 @@ Here's the code:
 
 ## Running the program
 
-As before, the interface can be overwritten by providing the interface name as a parameter, for example, `cargo xtask run -- iface wlp2s0`.
+As before, the interface can be overwritten by providing the interface name as a parameter, for example, `RUST_LOG=info cargo xtask run -- iface wlp2s0`.
 
 ```console
-$ cargo xtask run
-LOG: SRC 192.168.1.205, ACTION 2
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 192.168.1.21, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 18.168.253.132, ACTION 2
-LOG: SRC 140.82.121.6, ACTION 2
+$ RUST_LOG=info cargo xtask run
+[2022-10-04T12:46:05Z INFO  myapp] LOG: SRC 192.168.1.205, ACTION 2
+[2022-10-04T12:46:05Z INFO  myapp] LOG: SRC 192.168.1.21, ACTION 2
+[2022-10-04T12:46:05Z INFO  myapp] LOG: SRC 192.168.1.21, ACTION 2
+[2022-10-04T12:46:05Z INFO  myapp] LOG: SRC 18.168.253.132, ACTION 2
+[2022-10-04T12:46:05Z INFO  myapp] LOG: SRC 18.168.253.132, ACTION 2
+[2022-10-04T12:46:05Z INFO  myapp] LOG: SRC 18.168.253.132, ACTION 2
+[2022-10-04T12:46:05Z INFO  myapp] LOG: SRC 140.82.121.6, ACTION 2
 ```

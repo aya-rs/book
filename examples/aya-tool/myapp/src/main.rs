@@ -1,4 +1,5 @@
 use aya::{include_bytes_aligned, programs::Lsm, Bpf, Btf};
+use log::info;
 use std::{
     sync::{
         atomic::{AtomicBool, Ordering},
@@ -22,6 +23,8 @@ fn try_main() -> Result<(), anyhow::Error> {
     // command-line options a currently unused
     let _opt = Opt::from_args();
 
+    env_logger::init();
+
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
@@ -43,11 +46,11 @@ fn try_main() -> Result<(), anyhow::Error> {
     })
     .expect("Error setting Ctrl-C handler");
 
-    println!("Waiting for Ctrl-C...");
+    info!("Waiting for Ctrl-C...");
     while running.load(Ordering::SeqCst) {
         thread::sleep(Duration::from_millis(500))
     }
-    println!("Exiting...");
+    info!("Exiting...");
 
     Ok(())
 }

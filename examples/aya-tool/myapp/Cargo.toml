@@ -10,9 +10,10 @@ aya-log = "0.1"
 myapp-common = { path = "../myapp-common", features=["userspace"] }
 anyhow = "1.0.42"
 ctrlc = "3.2"
-simplelog = "0.11"
 structopt = { version = "0.3"}
 tokio = { version = "1.14", features = ["full"] }
+env_logger = "0.9"
+log = "0.4"
 
 [[bin]]
 name = "myapp"

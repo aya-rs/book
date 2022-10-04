@@ -143,10 +143,11 @@ OPTIONS:
 !!! note "Interface Name"
 
     This command assumes the interface is `eth0` by default. If you wish to attach to an interface
-    with another name, use `cargo xtask run -- --iface wlp2s0`, where  `wlp2s0` is your interface.
+    with another name, use `RUST_LOG=info cargo xtask run -- --iface wlp2s0`, where  `wlp2s0` is
+    your interface.
 
 ```console
-$ cargo xtask run
+$ RUST_LOG=info cargo xtask run
 17:51:57 [INFO] myapp: [myapp/src/main.rs:48] Waiting for Ctrl-C...
 17:51:57 [INFO] myapp: [src/main.rs:20] received a packet
 17:51:57 [INFO] myapp: [src/main.rs:20] received a packet

@@ -90,7 +90,7 @@ is an appropriate type to use in eBPF maps.
 ## Running the program
 
 ```console
-$ cargo xtask run
+$ RUST_LOG=info cargo xtask run
 LOG: SRC 1.1.1.1, ACTION 2
 LOG: SRC 35.186.224.47, ACTION 3
 LOG: SRC 35.186.224.47, ACTION 3
