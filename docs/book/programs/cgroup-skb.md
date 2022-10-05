@@ -127,7 +127,7 @@ Inside that location, we need to create our new cgroup (as root):
 Then run the program with:
 
 ```console
-cargo xtask run
+RUST_LOG=info cargo xtask run
 ```
 
 And then, in a separate terminal, as root, try to access `1.1.1.1`:

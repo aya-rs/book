@@ -64,7 +64,7 @@ async fn main() -> Result<(), anyhow::Error> {
                     let ptr = buf.as_ptr() as *const PacketLog;
                     let data = unsafe { ptr.read_unaligned() };
                     let src_addr = Ipv4Addr::from(data.ipv4_address);
-                    println!("LOG: DST {}, ACTION {}", src_addr, data.action);
+                    info!("LOG: DST {}, ACTION {}", src_addr, data.action);
                 }
             }
         });

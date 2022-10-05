@@ -166,7 +166,7 @@ The final result should look like:
 After that, we can build and run our project with:
 
 ```console
-cargo xtask run
+RUST_LOG=info cargo xtask run
 ```
 
 The output should contain our log line showing the PID of the userspace

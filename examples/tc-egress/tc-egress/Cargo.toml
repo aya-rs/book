@@ -11,9 +11,9 @@ tc-egress-common = { path = "../tc-egress-common", features=["user"] }
 anyhow = "1.0.42"
 clap = { version = "3.1", features = ["derive"] }
 log = "0.4"
-simplelog = "0.12"
 tokio = { version = "1.18", features = ["macros", "rt", "rt-multi-thread", "net", "signal"] }
 bytes = "1"
+env_logger = "0.9"
 
 [[bin]]
 name = "tc-egress"

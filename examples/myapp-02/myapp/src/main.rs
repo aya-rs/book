@@ -6,6 +6,7 @@ use aya::util::online_cpus;
 use bytes::BytesMut;
 use std::net;
 use clap::Parser;
+use log::info;
 use tokio::{signal, task};
 
 use myapp_common::PacketLog;
@@ -19,6 +20,8 @@ struct Opt {
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     let opt = Opt::parse();
+
+    env_logger::init();
 
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
@@ -62,7 +65,7 @@ async fn main() -> Result<(), anyhow::Error> {
                     let data = unsafe { ptr.read_unaligned() };
                     let src_addr = net::Ipv4Addr::from(data.ipv4_address);
                     // (8)
-                    println!("LOG: SRC {}, ACTION {}", src_addr, data.action);
+                    info!("LOG: SRC {}, ACTION {}", src_addr, data.action);
                 }
             }
         });
