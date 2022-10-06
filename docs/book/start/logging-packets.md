@@ -188,7 +188,7 @@ Here's the code:
 
 ## Running the program
 
-As before, the interface can be overwritten by providing the interface name as a parameter, for example, `RUST_LOG=info cargo xtask run -- iface wlp2s0`.
+As before, the interface can be overwritten by providing the interface name as a parameter, for example, `RUST_LOG=info cargo xtask run -- --iface wlp2s0`.
 
 ```console
 $ RUST_LOG=info cargo xtask run
