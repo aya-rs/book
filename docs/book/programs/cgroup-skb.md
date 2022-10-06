@@ -16,7 +16,7 @@ cgroups (and therefore - containers).
 Both Cgroup SKB and Classifiers receive the same type of context -
 `SkBuffContext`.
 
-The difference is that Classifiers are attached to the network interface
+The difference is that Classifiers are attached to the network interface.
 
 ## Example project
 
