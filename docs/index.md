@@ -12,10 +12,6 @@ deployed on many linux distributions and kernel versions.
 
 Some of the major features provided include:
 
-* Support for the **BPF Type Format** (BTF), which is transparently enabled when
-  supported by the target kernel. This allows eBPF programs compiled against
-  one kernel version to run on different kernel versions without the need to
-  recompile.
 * Support for function call relocation and global data maps, which
   allows eBPF programs to make **function calls** and use **global variables
   and initializers**.
@@ -23,6 +19,16 @@ Some of the major features provided include:
 * Easy to deploy and fast to build: aya doesn't require a kernel build or
   compiled headers, and not even a C toolchain; a release build completes in a matter
   of seconds.
+* Support for the **BPF Type Format** (BTF), which is transparently enabled when
+  supported by the target kernel. This allows eBPF programs compiled against
+  one kernel version to run on different kernel versions without the need to
+  recompile.
+  **This feature, however, is limited only to Aya as the loader of eBPF programs
+  (in the userspace). The loaded eBPF program need to be compiled with clang.
+  We don't support emitting BTF info and BTF relocations in eBPF programs
+  compiled with Rust yet, although we are actively working on that.**
+  [[0]](https://github.com/aya-rs/aya/issues/351)
+  [[1]](https://github.com/aya-rs/aya/issues/349)
 
 [libbpf]: https://github.com/libbpf/libbpf
 [bcc]: https://github.com/iovisor/bcc
