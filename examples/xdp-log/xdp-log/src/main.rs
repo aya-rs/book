@@ -1,15 +1,10 @@
 use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
 use aya::programs::{Xdp, XdpFlags};
-use aya::maps::perf::AsyncPerfEventArray;
-use aya::util::online_cpus;
-use bytes::BytesMut;
-use std::net;
+use aya_log::BpfLogger;
 use clap::Parser;
-use log::info;
-use tokio::{signal, task};
-
-use xdp_log_common::PacketLog;
+use log::{info, warn};
+use tokio::signal;
 
 #[derive(Debug, Parser)]
 struct Opt {
@@ -35,41 +30,19 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/xdp-log"
     ))?;
+    if let Err(e) = BpfLogger::init(&mut bpf) {
+        // This can happen if you remove all log statements from your eBPF program.
+        warn!("failed to initialize eBPF logger: {}", e);
+    }
     // (1)
     let program: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
     program.load()?;
     program.attach(&opt.iface, XdpFlags::default())
         .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
-    // (2)
-    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut("EVENTS")?)?;
+    info!("Waiting for Ctrl-C...");
+    signal::ctrl_c().await?;
+    info!("Exiting...");
 
-    for cpu_id in online_cpus()? {
-        // (3)
-        let mut buf = perf_array.open(cpu_id, None)?;
-
-        // (4)
-        task::spawn(async move {
-            // (5)
-            let mut buffers = (0..10)
-                .map(|_| BytesMut::with_capacity(1024))
-                .collect::<Vec<_>>();
-
-            loop {
-                // (6)
-                let events = buf.read_events(&mut buffers).await.unwrap();
-                for i in 0..events.read {
-                    let buf = &mut buffers[i];
-                    let ptr = buf.as_ptr() as *const PacketLog;
-                    // (7)
-                    let data = unsafe { ptr.read_unaligned() };
-                    let src_addr = net::Ipv4Addr::from(data.ipv4_address);
-                    // (8)
-                    info!("LOG: SRC {}, ACTION {}", src_addr, data.action);
-                }
-            }
-        });
-    }
-    signal::ctrl_c().await.expect("failed to listen for event");
-    Ok::<_, anyhow::Error>(())
+    Ok(())
 }

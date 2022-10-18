@@ -1,12 +1,10 @@
-use std::net::{self, Ipv4Addr};
+use std::net::Ipv4Addr;
 
-use aya::{include_bytes_aligned, Bpf, programs::{tc, SchedClassifier, TcAttachType}, maps::{perf::AsyncPerfEventArray, HashMap}, util::online_cpus};
-use bytes::BytesMut;
+use aya::{include_bytes_aligned, Bpf, programs::{tc, SchedClassifier, TcAttachType}, maps::HashMap};
+use aya_log::BpfLogger;
 use clap::Parser;
-use log::info;
-use tokio::{signal, task};
-
-use tc_egress_common::PacketLog;
+use log::{info, warn};
+use tokio::signal;
 
 #[derive(Debug, Parser)]
 struct Opt {
@@ -32,6 +30,10 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/tc-egress"
     ))?;
+    if let Err(e) = BpfLogger::init(&mut bpf) {
+        // This can happen if you remove all log statements from your eBPF program.
+        warn!("failed to initialize eBPF logger: {}", e);
+    }
     // error adding clsact to the interface if it is already added is harmless
     // the full cleanup can be done with 'sudo tc qdisc del dev eth0 clsact'.
     let _ = tc::qdisc_add_clsact(&opt.iface);
@@ -48,29 +50,6 @@ async fn main() -> Result<(), anyhow::Error> {
 
     // (3)
     blocklist.insert(block_addr, 0, 0)?;
-
-    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut("EVENTS")?)?;
-
-    for cpu_id in online_cpus()? {
-        let mut buf = perf_array.open(cpu_id, None)?;
-
-        task::spawn(async move {
-            let mut buffers = (0..10)
-                .map(|_| BytesMut::with_capacity(1024))
-                .collect::<Vec<_>>();
-
-            loop {
-                let events = buf.read_events(&mut buffers).await.unwrap();
-                for i in 0..events.read {
-                    let buf = &mut buffers[i];
-                    let ptr = buf.as_ptr() as *const PacketLog;
-                    let data = unsafe { ptr.read_unaligned() };
-                    let src_addr = net::Ipv4Addr::from(data.ipv4_address);
-                    info!("LOG: SRC {}, ACTION {}", src_addr, data.action);
-                }
-            }
-        });
-    }
 
     info!("Waiting for Ctrl-C...");
     signal::ctrl_c().await?;

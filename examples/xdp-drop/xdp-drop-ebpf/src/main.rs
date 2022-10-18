@@ -5,25 +5,21 @@
 use aya_bpf::{
     bindings::xdp_action,
     macros::{map, xdp},
-    maps::{HashMap, PerfEventArray},
+    maps::HashMap,
     programs::XdpContext,
 };
+use aya_log_ebpf::info;
 
 use core::mem;
-use memoffset::offset_of;
-use xdp_drop_common::PacketLog;
-
-mod bindings;
-use bindings::{ethhdr, iphdr};
+use network_types::{
+    l2::eth::{EthHdr, EthProto, ETH_HDR_LEN},
+    l3::ip::Ipv4Hdr,
+};
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     unsafe { core::hint::unreachable_unchecked() }
 }
-
-#[map(name = "EVENTS")]
-static mut EVENTS: PerfEventArray<PacketLog> =
-    PerfEventArray::<PacketLog>::with_max_entries(1024, 0);
 
 #[map(name = "BLOCKLIST")] // (1)
 static mut BLOCKLIST: HashMap<u32, u32> =
@@ -47,7 +43,8 @@ unsafe fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
         return Err(());
     }
 
-    Ok((start + offset) as *const T)
+    let ptr = (start + offset) as *const T;
+    Ok(&*ptr)
 }
 
 // (2)
@@ -56,14 +53,14 @@ fn block_ip(address: u32) -> bool {
 }
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
-    let h_proto =
-        u16::from_be(unsafe { *ptr_at(&ctx, offset_of!(ethhdr, h_proto))? });
-    if h_proto != ETH_P_IP {
-        return Ok(xdp_action::XDP_PASS);
+    let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
+    match unsafe { *ethhdr }.proto {
+        EthProto::Ipv4 => {}
+        _ => return Ok(xdp_action::XDP_PASS),
     }
-    let source = u32::from_be(unsafe {
-        *ptr_at(&ctx, ETH_HDR_LEN + offset_of!(iphdr, saddr))?
-    });
+
+    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, ETH_HDR_LEN)? };
+    let source = unsafe { *ipv4hdr }.source;
 
     // (3)
     let action = if block_ip(source) {
@@ -71,16 +68,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     } else {
         xdp_action::XDP_PASS
     };
+    info!(&ctx, "SRC: {:ipv4}, ACTION: {}", source, action);
 
-    let log_entry = PacketLog {
-        ipv4_address: source,
-        action: action,
-    };
-    unsafe {
-        EVENTS.output(&ctx, &log_entry, 0);
-    }
     Ok(action)
 }
-
-const ETH_P_IP: u16 = 0x0800;
-const ETH_HDR_LEN: usize = mem::size_of::<ethhdr>();
