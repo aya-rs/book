@@ -40,7 +40,7 @@ represents the IP protocol header. We need to generate Rust bindings to it.
 
 First, we must make sure that `bindgen` is installed.
 ```sh
-cargo install bindgen
+cargo install bindgen-cli
 ```
 
 Let's use `xtask` to automate the process of generating bindings so we can

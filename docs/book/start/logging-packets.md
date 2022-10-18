@@ -101,7 +101,7 @@ This is where `aya-tool` comes in to play. It can easily generate bindings for u
 
 First, we must make sure that `bindgen` is installed.
 ```sh
-cargo install bindgen
+cargo install bindgen-cli
 ```
 
 Once the bindings are generated and checked in to our repository they shouldn't need to be regenerated again unless we need to add a new struct.
