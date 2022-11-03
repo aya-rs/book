@@ -21,25 +21,24 @@ It can be installed with the following command:
 $ cargo install --git https://github.com/aya-rs/aya -- aya-tool
 ```
 
-Ensure that you have `bpftool` installed in your system, `aya-tool` is not going
+Ensure that you have `bpftool` and `bindgen` installed in your system, `aya-tool` is not going
 to work without it.
 
 The syntax of the command is:
 
 ```console
 $ aya-tool
-aya-tool 0.1.0
+aya-tool 
 
 USAGE:
     aya-tool <SUBCOMMAND>
 
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+OPTIONS:
+    -h, --help    Print help information
 
 SUBCOMMANDS:
-    generate
-    help         Prints this message or the help of the given subcommand(s)
+    generate    Generate Rust bindings to Kernel types using bpftool
+    help        Print this message or the help of the given subcommand(s)
 ```
 
 Let's assume that we want to generate Rust definition of
