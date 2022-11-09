@@ -11,7 +11,7 @@ aya = { git = "https://github.com/aya-rs/aya", branch = "main", features = [
 ] }
 aya-log = { git = "https://github.com/aya-rs/aya", branch = "main" }
 kprobetcp-common = { path = "../kprobetcp-common", features = ["user"] }
-anyhow = "1.0.66"
+anyhow = "1.0.68"
 clap = { version = "4.0", features = ["derive"] }
 env_logger = "0.10"
 log = "0.4"
