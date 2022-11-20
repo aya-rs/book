@@ -77,9 +77,9 @@ Here's how the code looks like:
 --8<-- "examples/tc-egress/tc-egress/src/main.rs"
 ```
 
-1. Loading the eBPF program.
-2. Attaching it to the given network interface.
-3. Populating the map with remote IP addresses which we want to prevent the
+1. Get a reference to the map.
+2. Create an IPv4Addr.
+3. Populate the map with remote IP addresses which we want to prevent the
    egress traffic to.
 
 The third thing is done with getting a reference to the `BLOCKLIST` map and
