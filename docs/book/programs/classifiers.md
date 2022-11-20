@@ -79,7 +79,7 @@ Here's how the code looks like:
 
 1. Get a reference to the map.
 2. Create an IPv4Addr.
-3. Populating the map with remote IP addresses which we want to prevent the
+3. Populate the map with remote IP addresses which we want to prevent the
    egress traffic to.
 
 The third thing is done with getting a reference to the `BLOCKLIST` map and
