@@ -12,8 +12,8 @@ use aya_log_ebpf::info;
 
 use core::mem;
 use network_types::{
-    l2::eth::{EthHdr, EthProto, ETH_HDR_LEN},
-    l3::ip::Ipv4Hdr,
+    eth::{EthHdr, EtherType},
+    ip::Ipv4Hdr,
 };
 
 #[panic_handler]
@@ -54,13 +54,13 @@ fn block_ip(address: u32) -> bool {
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
-    match unsafe { *ethhdr }.proto {
-        EthProto::Ipv4 => {}
+    match unsafe { (*ethhdr).ether_type } {
+        EtherType::Ipv4 => {}
         _ => return Ok(xdp_action::XDP_PASS),
     }
 
-    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, ETH_HDR_LEN)? };
-    let source = unsafe { *ipv4hdr }.source;
+    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
+    let source = unsafe { (*ipv4hdr).src_addr };
 
     // (3)
     let action = if block_ip(source) {

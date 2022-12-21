@@ -9,8 +9,8 @@ use aya_bpf::{
 };
 use aya_log_ebpf::info;
 use network_types::{
-    l2::eth::{EthHdr, EthProto, ETH_HDR_LEN},
-    l3::ip::Ipv4Hdr,
+    eth::{EthHdr, EtherType},
+    ip::Ipv4Hdr,
 };
 
 #[map]
@@ -30,13 +30,13 @@ fn block_ip(address: u32) -> bool {
 
 fn try_tc_egress(ctx: TcContext) -> Result<i32, ()> {
     let ethhdr: EthHdr = ctx.load(0).map_err(|_| ())?;
-    match ethhdr.proto {
-        EthProto::Ipv4 => {}
+    match ethhdr.ether_type {
+        EtherType::Ipv4 => {}
         _ => return Ok(TC_ACT_PIPE),
     }
 
-    let ipv4hdr: Ipv4Hdr = ctx.load(ETH_HDR_LEN).map_err(|_| ())?;
-    let destination = u32::from_be(ipv4hdr.dest);
+    let ipv4hdr: Ipv4Hdr = ctx.load(EthHdr::LEN).map_err(|_| ())?;
+    let destination = u32::from_be(ipv4hdr.dst_addr);
 
     let action = if block_ip(destination) {
         TC_ACT_SHOT

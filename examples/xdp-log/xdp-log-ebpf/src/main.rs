@@ -6,10 +6,12 @@ use aya_log_ebpf::info;
 
 use core::mem;
 use network_types::{
-    l2::eth::{EthHdr, EthProto, ETH_HDR_LEN},
-    l3::ip::{Ipv4Hdr, Ipv4Proto, IPV4_HDR_LEN},
-    l4::{tcp::TcpHdr, udp::UdpHdr},
+    eth::{EthHdr, EtherType},
+    ip::{Ipv4Hdr, IpProto},
+    tcp::TcpHdr,
+    udp::UdpHdr,
 };
+
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
@@ -39,24 +41,24 @@ unsafe fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
-    match unsafe { *ethhdr }.proto {
-        EthProto::Ipv4 => {}
+    match unsafe { (*ethhdr).ether_type } {
+        EtherType::Ipv4 => {}
         _ => return Ok(xdp_action::XDP_PASS),
     }
 
-    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, ETH_HDR_LEN)? };
-    let source_addr = unsafe { *ipv4hdr }.source;
+    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
+    let source_addr = unsafe { (*ipv4hdr).src_addr };
 
-    let source_port = match unsafe { *ipv4hdr }.proto {
-        Ipv4Proto::Tcp => {
+    let source_port = match unsafe { (*ipv4hdr).proto } {
+        IpProto::Tcp => {
             let tcphdr: *const TcpHdr =
-                unsafe { ptr_at(&ctx, ETH_HDR_LEN + IPV4_HDR_LEN) }?;
-            u16::from_be(unsafe { *tcphdr }.source)
+                unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN) }?;
+            u16::from_be(unsafe { (*tcphdr).source })
         }
-        Ipv4Proto::Udp => {
+        IpProto::Udp => {
             let udphdr: *const UdpHdr =
-                unsafe { ptr_at(&ctx, ETH_HDR_LEN + IPV4_HDR_LEN) }?;
-            u16::from_be(unsafe { *udphdr }.source)
+                unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN) }?;
+            u16::from_be(unsafe { (*udphdr).source })
         }
         _ => return Err(()),
     };
