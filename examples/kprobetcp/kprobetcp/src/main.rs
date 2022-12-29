@@ -18,19 +18,19 @@ async fn main() -> Result<(), anyhow::Error> {
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
     #[cfg(debug_assertions)]
-    let mut bpfh = Bpf::load(include_bytes_aligned!(
+    let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/kprobetcp"
     ))?;
     #[cfg(not(debug_assertions))]
-    let mut bpfh = Bpf::load(include_bytes_aligned!(
+    let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/kprobetcp"
     ))?;
-    if let Err(e) = BpfLogger::init(&mut bpfh) {
+    if let Err(e) = BpfLogger::init(&mut bpf) {
         // This can happen if you remove all log statements from your eBPF program.
         warn!("failed to initialize eBPF logger: {}", e);
     }
     let program: &mut KProbe =
-        bpfh.program_mut("kprobetcp").unwrap().try_into()?;
+        bpf.program_mut("kprobetcp").unwrap().try_into()?;
     program.load()?;
     program.attach("tcp_connect", 0)?;
 
