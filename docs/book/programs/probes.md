@@ -19,7 +19,7 @@ For this demo program, we are going to rely on aya-log to print IP addresses fro
 
 ## eBPF code
 - From the `tcp_connect` signature, we see that `struct sock *sk` is the only function parameter. We will access it from the `ProbeContext` ctx handle.
--  We call `bpf_probe_read_kernel` helper to copy the `struct sock_common	__sk_common` portion of the socket structure.  (For uprobe programs, we would need to call `bpf_probe_read_kernel` instead.)
+- We call `bpf_probe_read_kernel` helper to copy the `struct sock_common	__sk_common` portion of the socket structure.  (For uprobe programs, we would need to call `bpf_probe_read_user` instead.)
 - We match the `skc_family` field, and for `AF_INET` (IPv4) and `AF_INET6` (IPv6) values, extract and print the src and destination addresses using aya-log `info!` macro.
 
 Here's how the eBPF code looks like:
