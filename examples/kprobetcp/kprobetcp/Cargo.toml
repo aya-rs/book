@@ -1,0 +1,28 @@
+[package]
+name = "kprobetcp"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+# TODO: change to the stable version by the next release = 0.12
+aya = { git = "https://github.com/aya-rs/aya", branch = "main", features = [
+    "async_tokio",
+] }
+aya-log = { git = "https://github.com/aya-rs/aya", branch = "main" }
+kprobetcp-common = { path = "../kprobetcp-common", features = ["user"] }
+anyhow = "1.0.66"
+clap = { version = "4.0", features = ["derive"] }
+env_logger = "0.10"
+log = "0.4"
+tokio = { version = "1.23", features = [
+    "macros",
+    "rt",
+    "rt-multi-thread",
+    "net",
+    "signal",
+] }
+
+[[bin]]
+name = "kprobetcp"
+path = "src/main.rs"
