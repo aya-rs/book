@@ -27,7 +27,7 @@ cargo build --release
 ## Run
 
 ```bash
-RUST_LOG=info sudo target/release/kprob
+RUST_LOG=info sudo target/release/kprobetcp
 ```
 Execute some TCP connection in a different terminal, such as `curl http://example.com`.  The expected output (the source IP address will likely be different):
 ```
