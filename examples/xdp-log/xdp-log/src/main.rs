@@ -1,6 +1,6 @@
-use std::net::Ipv4Addr;
-
-use aya::{include_bytes_aligned, Bpf, programs::{tc, SchedClassifier, TcAttachType}, maps::HashMap};
+use aya::{include_bytes_aligned, Bpf};
+use anyhow::Context;
+use aya::programs::{Xdp, XdpFlags};
 use aya_log::BpfLogger;
 use clap::Parser;
 use log::{info, warn};
@@ -24,32 +24,21 @@ async fn main() -> Result<(), anyhow::Error> {
     // reach for `Bpf::load_file` instead.
     #[cfg(debug_assertions)]
     let mut bpf = Bpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/tc-egress"
+        "../../target/bpfel-unknown-none/debug/xdp-log"
     ))?;
     #[cfg(not(debug_assertions))]
     let mut bpf = Bpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/tc-egress"
+        "../../target/bpfel-unknown-none/release/xdp-log"
     ))?;
     if let Err(e) = BpfLogger::init(&mut bpf) {
         // This can happen if you remove all log statements from your eBPF program.
         warn!("failed to initialize eBPF logger: {}", e);
     }
-    // error adding clsact to the interface if it is already added is harmless
-    // the full cleanup can be done with 'sudo tc qdisc del dev eth0 clsact'.
-    let _ = tc::qdisc_add_clsact(&opt.iface);
-    let program: &mut SchedClassifier = bpf.program_mut("tc_egress").unwrap().try_into()?;
-    program.load()?;
-    program.attach(&opt.iface, TcAttachType::Egress)?;
-
     // (1)
-    let mut blocklist: HashMap<_, u32, u32> =
-        HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
-    
-    // (2)
-    let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
-
-    // (3)
-    blocklist.insert(block_addr, 0, 0)?;
+    let program: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
+    program.load()?;
+    program.attach(&opt.iface, XdpFlags::default())
+        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
     info!("Waiting for Ctrl-C...");
     signal::ctrl_c().await?;

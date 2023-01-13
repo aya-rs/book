@@ -1,17 +1,16 @@
 [package]
-name = "tc-egress-ebpf"
+name = "xdp-drop-ebpf"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 aya-bpf = { git = "https://github.com/aya-rs/aya", branch = "main" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya", branch = "main" }
-tc-egress-common = { path = "../tc-egress-common" }
-memoffset = "0.6"
+xdp-drop-common = { path = "../xdp-drop-common" }
 network-types = "0.0.4"
 
 [[bin]]
-name = "tc-egress"
+name = "xdp-drop"
 path = "src/main.rs"
 
 [profile.dev]

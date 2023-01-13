@@ -2,7 +2,7 @@
 
 !!! example "Source Code"
 
-    Full code for the example in this chapter is availble [here](https://github.com/aya-rs/book/tree/main/examples/myapp-01)
+    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/xdp-hello)
 
 ## Example Project
 
@@ -16,10 +16,10 @@ XDP (eXpress Data Path) programs permit our eBPF program to make decisions about
 
 We must first write the eBPF component of our program.
 This is a minimal generated XDP program that permits all traffic.
-The logic for this program is located in `myapp-ebpf/src/main.rs` and currently looks like this:
+The logic for this program is located in `xdp-hello-ebpf/src/main.rs` and currently looks like this:
 
-```rust linenums="1" title="myapp-ebpf/src/main.rs"
---8<-- "examples/myapp-01/myapp-ebpf/src/main.rs"
+```rust linenums="1" title="xdp-hello-ebpf/src/main.rs"
+--8<-- "examples/xdp-hello/xdp-hello-ebpf/src/main.rs"
 ```
 
 1. `#![no_std]` is required since we cannot use the standard library.
@@ -37,9 +37,9 @@ Now we can compile this using `cargo xtask build-ebpf`.
 Let's take a look at the compiled eBPF program:
 
 ```console
-$ llvm-objdump -S target/bpfel-unknown-none/debug/myapp
+$ llvm-objdump -S target/bpfel-unknown-none/debug/xdp-hello
 
-target/bpfel-unknown-none/debug/myapp:	file format elf64-bpf
+target/bpfel-unknown-none/debug/xdp-hello:	file format elf64-bpf
 
 Disassembly of section .text:
 
@@ -74,9 +74,9 @@ Disassembly of section .text:
 0000000000000090 <LBB2_3>:
       18:	95 00 00 00 00 00 00 00	exit
 
-Disassembly of section xdp/myapp:
+Disassembly of section xdp/xdp_hello:
 
-0000000000000000 <myapp>:
+0000000000000000 <xdp_hello>:
        0:	bf 16 00 00 00 00 00 00	r6 = r1
        1:	b7 07 00 00 00 00 00 00	r7 = 0
        2:	63 7a fc ff 00 00 00 00	*(u32 *)(r10 - 4) = r7
@@ -93,7 +93,7 @@ Disassembly of section xdp/myapp:
 ```
 
 The output was trimmed for brevity.
-We can see an `xdp/myapp` section here.
+We can see an `xdp/xdp_hello` section here.
 And in `<LBB0_2>`, `r0 = 2` sets register `0` to `2`, which is the value of the `XDP_PASS` action.
 `exit` ends the program.
 
@@ -102,14 +102,14 @@ Simple!
 ## User-space Component
 
 Now our eBPF program is complete and compiled, we need a user-space program to load it and attach it to a trace point.
-Fortunately, we have a generated program ready in `myapp/src/main.rs` which is going to do that for us.
+Fortunately, we have a generated program ready in `xdp-hello/src/main.rs` which is going to do that for us.
 
 ### Starting Out
 
 Let's look at the details of our generated user-space application:
 
-```rust linenums="1" title="myapp/src/main.rs"
---8<-- "examples/myapp-01/myapp/src/main.rs"
+```rust linenums="1" title="xdp-hello/src/main.rs"
+--8<-- "examples/xdp-hello/xdp-hello/src/main.rs"
 ```
 
 1. `tokio` is the async library we're using, which provides our [Ctrl-C handler](https://docs.rs/tokio/latest/tokio/signal/fn.ctrl_c.html). It will come in useful later as we expand the functionality of the initial program:
@@ -130,10 +130,10 @@ $ cargo xtask run -- -h
 :
     Finished dev [optimized] target(s) in 0.90s
     Finished dev [unoptimized + debuginfo] target(s) in 0.60s
-myapp 
+xdp-hello
 
 USAGE:
-    myapp [OPTIONS]
+    xdp-hello [OPTIONS]
 
 OPTIONS:
     -h, --help             Print help information
@@ -148,13 +148,12 @@ OPTIONS:
 
 ```console
 $ RUST_LOG=info cargo xtask run
-17:51:57 [INFO] myapp: [myapp/src/main.rs:48] Waiting for Ctrl-C...
-17:51:57 [INFO] myapp: [src/main.rs:20] received a packet
-17:51:57 [INFO] myapp: [src/main.rs:20] received a packet
-17:51:57 [INFO] myapp: [src/main.rs:20] received a packet
-:
-17:51:58 [INFO] myapp: [src/main.rs:20] received a packet
-^C17:51:58 [INFO] myapp: [myapp/src/main.rs:50] Exiting...
+[2022-12-21T18:03:09Z INFO  xdp_hello] Waiting for Ctrl-C...
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+^C[2022-12-21T18:03:11Z INFO  xdp_hello] Exiting...
 ```
 
 So everytime a packet was received on the interface, a log was printed!
@@ -169,13 +168,13 @@ So everytime a packet was received on the interface, a log was printed!
 The program runs until CTRL+C is pressed and then exits.
 On exit, Aya takes care of detaching the program for us.
 
-If you issue the `sudo bpftool prog list` command when `myapp` is running you can verify that it is loaded:
+If you issue the `sudo bpftool prog list` command when `xdp_hello` is running you can verify that it is loaded:
 
 ```console
-958: xdp  name myapp  tag 0137ce4fce70b467  gpl
+958: xdp  name xdp_hello  tag 0137ce4fce70b467  gpl
 	loaded_at 2022-06-23T13:55:28-0400  uid 0
 	xlated 2016B  jited 1138B  memlock 4096B  map_ids 275,274,273
-	pids myapp(131677)
+	pids xdp-hello(131677)
 ```
 
-Running the command again once `myapp` has exited will show that the program is no longer running.
+Running the command again once `xdp_hello` has exited will show that the program is no longer running.
