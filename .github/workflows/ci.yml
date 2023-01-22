@@ -29,11 +29,11 @@ jobs:
       - name: Install latest nightly
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: nightly-2023-01-10
           components: rust-src
 
       - name: Install bpf-linker
-        run: cargo +nightly install bpf-linker
+        run: cargo install bpf-linker
 
       - uses: Swatinem/rust-cache@v1
 
