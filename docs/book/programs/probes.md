@@ -22,6 +22,17 @@ For this demo program, we are going to rely on aya-log to print IP addresses fro
 - We call `bpf_probe_read_kernel` helper to copy the `struct sock_common	__sk_common` portion of the socket structure.  (For uprobe programs, we would need to call `bpf_probe_read_user` instead.)
 - We match the `skc_family` field, and for `AF_INET` (IPv4) and `AF_INET6` (IPv6) values, extract and print the src and destination addresses using aya-log `info!` macro.
 
+Before we write eBPF code in Rust, we need to generate the BTF bindings for Rust:
+
+```rust linenums="1" title="kprobetcp/xtask/src/codegen.rs"
+--8<-- "examples/kprobetcp/xtask/src/codegen.rs"
+```
+
+Generate the code by:
+```console
+$ cargo xtask codegen
+```
+
 Here's how the eBPF code looks like:
 
 ```rust linenums="1" title="kprobetcp-ebpf/src/main.rs"
