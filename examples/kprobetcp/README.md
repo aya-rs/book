@@ -11,23 +11,22 @@ and prints the source and destination IP addreses from the sockets for the TCP c
 ## Build eBPF
 
 ```bash
-cargo xtask build-ebpf --release
+cargo xtask build-ebpf
 ```
 
-To perform a debug build you can leave out the `--release` flag.
-In this case, below you should also leave out the `--release` flag.
+To perform a release build you can use the `--release` flag.
 You may also change the target architecture with the `--target` flag
 
 ## Build Userspace
 
 ```bash
-cargo build --release
+cargo build
 ```
 
 ## Run
 
 ```bash
-RUST_LOG=info sudo target/release/kprob
+RUST_LOG=info cargo xtask run
 ```
 Execute some TCP connection in a different terminal, such as `curl http://example.com`.  The expected output (the source IP address will likely be different):
 ```
