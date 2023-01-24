@@ -125,6 +125,13 @@ With our helper function in place, we can:
 1. Read the Ethertype field to check if we have an IPv4 packet.
 1. Read the IPv4 Source Address from the IP header
 
+To do this efficiently we'll add a dependency on `memoffset = "0.8"` in our `myapp-ebpf/Cargo.toml`
+
+!!! tip "Reading Fields Using `offset_of!`"
+
+    As there is limited stack space, it's more memory efficient to use the `offset_of!` macro to read
+    a single field from a struct, rather than reading the whole struct and accessing the field by name.
+
 Once we have our IPv4 source address, we can create a `PacketLog` struct and output this to our `PerfEventArray`
 
 The resulting code looks like this:
