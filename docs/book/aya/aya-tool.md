@@ -2,7 +2,7 @@
 
 !!! example "Source Code"
 
-    Full code for the example in this chapter is availble [here](https://github.com/aya-rs/book/tree/main/examples/aya-tool)
+    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/aya-tool)
 
 Very often you will need to use type definitions that your running Linux kernel
 uses in its source code. For example, you might need a definition of
