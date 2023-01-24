@@ -2,7 +2,7 @@
 
 !!! example "Source Code"
 
-    Full code for the example in this chapter is availble [here](https://github.com/aya-rs/book/tree/main/examples/kprobetcp).
+    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/kprobetcp).
 
 # What are the probes in eBPF?
 

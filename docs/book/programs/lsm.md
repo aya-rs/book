@@ -2,7 +2,7 @@
 
 !!! example "Source Code"
 
-    Full code for the example in this chapter is availble [here](https://github.com/aya-rs/book/tree/main/examples/lsm-nice)
+    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/lsm-nice)
 ## What is LSM
 
 LSM stands for [Linux Security Modules](https://en.wikipedia.org/wiki/Linux_Security_Modules)
