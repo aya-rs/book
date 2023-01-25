@@ -7,11 +7,10 @@ use aya_log_ebpf::info;
 use core::mem;
 use network_types::{
     eth::{EthHdr, EtherType},
-    ip::{Ipv4Hdr, IpProto},
+    ip::{IpProto, Ipv4Hdr},
     tcp::TcpHdr,
     udp::UdpHdr,
 };
-
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
@@ -26,7 +25,7 @@ pub fn xdp_firewall(ctx: XdpContext) -> u32 {
     }
 }
 
-#[inline(always)] // (2)
+#[inline(always)] // (1)
 unsafe fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
     let start = ctx.data();
     let end = ctx.data_end();
@@ -40,7 +39,7 @@ unsafe fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
 }
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
-    let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
+    let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? }; // (2)
     match unsafe { (*ethhdr).ether_type } {
         EtherType::Ipv4 => {}
         _ => return Ok(xdp_action::XDP_PASS),
@@ -63,6 +62,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
         _ => return Err(()),
     };
 
+    // (3)
     info!(
         &ctx,
         "SRC IP: {:ipv4}, SRC PORT: {}", source_addr, source_port
