@@ -11,7 +11,7 @@ xdp-drop-common = { path = "../xdp-drop-common", features = ["user"] }
 anyhow = "1.0.68"
 clap = { version = "3.1", features = ["derive"] }
 log = "0.4"
-tokio = { version = "1.18", features = ["macros", "rt", "rt-multi-thread", "net", "signal"] }
+tokio = { version = "1.24", features = ["macros", "rt", "rt-multi-thread", "net", "signal"] }
 bytes = "1"
 env_logger = "0.10"
 

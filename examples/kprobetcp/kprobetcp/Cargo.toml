@@ -15,13 +15,7 @@ anyhow = "1.0.68"
 clap = { version = "4.0", features = ["derive"] }
 env_logger = "0.10"
 log = "0.4"
-tokio = { version = "1.23", features = [
-    "macros",
-    "rt",
-    "rt-multi-thread",
-    "net",
-    "signal",
-] }
+tokio = { version = "1.24", features = ["macros", "rt", "rt-multi-thread", "net", "signal"] }
 
 [[bin]]
 name = "kprobetcp"

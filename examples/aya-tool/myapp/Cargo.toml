@@ -11,7 +11,7 @@ myapp-common = { path = "../myapp-common", features=["userspace"] }
 anyhow = "1.0.68"
 ctrlc = "3.2"
 structopt = { version = "0.3"}
-tokio = { version = "1.14", features = ["full"] }
+tokio = { version = "1.24", features = ["full"] }
 env_logger = "0.10"
 log = "0.4"
 
