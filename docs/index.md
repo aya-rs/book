@@ -1,7 +1,7 @@
 # Home
 
 eBPF is a technology that allows running user-supplied programs inside the Linux
-kernel. For more info see https://ebpf.io/what-is-ebpf.
+kernel. For more info see the ["What is eBPF?" documentation][what-is-ebpf].
 
 Aya is an eBPF library built with a focus on operability and developer
 experience. It does not rely on [libbpf] nor [bcc] - it's built from the ground
@@ -24,6 +24,7 @@ Some of the major features provided include:
   compiled headers, and not even a C toolchain; a release build completes in a matter
   of seconds.
 
+[what-is-ebpf]:https://ebpf.io/what-is-ebpf
 [libbpf]: https://github.com/libbpf/libbpf
 [bcc]: https://github.com/iovisor/bcc
 [libc]: https://docs.rs/libc
