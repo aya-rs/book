@@ -26,7 +26,7 @@ pub fn xdp_firewall(ctx: XdpContext) -> u32 {
 }
 
 #[inline(always)] // (1)
-unsafe fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
+fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
     let start = ctx.data();
     let end = ctx.data_end();
     let len = mem::size_of::<T>();
@@ -39,24 +39,24 @@ unsafe fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
 }
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
-    let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? }; // (2)
+    let ethhdr: *const EthHdr = ptr_at(&ctx, 0)?; // (2)
     match unsafe { (*ethhdr).ether_type } {
         EtherType::Ipv4 => {}
         _ => return Ok(xdp_action::XDP_PASS),
     }
 
-    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
+    let ipv4hdr: *const Ipv4Hdr = ptr_at(&ctx, EthHdr::LEN)?;
     let source_addr = u32::from_be(unsafe { (*ipv4hdr).src_addr });
 
     let source_port = match unsafe { (*ipv4hdr).proto } {
         IpProto::Tcp => {
             let tcphdr: *const TcpHdr =
-                unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN) }?;
+                ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN)?;
             u16::from_be(unsafe { (*tcphdr).source })
         }
         IpProto::Udp => {
             let udphdr: *const UdpHdr =
-                unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN) }?;
+                ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN)?;
             u16::from_be(unsafe { (*udphdr).source })
         }
         _ => return Err(()),
