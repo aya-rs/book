@@ -65,7 +65,7 @@ nav:
     - A Simple XDP Program:
       - book/start/index.md
       - Hello XDP!: book/start/hello-xdp.md
-      - Logging Packets: book/start/logging-packets.md
+      - Parsing packets: book/start/parsing-packets.md
       - Dropping Packets: book/start/dropping-packets.md
     - Working With Aya:
       - book/aya/index.md
