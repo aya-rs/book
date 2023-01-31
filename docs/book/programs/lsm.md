@@ -87,10 +87,10 @@ GRUB_CMDLINE_LINUX="lsm=[YOUR CURRENTLY ENABLED LSMs],bpf"
 Then rebuilding the grub configuration with any of the commands listed below (each of them might be available or not in different Linux distributions):
 
 ```console
-sudo update-grub2
+# update-grub2
 ```
 ```console
-grub-mkconfig -o /boot/grub/grub.cfg
+# grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
 And finally, rebooting the system.
@@ -104,7 +104,7 @@ nice value lower than 0 (which means higher priority), for a particular process.
 The `renice` tool can be used to change niceness values:
 
 ```console
-renice [value] -p [pid]
+$ renice [value] -p [pid]
 ```
 
 With our eBPF program, we want to make it impossible to call `renice` for a
@@ -117,14 +117,14 @@ the userspace process which loads the eBPF program.
 The first step is to create a new project:
 
 ```console
-cargo generate --name lsm-nice -d program_type=lsm -d lsm_hook=task_setnice https://github.com/aya-rs/aya-template
+$ cargo generate --name lsm-nice -d program_type=lsm -d lsm_hook=task_setnice https://github.com/aya-rs/aya-template
 ```
 
 That command should create a new Aya project with an empty program attaching to
 the `task_setnice` hook. Let's go to its directory:
 
 ```console
-cd lsm-nice
+$ cd lsm-nice
 ```
 One of the arguments passed to the `task_setnice` hook is a pointer to a
 [task_struct type](https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723).
@@ -134,7 +134,7 @@ Therefore we need to generate a binding to `task_struct` with aya-tool.
 > [this section](../aya/aya-tool.md).
 
 ```console
-aya-tool generate task_struct > lsm-nice-ebpf/src/vmlinux.rs
+$ aya-tool generate task_struct > lsm-nice-ebpf/src/vmlinux.rs
 ```
 
 Now it's time to modify the `lsm-nice-ebpf` project and write an actual program
@@ -169,7 +169,7 @@ The final result should look like:
 After that, we can build and run our project with:
 
 ```console
-RUST_LOG=info cargo xtask run
+$ RUST_LOG=info cargo xtask run
 ```
 
 The output should contain our log line showing the PID of the userspace
