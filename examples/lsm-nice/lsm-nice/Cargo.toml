@@ -6,12 +6,17 @@ publish = false
 
 [dependencies]
 aya = "0.11"
-lsm-nice-common = { path = "../lsm-nice-common", features=["user"] }
+lsm-nice-common = { path = "../lsm-nice-common", features = ["user"] }
 anyhow = "1.0.68"
 
 log = "0.4"
-structopt = { version = "0.3" }
-tokio = { version = "1.24", features = ["macros", "rt", "rt-multi-thread", "net", "signal"] }
+tokio = { version = "1.25", features = [
+    "macros",
+    "rt",
+    "rt-multi-thread",
+    "net",
+    "signal",
+] }
 env_logger = "0.10"
 
 [[bin]]

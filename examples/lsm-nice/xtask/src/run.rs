@@ -1,29 +1,32 @@
-use std::{os::unix::process::CommandExt, process::Command};
+use std::process::Command;
 
 use anyhow::Context as _;
-use structopt::StructOpt;
+use clap::Parser;
 
 use crate::build_ebpf::{build_ebpf, Architecture, Options as BuildOptions};
 
-#[derive(StructOpt)]
+#[derive(Debug, Parser)]
 pub struct Options {
     /// Set the endianness of the BPF target
-    #[structopt(default_value = "bpfel-unknown-none", long)]
+    #[clap(default_value = "bpfel-unknown-none", long)]
     pub bpf_target: Architecture,
-    /// Build profile for userspace program
-    #[structopt(default_value = "dev", long)]
-    pub profile: String,
+    /// Build and run the release target
+    #[clap(long)]
+    pub release: bool,
     /// The command used to wrap your application
-    #[structopt(short, long, default_value = "sudo -E")]
+    #[clap(short, long, default_value = "sudo -E")]
     pub runner: String,
     /// Arguments to pass to your application
-    #[structopt(name = "args", last = true)]
+    #[clap(name = "args", last = true)]
     pub run_args: Vec<String>,
 }
 
 /// Build the project
 fn build(opts: &Options) -> Result<(), anyhow::Error> {
-    let args = vec!["build", "--profile", opts.profile.as_str()];
+    let mut args = vec!["build"];
+    if opts.release {
+        args.push("--release")
+    }
     let status = Command::new("cargo")
         .args(&args)
         .status()
@@ -37,17 +40,14 @@ pub fn run(opts: Options) -> Result<(), anyhow::Error> {
     // build our ebpf program followed by our application
     build_ebpf(BuildOptions {
         target: opts.bpf_target,
-        profile: opts.profile.clone(),
+        release: opts.release,
     })
     .context("Error while building eBPF program")?;
     build(&opts).context("Error while building userspace application")?;
 
-    let target_dir = match opts.profile.as_str() {
-        "dev" | "test" => "debug",
-        "bench" | "release" => "release",
-        _ => opts.profile.as_str(),
-    };
-    let bin_path = format!("target/{}/lsm-nice", target_dir);
+    // profile we are building (release or debug)
+    let profile = if opts.release { "release" } else { "debug" };
+    let bin_path = format!("target/{profile}/lsm-nice");
 
     // arguments to pass to the application
     let mut run_args: Vec<_> =
@@ -58,12 +58,14 @@ pub fn run(opts: Options) -> Result<(), anyhow::Error> {
     args.push(bin_path.as_str());
     args.append(&mut run_args);
 
-    // spawn the command
-    let err = Command::new(args.get(0).expect("No first argument"))
+    // run the command
+    let status = Command::new(args.first().expect("No first argument"))
         .args(args.iter().skip(1))
-        .exec();
+        .status()
+        .expect("failed to run the command");
 
-    // we shouldn't get here unless the command failed to spawn
-    Err(anyhow::Error::from(err)
-        .context(format!("Failed to run `{}`", args.join(" "))))
+    if !status.success() {
+        anyhow::bail!("Failed to run `{}`", args.join(" "));
+    }
+    Ok(())
 }

@@ -11,7 +11,7 @@ use std::{
 
 fn main() {
     if let Err(e) = try_main() {
-        eprintln!("error: {:#}", e);
+        eprintln!("error: {e:#}");
     }
 }
 
@@ -22,9 +22,15 @@ fn try_main() -> Result<(), anyhow::Error> {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
+    #[cfg(debug_assertions)]
+    let mut bpf = Bpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/debug/myapp"
+    ))?;
+    #[cfg(not(debug_assertions))]
     let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/myapp"
     ))?;
+
     let btf = Btf::from_sys_fs()?;
     let program: &mut Lsm =
         bpf.program_mut("task_alloc").unwrap().try_into()?;
