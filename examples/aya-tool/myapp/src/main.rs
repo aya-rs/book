@@ -8,7 +8,6 @@ use std::{
     thread,
     time::Duration,
 };
-use structopt::StructOpt;
 
 fn main() {
     if let Err(e) = try_main() {
@@ -16,13 +15,7 @@ fn main() {
     }
 }
 
-#[derive(Debug, StructOpt)]
-struct Opt {}
-
 fn try_main() -> Result<(), anyhow::Error> {
-    // command-line options a currently unused
-    let _opt = Opt::from_args();
-
     env_logger::init();
 
     // This will include your eBPF object file as raw bytes at compile-time and load it at
