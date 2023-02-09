@@ -4,6 +4,7 @@ mod run;
 use std::process::exit;
 
 use clap::Parser;
+
 #[derive(Debug, Parser)]
 pub struct Options {
     #[clap(subcommand)]
