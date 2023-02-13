@@ -1,6 +1,11 @@
 use std::net::Ipv4Addr;
 
-use aya::{include_bytes_aligned, Bpf, programs::{tc, SchedClassifier, TcAttachType}, maps::HashMap};
+use aya::{
+    include_bytes_aligned,
+    maps::HashMap,
+    programs::{tc, SchedClassifier, TcAttachType},
+    Bpf,
+};
 use aya_log::BpfLogger;
 use clap::Parser;
 use log::{info, warn};
@@ -37,14 +42,15 @@ async fn main() -> Result<(), anyhow::Error> {
     // error adding clsact to the interface if it is already added is harmless
     // the full cleanup can be done with 'sudo tc qdisc del dev eth0 clsact'.
     let _ = tc::qdisc_add_clsact(&opt.iface);
-    let program: &mut SchedClassifier = bpf.program_mut("tc_egress").unwrap().try_into()?;
+    let program: &mut SchedClassifier =
+        bpf.program_mut("tc_egress").unwrap().try_into()?;
     program.load()?;
     program.attach(&opt.iface, TcAttachType::Egress)?;
 
     // (1)
     let mut blocklist: HashMap<_, u32, u32> =
         HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
-    
+
     // (2)
     let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
 
