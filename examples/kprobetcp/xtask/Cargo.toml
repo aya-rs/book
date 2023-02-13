@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 anyhow = "1"
 clap = { version = "4.0", features = ["derive"] }
+aya-tool = { git = "https://github.com/aya-rs/aya", branch = "main" }
