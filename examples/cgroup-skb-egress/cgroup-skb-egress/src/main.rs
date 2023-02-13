@@ -1,6 +1,12 @@
 use std::net::Ipv4Addr;
 
-use aya::{include_bytes_aligned, Bpf, maps::{perf::AsyncPerfEventArray, HashMap}, programs::{CgroupSkb, CgroupSkbAttachType}, util::online_cpus};
+use aya::{
+    include_bytes_aligned,
+    maps::{perf::AsyncPerfEventArray, HashMap},
+    programs::{CgroupSkb, CgroupSkbAttachType},
+    util::online_cpus,
+    Bpf,
+};
 use bytes::BytesMut;
 use clap::Parser;
 use log::info;
@@ -32,7 +38,8 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut bpf = Bpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/cgroup-skb-egress"
     ))?;
-    let program: &mut CgroupSkb = bpf.program_mut("cgroup_skb_egress").unwrap().try_into()?;
+    let program: &mut CgroupSkb =
+        bpf.program_mut("cgroup_skb_egress").unwrap().try_into()?;
     let cgroup = std::fs::File::open(opt.cgroup_path)?;
     // (1)
     program.load()?;
@@ -59,8 +66,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
             loop {
                 let events = buf.read_events(&mut buffers).await.unwrap();
-                for i in 0..events.read {
-                    let buf = &mut buffers[i];
+                for buf in buffers.iter_mut().take(events.read) {
                     let ptr = buf.as_ptr() as *const PacketLog;
                     let data = unsafe { ptr.read_unaligned() };
                     let src_addr = Ipv4Addr::from(data.ipv4_address);

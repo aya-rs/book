@@ -11,6 +11,6 @@ pub fn generate() -> Result<(), anyhow::Error> {
     )?;
     // Write the bindings to the $OUT_DIR/bindings.rs file.
     let mut out = File::create(dir.join("bindings.rs"))?;
-    write!(out, "{}", bindings)?;
+    write!(out, "{bindings}")?;
     Ok(())
 }

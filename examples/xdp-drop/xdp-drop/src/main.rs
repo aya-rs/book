@@ -1,11 +1,14 @@
-use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
-use aya::programs::{Xdp, XdpFlags};
-use aya::maps::HashMap;
+use aya::{
+    include_bytes_aligned,
+    maps::HashMap,
+    programs::{Xdp, XdpFlags},
+    Bpf,
+};
 use aya_log::BpfLogger;
-use std::net::Ipv4Addr;
 use clap::Parser;
 use log::{info, warn};
+use std::net::Ipv4Addr;
 use tokio::signal;
 
 #[derive(Debug, Parser)]
@@ -54,7 +57,6 @@ async fn main() -> Result<(), anyhow::Error> {
     info!("Waiting for Ctrl-C...");
     signal::ctrl_c().await?;
     info!("Exiting...");
-
 
     Ok(())
 }

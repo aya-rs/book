@@ -27,7 +27,7 @@ async fn main() -> Result<(), anyhow::Error> {
     ))?;
     if let Err(e) = BpfLogger::init(&mut bpf) {
         // This can happen if you remove all log statements from your eBPF program.
-        warn!("failed to initialize eBPF logger: {}", e);
+        warn!("failed to initialize eBPF logger: {e}");
     }
     let program: &mut KProbe =
         bpf.program_mut("kprobetcp").unwrap().try_into()?;

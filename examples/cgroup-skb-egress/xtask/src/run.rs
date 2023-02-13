@@ -1,4 +1,4 @@
-use std::{os::unix::process::CommandExt, process::Command};
+use std::process::Command;
 
 use anyhow::Context as _;
 use clap::Parser;
@@ -47,21 +47,25 @@ pub fn run(opts: Options) -> Result<(), anyhow::Error> {
 
     // profile we are building (release or debug)
     let profile = if opts.release { "release" } else { "debug" };
-    let bin_path = format!("target/{}/cgroup-skb-egress", profile);
+    let bin_path = format!("target/{profile}/cgroup-skb-egress");
 
     // arguments to pass to the application
-    let mut run_args: Vec<_> = opts.run_args.iter().map(String::as_str).collect();
+    let mut run_args: Vec<_> =
+        opts.run_args.iter().map(String::as_str).collect();
 
     // configure args
     let mut args: Vec<_> = opts.runner.trim().split_terminator(' ').collect();
     args.push(bin_path.as_str());
     args.append(&mut run_args);
 
-    // spawn the command
-    let err = Command::new(args.get(0).expect("No first argument"))
+    // run the command
+    let status = Command::new(args.first().expect("No first argument"))
         .args(args.iter().skip(1))
-        .exec();
+        .status()
+        .expect("failed to run the command");
 
-    // we shouldn't get here unless the command failed to spawn
-    Err(anyhow::Error::from(err).context(format!("Failed to run `{}`", args.join(" "))))
+    if !status.success() {
+        anyhow::bail!("Failed to run `{}`", args.join(" "));
+    }
+    Ok(())
 }

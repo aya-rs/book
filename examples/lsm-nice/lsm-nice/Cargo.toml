@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 aya = "0.11"
 lsm-nice-common = { path = "../lsm-nice-common", features = ["user"] }
-anyhow = "1.0.68"
+anyhow = "1"
 
 log = "0.4"
 tokio = { version = "1.25", features = [
