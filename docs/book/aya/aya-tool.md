@@ -15,9 +15,10 @@ we also need that definition in Rust, not in C.
 That's what aya-tool is designed for. It's a tool which allows to generate Rust
 bindings for specific kernel structures.
 
-It can be installed with the following command:
+It can be installed with the following commands:
 
 ```console
+$ cargo install bindgen-cli
 $ cargo install --git https://github.com/aya-rs/aya -- aya-tool
 ```
 
