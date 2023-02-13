@@ -47,10 +47,11 @@ pub fn run(opts: Options) -> Result<(), anyhow::Error> {
 
     // profile we are building (release or debug)
     let profile = if opts.release { "release" } else { "debug" };
-    let bin_path = format!("target/{}/tc-egress", profile);
+    let bin_path = format!("target/{profile}/tc-egress");
 
     // arguments to pass to the application
-    let mut run_args: Vec<_> = opts.run_args.iter().map(String::as_str).collect();
+    let mut run_args: Vec<_> =
+        opts.run_args.iter().map(String::as_str).collect();
 
     // configure args
     let mut args: Vec<_> = opts.runner.trim().split_terminator(' ').collect();
@@ -58,10 +59,11 @@ pub fn run(opts: Options) -> Result<(), anyhow::Error> {
     args.append(&mut run_args);
 
     // spawn the command
-    let err = Command::new(args.get(0).expect("No first argument"))
+    let err = Command::new(args.first().expect("No first argument"))
         .args(args.iter().skip(1))
         .exec();
 
     // we shouldn't get here unless the command failed to spawn
-    Err(anyhow::Error::from(err).context(format!("Failed to run `{}`", args.join(" "))))
+    Err(anyhow::Error::from(err)
+        .context(format!("Failed to run `{}`", args.join(" "))))
 }
