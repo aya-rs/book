@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 aya = "0.11"
 aya-log = "0.1"
-myapp-common = { path = "../myapp-common", features=["userspace"] }
+myapp-common = { path = "../myapp-common", features = ["user"] }
 anyhow = "1.0.68"
 ctrlc = "3.2"
 tokio = { version = "1.24", features = ["full"] }
