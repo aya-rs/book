@@ -84,10 +84,14 @@ the kernel parameters:
 GRUB_CMDLINE_LINUX="lsm=[YOUR CURRENTLY ENABLED LSMs],bpf"
 ```
 
-Then rebuilding the grub configuration with any of the commands listed below (each of them might be available or not in different Linux distributions):
+Then rebuilding the GRUB configuration with any of the commands listed below
+(each of them might be available or not in different Linux distributions):
 
 ```console
 # update-grub2
+```
+```console
+# grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 ```console
 # grub-mkconfig -o /boot/grub/grub.cfg
