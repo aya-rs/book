@@ -5,14 +5,22 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya = { version = ">=0.11", features=["async_tokio"] }
+aya = { version = ">=0.11", features = ["async_tokio"] }
 aya-log = "0.1"
-cgroup-skb-egress-common = { path = "../cgroup-skb-egress-common", features=["user"] }
-anyhow = "1.0.68"
-clap = { version = "3.2", features = ["derive"] }
+cgroup-skb-egress-common = { path = "../cgroup-skb-egress-common", features = [
+    "user",
+] }
+anyhow = "1"
+clap = { version = "4.1", features = ["derive"] }
 env_logger = "0.10"
 log = "0.4"
-tokio = { version = "1.24", features = ["macros", "rt", "rt-multi-thread", "net", "signal"] }
+tokio = { version = "1.25", features = [
+    "macros",
+    "rt",
+    "rt-multi-thread",
+    "net",
+    "signal",
+] }
 bytes = "1"
 
 [[bin]]
