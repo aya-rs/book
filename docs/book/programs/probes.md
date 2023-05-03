@@ -4,7 +4,7 @@
 
     Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/kprobetcp).
 
-# What are the probes in eBPF?
+## What are the probes in eBPF?
 
 The probe BPF programs attach to kernel (kprobes) or user-side (uprobes) functions and are able to access the function parameters of those functions.  You can find more information about probes in the [kernel documentation](https://docs.kernel.org/trace/kprobes.html), including the difference between kprobes and kretprobes.
 
