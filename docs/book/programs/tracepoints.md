@@ -4,21 +4,27 @@
 
     Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/tracepoint-openat).
 
-## What are the tracepoint in eBPF?
+## What are tracepoints in eBPF?
 
-The tracepoint BPF programs attach to kernel functions and are able to access the function parameters of those functions.  You can find more information about tracepoint in the [kernel documentation](https://docs.kernel.org/trace/tracepoints.html), tracepoint is more stable than kprobe.
+The tracepoints BPF programs attach to kernel functions and are able to access the function
+parameters of those functions.  You can find more information about tracepoints in the
+[kernel documentation](https://docs.kernel.org/trace/tracepoints.html), tracepoints is more stable than kprobe.
 
 ## Example project
 
-To illustrate tracepoints with Aya, let's write a program which attaches a eBPF handler to the [`sys_openat`](https://elixir.bootlin.com/linux/latest/source/include/linux/syscalls.h#L472) syscall and allows printing the filename from the function parameter.
+To illustrate tracepoints with Aya, let's write a program which attaches a eBPF handler to the
+[`sys_openat`](https://elixir.bootlin.com/linux/v6.3.1/source/include/linux/syscalls.h#L472)
+syscall and allows printing the filename from the function parameter.
 
 ## Design
 
-For this demo program, we are going to rely on `bpf_printk` macro to print filename from the BPF program and not going to have any custom BPF maps (besides those created by aya-log).
+For this demo program, we are going to rely on `bpf_printk` macro to print filename from the
+BPF program and not going to have any custom BPF maps (besides those created by aya-log).
 
 ## eBPF code
 
-* We can see the `sys_openat` signature in `/sys/kernel/tracing/events/syscalls/sys_enter_openat/format` (attach at the enter of function).
+* We can see the `sys_openat` signature in
+`/sys/kernel/tracing/events/syscalls/sys_enter_openat/format`(attach at the enter of function).
 * We call `read_at` method of `TracePointContext` struct to get the filename pointer at the offset.
 * We print the filename using aya_bpf `bpf_printk` macro.
 
