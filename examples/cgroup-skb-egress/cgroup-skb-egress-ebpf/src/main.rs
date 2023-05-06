@@ -18,11 +18,11 @@ mod bindings;
 use bindings::iphdr;
 
 #[map(name = "EVENTS")]
-static mut EVENTS: PerfEventArray<PacketLog> =
+static EVENTS: PerfEventArray<PacketLog> =
     PerfEventArray::with_max_entries(1024, 0);
 
 #[map(name = "BLOCKLIST")] // (1)
-static mut BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
+static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
 
 #[cgroup_skb(name = "cgroup_skb_egress")]
 pub fn cgroup_skb_egress(ctx: SkBuffContext) -> i32 {
@@ -52,9 +52,7 @@ fn try_cgroup_skb_egress(ctx: SkBuffContext) -> Result<i32, i64> {
         ipv4_address: destination,
         action: action,
     };
-    unsafe {
-        EVENTS.output(&ctx, &log_entry, 0);
-    }
+    EVENTS.output(&ctx, &log_entry, 0);
     Ok(action)
 }
 
