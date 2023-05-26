@@ -1,6 +1,6 @@
 use std::process;
 
-use aya::{include_bytes_aligned, programs::Lsm, Bpf, Btf};
+use aya::{include_bytes_aligned, programs::Lsm, BpfLoader, Btf};
 use log::info;
 use tokio::signal;
 
@@ -17,11 +17,16 @@ async fn main() -> Result<(), anyhow::Error> {
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
     #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut bpf = BpfLoader::new()
+    .set_global("PID", &pid)
+    .load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/lsm-nice"
     ))?;
+
     #[cfg(not(debug_assertions))]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut bpf = BpfLoader::new()
+    .set_global("PID", &pid)
+    .load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/lsm-nice"
     ))?;
 
