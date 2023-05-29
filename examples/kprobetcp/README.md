@@ -11,6 +11,7 @@ and prints the source and destination IP addreses from the sockets for the TCP c
 ## Build eBPF
 
 ```bash
+aya-tool generate sock > kprobetcp-ebpf/src/binding.rs
 cargo xtask build-ebpf
 ```
 
