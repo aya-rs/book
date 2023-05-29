@@ -44,7 +44,7 @@ fn try_kprobetcp(ctx: ProbeContext) -> Result<u32, i64> {
             });
             info!(
                 &ctx,
-                "AF_INET src address: {:ipv4}, dest address: {:ipv4}",
+                "AF_INET src address: {:i}, dest address: {:i}",
                 src_addr,
                 dest_addr,
             );
@@ -55,7 +55,7 @@ fn try_kprobetcp(ctx: ProbeContext) -> Result<u32, i64> {
             let dest_addr = sk_common.skc_v6_daddr;
             info!(
                 &ctx,
-                "AF_INET6 src addr: {:ipv6}, dest addr: {:ipv6}",
+                "AF_INET6 src addr: {:i}, dest addr: {:i}",
                 unsafe { src_addr.in6_u.u6_addr8 },
                 unsafe { dest_addr.in6_u.u6_addr8 }
             );
