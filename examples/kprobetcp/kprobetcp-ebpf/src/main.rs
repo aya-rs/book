@@ -44,7 +44,7 @@ fn try_kprobetcp(ctx: ProbeContext) -> Result<u32, i64> {
             });
             info!(
                 &ctx,
-                "AF_INET src address: {:ipv4}, dest address: {:ipv4}",
+                "AF_INET src address: {:i}, dest address: {:i}",
                 src_addr,
                 dest_addr,
             );
