@@ -5,8 +5,8 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya = { version = ">=0.11", features = ["async_tokio"] }
-aya-log = "0.1"
+aya = { git = "https://github.com/aya-rs/aya", branch = "main", features = ["async_tokio"] }
+aya-log = { git = "https://github.com/aya-rs/aya", branch = "main" }
 xdp-hello-common = { path = "../xdp-hello-common", features = ["user"] }
 anyhow = "1"
 clap = { version = "4.1", features = ["derive"] }
