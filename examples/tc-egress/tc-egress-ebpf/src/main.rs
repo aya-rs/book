@@ -44,7 +44,7 @@ fn try_tc_egress(ctx: TcContext) -> Result<i32, ()> {
         TC_ACT_PIPE
     };
 
-    info!(&ctx, "DEST {:ipv4}, ACTION {}", destination, action);
+    info!(&ctx, "DEST {:i}, ACTION {}", destination, action);
 
     Ok(action)
 }
