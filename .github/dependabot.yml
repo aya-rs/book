@@ -1,12 +1,42 @@
 # Please see the documentation for all configuration options:
-# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
+  # TODO(https://github.com/dependabot/dependabot-core/issues/2178): reduce repetition.
   - package-ecosystem: "cargo"
-    directory: "/"
+    directory: "/examples/aya-tool"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/examples/cgroup-skb-egress"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/examples/kprobetcp"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/examples/lsm-nice"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/examples/tc-egress"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/examples/xdp-drop"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/examples/xdp-hello"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "cargo"
+    directory: "/examples/xdp-log"
+    schedule:
+      interval: "weekly"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
