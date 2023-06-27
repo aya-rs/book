@@ -38,7 +38,7 @@ jobs:
         run: cargo install bpf-linker
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
 
       - name: Install python dependencies
         run: |
