@@ -32,10 +32,10 @@ jobs:
           toolchain: nightly
           components: rust-src
 
+      - uses: Swatinem/rust-cache@v1
+
       - name: Install bpf-linker
         run: cargo install bpf-linker
-
-      - uses: Swatinem/rust-cache@v1
 
       - name: Set up Python
         uses: actions/setup-python@v3
