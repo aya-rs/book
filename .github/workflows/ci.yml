@@ -33,6 +33,16 @@ jobs:
           components: rust-src
 
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            examples/aya-tool
+            examples/cgroup-skb-egress
+            examples/kprobetcp
+            examples/lsm-nice
+            examples/tc-egress
+            examples/xdp-drop
+            examples/xdp-hello
+            examples/xdp-log
 
       - name: Install bpf-linker
         run: cargo install bpf-linker
