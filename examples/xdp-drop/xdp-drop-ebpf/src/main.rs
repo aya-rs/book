@@ -68,7 +68,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     } else {
         xdp_action::XDP_PASS
     };
-    info!(&ctx, "SRC: {:ipv4}, ACTION: {}", source, action);
+    info!(&ctx, "SRC: {:i}, ACTION: {}", source, action);
 
     Ok(action)
 }
