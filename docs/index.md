@@ -37,8 +37,8 @@ Some of the major features provided include:
 ### [![Deepfence](https://deepfence.io/wp-content/themes/deepfence/public/img/logo.svg){ width="150"}](https://deepfence.io/)
 Deepfence are using Aya with XDP/TC as their packet filtering stack. See more [here](https://deepfence.io/aya-your-trusty-ebpf-companion/).
 
-### [![Exein](https://blog.exein.io/img/exein.gif){ width="150"}](https://exein.io)
-Exein are using Aya in [Pulsar](https://pulsar.sh/), a Runtime Security Observability Tool for IoT. See more [here](https://blog.exein.io/pulsar).
+### [![Exein](https://blog.exein.io/content/images/2023/03/logoexein.png){ width="150"}](https://exein.io)
+Exein are using Aya in [Pulsar](https://pulsar.sh/), a Runtime Security Observability Tool for IoT. See more [here](https://github.com/Exein-io/pulsar).
 
 ### [![Parca](https://www.parca.dev/docs/img/logo.svg){ width="150"}](https://www.parca.dev/)
 Parca are using Aya to write the BPF component of their profiler. See more [here](https://github.com/parca-dev/parca-agent/blob/main/bpf/cpu-profiler/src/main.rs).
