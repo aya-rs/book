@@ -22,7 +22,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 }
 
 #[map(name = "BLOCKLIST")] // (1)
-static mut BLOCKLIST: HashMap<u32, u32> =
+static BLOCKLIST: HashMap<u32, u32> =
     HashMap::<u32, u32>::with_max_entries(1024, 0);
 
 #[xdp]
@@ -60,7 +60,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     }
 
     let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
-    let source =  u32::from_be(unsafe { (*ipv4hdr).src_addr });
+    let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
 
     // (3)
     let action = if block_ip(source) {

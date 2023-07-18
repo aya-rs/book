@@ -17,7 +17,7 @@ use aya_bpf::{
 use vmlinux::task_struct;
 
 #[map]
-static mut PROCESSES: HashMap<i32, i32> = HashMap::with_max_entries(32768, 0);
+static PROCESSES: HashMap<i32, i32> = HashMap::with_max_entries(32768, 0);
 
 #[lsm(name = "task_alloc")]
 pub fn task_alloc(ctx: LsmContext) -> i32 {
