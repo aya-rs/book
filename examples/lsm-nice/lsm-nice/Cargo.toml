@@ -5,8 +5,8 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya = { git = "https://github.com/aya-rs/aya", branch = "main" }
-aya-log = { git = "https://github.com/aya-rs/aya", branch = "main" }
+aya = { git = "https://github.com/aya-rs/aya" }
+aya-log = { git = "https://github.com/aya-rs/aya" }
 lsm-nice-common = { path = "../lsm-nice-common", features = ["user"] }
 anyhow = "1"
 

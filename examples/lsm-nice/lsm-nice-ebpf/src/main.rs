@@ -28,19 +28,20 @@ pub fn task_setnice(ctx: LsmContext) -> i32 {
 
 // (3)
 unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
-
     let p: *const task_struct = ctx.arg(0);
     let nice: c_int = ctx.arg(1);
     let ret: c_int = ctx.arg(2);
+    let global_pid: c_int = core::ptr::read_volatile(&PID);
 
-    info!(&ctx, "The PID supplied to this program is: {}, with nice value {} and return value {}", (*p).pid, nice, ret); 
-    info!(&ctx, "The PID that we need to monitor for changes: {}", core::ptr::read_volatile(&PID));
+    info!(&ctx,
+          "The PID supplied to this program is: {}, with nice value {} and return value {}. Monitoring for changes in PID: {}",
+          (*p).pid, nice, ret, global_pid);
     if ret != 0 {
         return Err(ret);
     }
-    
-    if (*p).pid == core::ptr::read_volatile(&PID) && nice < 0 {
-        info!(&ctx, "Nice value is less than zero, return error");
+
+    if (*p).pid == global_pid && nice < 0 {
+        info!(&ctx, "Nice value is less than zero, returning error");
         return Err(-1);
     }
 
