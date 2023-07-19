@@ -41,7 +41,6 @@ unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
     }
 
     if (*p).pid == global_pid && nice < 0 {
-        info!(&ctx, "Nice value is less than zero, returning error");
         return Err(-1);
     }
 
