@@ -20,7 +20,8 @@ cargo install bpf-linker
 ```
 
 If you are running **macos, or linux on any other architecture**, you need to
-install LLVM 15 first, then install the linker with:
+install LLVM 16 first (for example, with `brew install llvm`),
+then install the linker with:
 
 ```console
 cargo install --no-default-features bpf-linker
