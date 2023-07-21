@@ -40,8 +40,5 @@ Deepfence are using Aya with XDP/TC as their packet filtering stack. See more [h
 ### [![Exein](https://blog.exein.io/content/images/2023/03/logoexein.png){ width="150"}](https://exein.io)
 Exein are using Aya in [Pulsar](https://pulsar.sh/), a Runtime Security Observability Tool for IoT. See more [here](https://github.com/Exein-io/pulsar).
 
-### [![Parca](https://www.parca.dev/docs/img/logo.svg){ width="150"}](https://www.parca.dev/)
-Parca are using Aya to write the BPF component of their profiler. See more [here](https://github.com/parca-dev/parca-agent/blob/main/bpf/cpu-profiler/src/main.rs).
-
 ### [![Red Hat](https://www.redhat.com/cms/managed-files/Asset-Red_Hat-Logo_page-Logo-RGB.svg?itok=yWDK-rRz){ width="150"}](https://redhat.com)
 Red Hat are using Aya to develop [bpfd](https://github.com/redhat-et/bpfd), an eBPF program loading daemon.
