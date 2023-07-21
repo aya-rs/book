@@ -2,6 +2,7 @@
 #![no_main]
 
 use aya_bpf::{cty::c_int, macros::lsm, programs::LsmContext};
+use aya_log_ebpf::info;
 
 // (1)
 #[allow(non_upper_case_globals)]
@@ -30,19 +31,20 @@ unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
     let p: *const task_struct = ctx.arg(0);
     let nice: c_int = ctx.arg(1);
     let ret: c_int = ctx.arg(2);
+    let global_pid: c_int = core::ptr::read_volatile(&PID);
+    let pid: c_int = (*p).pid;
 
-    // If previous eBPF LSM program didn't allow the action, return the
-    // previous error code.
+    info!(&ctx,
+          "The PID supplied to this program is: {}, with nice value {} and return value {}. Monitoring for changes in PID: {}",
+          pid, nice, ret, global_pid);
     if ret != 0 {
         return Err(ret);
     }
 
-    // Deny setting the nice value lower than 0 for the defined PID.
-    if (*p).pid == core::ptr::read_volatile(&PID) && nice < 0 {
+    if pid == global_pid && nice < 0 {
         return Err(-1);
     }
 
-    // Otherwise allow it.
     Ok(0)
 }
 

@@ -1,7 +1,8 @@
 use std::process;
 
 use aya::{include_bytes_aligned, programs::Lsm, BpfLoader, Btf};
-use log::info;
+use aya_log::BpfLogger;
+use log::{info, warn};
 use tokio::signal;
 
 #[tokio::main]
@@ -18,18 +19,21 @@ async fn main() -> Result<(), anyhow::Error> {
     // reach for `Bpf::load_file` instead.
     #[cfg(debug_assertions)]
     let mut bpf = BpfLoader::new()
-    .set_global("PID", &pid)
+    .set_global("PID", &pid, true)
     .load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/lsm-nice"
     ))?;
 
     #[cfg(not(debug_assertions))]
     let mut bpf = BpfLoader::new()
-    .set_global("PID", &pid)
+    .set_global("PID", &pid, true)
     .load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/lsm-nice"
     ))?;
-
+    if let Err(e) = BpfLogger::init(&mut bpf) {
+        // This can happen if you remove all log statements from your eBPF program.
+        warn!("failed to initialize eBPF logger: {}", e);
+    }
     let btf = Btf::from_sys_fs()?;
     let program: &mut Lsm =
         bpf.program_mut("task_setnice").unwrap().try_into()?;
