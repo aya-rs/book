@@ -32,15 +32,16 @@ unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
     let nice: c_int = ctx.arg(1);
     let ret: c_int = ctx.arg(2);
     let global_pid: c_int = core::ptr::read_volatile(&PID);
+    let pid: c_int = (*p).pid;
 
     info!(&ctx,
           "The PID supplied to this program is: {}, with nice value {} and return value {}. Monitoring for changes in PID: {}",
-          (*p).pid, nice, ret, global_pid);
+          pid, nice, ret, global_pid);
     if ret != 0 {
         return Err(ret);
     }
 
-    if (*p).pid == global_pid && nice < 0 {
+    if pid == global_pid && nice < 0 {
         return Err(-1);
     }
 
