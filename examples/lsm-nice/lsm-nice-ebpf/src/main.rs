@@ -1,5 +1,6 @@
-#![no_std]
+#![no_builtins]
 #![no_main]
+#![no_std]
 
 use aya_bpf::{cty::c_int, macros::lsm, programs::LsmContext};
 use aya_log_ebpf::info;

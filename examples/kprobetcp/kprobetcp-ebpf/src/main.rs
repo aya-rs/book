@@ -1,5 +1,6 @@
-#![no_std]
+#![no_builtins]
 #![no_main]
+#![no_std]
 
 #[allow(non_upper_case_globals)]
 #[allow(non_snake_case)]

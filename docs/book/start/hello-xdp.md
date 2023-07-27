@@ -24,11 +24,12 @@ The logic for this program is located in `xdp-hello-ebpf/src/main.rs` and curren
 
 1. `#![no_std]` is required since we cannot use the standard library.
 2. `#![no_main]` is required as we have no main function.
-3. The `#[panic_handler]` is required to keep the compiler happy, although it is never used since we cannot panic.
-4. This indicates that this function is an XDP program.
-5. Our main entry point defers to another function and performs error handling, returning `XDP_ABORTED`, which will drop the packet.
-6. Write a log entry every time a packet is received.
-7. This function returns a `Result` that permits all traffic.
+3. `#![no_builtins]` is required as we cannot use LLVM intrinsics.
+4. The `#[panic_handler]` is required to keep the compiler happy, although it is never used since we cannot panic.
+5. This indicates that this function is an XDP program.
+6. Our main entry point defers to another function and performs error handling, returning `XDP_ABORTED`, which will drop the packet.
+7. Write a log entry every time a packet is received.
+8. This function returns a `Result` that permits all traffic.
 
 Now we can compile this using `cargo xtask build-ebpf`.
 
