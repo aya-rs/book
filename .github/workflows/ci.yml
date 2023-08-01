@@ -44,8 +44,9 @@ jobs:
             examples/xdp-hello
             examples/xdp-log
 
-      - name: Install bpf-linker
-        run: cargo install bpf-linker
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: bpf-linker
 
       - name: Set up Python
         uses: actions/setup-python@v4
