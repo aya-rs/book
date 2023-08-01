@@ -18,18 +18,18 @@ async fn main() -> Result<(), anyhow::Error> {
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Bpf::load_file` instead.
     #[cfg(debug_assertions)]
-    let mut bpf = BpfLoader::new()
-    .set_global("PID", &pid, true)
-    .load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/lsm-nice"
-    ))?;
+    let mut bpf = BpfLoader::new().set_global("PID", &pid, true).load(
+        include_bytes_aligned!(
+            "../../target/bpfel-unknown-none/debug/lsm-nice"
+        ),
+    )?;
 
     #[cfg(not(debug_assertions))]
-    let mut bpf = BpfLoader::new()
-    .set_global("PID", &pid, true)
-    .load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/lsm-nice"
-    ))?;
+    let mut bpf = BpfLoader::new().set_global("PID", &pid, true).load(
+        include_bytes_aligned!(
+            "../../target/bpfel-unknown-none/release/lsm-nice"
+        ),
+    )?;
     if let Err(e) = BpfLogger::init(&mut bpf) {
         // This can happen if you remove all log statements from your eBPF program.
         warn!("failed to initialize eBPF logger: {}", e);

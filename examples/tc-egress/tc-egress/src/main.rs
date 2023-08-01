@@ -49,7 +49,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
     // (1)
     let mut blocklist: HashMap<_, u32, u32> =
-        HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
+        HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
 
     // (2)
     let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;

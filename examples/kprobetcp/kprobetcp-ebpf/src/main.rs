@@ -17,7 +17,7 @@ use aya_log_ebpf::info;
 const AF_INET: u16 = 2;
 const AF_INET6: u16 = 10;
 
-#[kprobe(name = "kprobetcp")]
+#[kprobe]
 pub fn kprobetcp(ctx: ProbeContext) -> u32 {
     match try_kprobetcp(ctx) {
         Ok(ret) => ret,

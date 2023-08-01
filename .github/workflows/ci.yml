@@ -11,6 +11,9 @@ on:
       - main
       - staging
 
+  schedule:
+    - cron: 00 4 * * *
+
 env:
   CARGO_TERM_COLOR: always
 
@@ -44,8 +47,9 @@ jobs:
             examples/xdp-hello
             examples/xdp-log
 
-      - name: Install bpf-linker
-        run: cargo install bpf-linker
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: bpf-linker
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -63,7 +67,7 @@ jobs:
           for dir in ./examples/*/ ; do
             pushd "${dir}"
             echo "Example: ${dir}."
-            cargo xtask build-ebpf
-            cargo build
+            cargo xtask build-ebpf --release
+            cargo build --release
             popd
           done

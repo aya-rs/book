@@ -5,8 +5,8 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya = { version = ">=0.11", features = ["async_tokio"] }
-aya-log = "0.1"
+aya = { git = "https://github.com/aya-rs/aya", features = ["async_tokio"] }
+aya-log = { git = "https://github.com/aya-rs/aya" }
 cgroup-skb-egress-common = { path = "../cgroup-skb-egress-common", features = [
     "user",
 ] }

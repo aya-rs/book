@@ -21,7 +21,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     unsafe { core::hint::unreachable_unchecked() }
 }
 
-#[map(name = "BLOCKLIST")] // (1)
+#[map] // (1)
 static BLOCKLIST: HashMap<u32, u32> =
     HashMap::<u32, u32>::with_max_entries(1024, 0);
 
