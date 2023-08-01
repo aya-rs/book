@@ -19,7 +19,7 @@ use vmlinux::task_struct;
 #[map]
 static PROCESSES: HashMap<i32, i32> = HashMap::with_max_entries(32768, 0);
 
-#[lsm(name = "task_alloc")]
+#[lsm]
 pub fn task_alloc(ctx: LsmContext) -> i32 {
     match unsafe { try_task_alloc(ctx) } {
         Ok(ret) => ret,
