@@ -9,9 +9,9 @@ aya = { version = ">=0.11", features = ["async_tokio"] }
 aya-log = "0.1"
 tc-egress-common = { path = "../tc-egress-common", features = ["user"] }
 anyhow = "1"
-clap = { version = "4.1", features = ["derive"] }
+clap = { version = "4.3", features = ["derive"] }
 log = "0.4"
-tokio = { version = "1.25", features = [
+tokio = { version = "1.29", features = [
     "macros",
     "rt",
     "rt-multi-thread",
