@@ -47,14 +47,15 @@ async fn main() -> Result<(), anyhow::Error> {
     program.attach(cgroup, CgroupSkbAttachType::Egress)?;
 
     let mut blocklist: HashMap<_, u32, u32> =
-        HashMap::try_from(bpf.map_mut("BLOCKLIST")?)?;
+        HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
 
     let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
 
     // (3)
     blocklist.insert(block_addr, 0, 0)?;
 
-    let mut perf_array = AsyncPerfEventArray::try_from(bpf.map_mut("EVENTS")?)?;
+    let mut perf_array =
+        AsyncPerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;
 
     for cpu_id in online_cpus()? {
         let mut buf = perf_array.open(cpu_id, None)?;

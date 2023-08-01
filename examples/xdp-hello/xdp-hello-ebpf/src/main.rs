@@ -4,7 +4,7 @@
 use aya_bpf::{bindings::xdp_action, macros::xdp, programs::XdpContext};
 use aya_log_ebpf::info;
 
-#[xdp(name = "xdp_hello")] // (4)
+#[xdp] // (4)
 pub fn xdp_hello(ctx: XdpContext) -> u32 {
     // (5)
     match unsafe { try_xdp_hello(ctx) } {

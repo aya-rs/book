@@ -17,14 +17,14 @@ use cgroup_skb_egress_common::PacketLog;
 mod bindings;
 use bindings::iphdr;
 
-#[map(name = "EVENTS")]
+#[map]
 static EVENTS: PerfEventArray<PacketLog> =
     PerfEventArray::with_max_entries(1024, 0);
 
-#[map(name = "BLOCKLIST")] // (1)
+#[map] // (1)
 static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
 
-#[cgroup_skb(name = "cgroup_skb_egress")]
+#[cgroup_skb]
 pub fn cgroup_skb_egress(ctx: SkBuffContext) -> i32 {
     match { try_cgroup_skb_egress(ctx) } {
         Ok(ret) => ret,

@@ -1,6 +1,9 @@
-use aya::{include_bytes_aligned, Bpf};
 use anyhow::Context;
-use aya::programs::{Xdp, XdpFlags};
+use aya::{
+    include_bytes_aligned,
+    programs::{Xdp, XdpFlags},
+    Bpf,
+};
 use aya_log::BpfLogger;
 use clap::Parser;
 use log::{info, warn};

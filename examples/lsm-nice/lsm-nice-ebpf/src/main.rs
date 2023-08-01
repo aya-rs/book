@@ -18,7 +18,7 @@ use vmlinux::task_struct;
 #[no_mangle]
 static PID: i32 = 0;
 
-#[lsm(name = "task_setnice")]
+#[lsm(hook = "task_setnice")]
 pub fn task_setnice(ctx: LsmContext) -> i32 {
     match unsafe { try_task_setnice(ctx) } {
         Ok(ret) => ret,

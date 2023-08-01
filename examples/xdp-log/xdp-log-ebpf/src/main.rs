@@ -63,10 +63,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     };
 
     // (3)
-    info!(
-        &ctx,
-        "SRC IP: {:i}, SRC PORT: {}", source_addr, source_port
-    );
+    info!(&ctx, "SRC IP: {:i}, SRC PORT: {}", source_addr, source_port);
 
     Ok(xdp_action::XDP_PASS)
 }

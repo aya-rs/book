@@ -64,7 +64,7 @@ jobs:
           for dir in ./examples/*/ ; do
             pushd "${dir}"
             echo "Example: ${dir}."
-            cargo xtask build-ebpf
-            cargo build
+            cargo xtask build-ebpf --release
+            cargo build --release
             popd
           done

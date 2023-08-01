@@ -44,7 +44,6 @@ pub fn build_ebpf(opts: Options) -> Result<(), anyhow::Error> {
     let target = format!("--target={}", opts.target);
     let mut args = vec![
         "build",
-        "--verbose",
         target.as_str(),
         "-Z",
         "build-std=core",
