@@ -9,19 +9,41 @@ to add instructions to do that soon (PRs welcome!).
 Cross compilation should work on both Intel and Apple Silicon Macs.
 
 1. Install `rustup` following the instructions on <https://rustup.rs/>
-2. Install a rust stable toolchain: `rustup install stable`
-3. Install a rust nightly toolchain:  
-`rustup toolchain install nightly --component rust-src`
-4. `brew install llvm`
-5. `brew install FiloSottile/musl-cross/musl-cross`
-6. Install bpf-linker:  
-`LLVM_SYS_160_PREFIX=$(brew --prefix llvm) cargo install bpf-linker --no-default-features`
-7. Build BPF object files: `cargo xtask build-ebpf --release`
-8. Build the userspace code:  
+1. Install a rust stable and nightly toolchains:
 ```bash
-RUSTFLAGS="-Clinker=x86_64-linux-musl-ld" cargo build --release
---target=x86_64-unknown-linux-musl
+rustup install stable
+rustup toolchain install nightly --component rust-src
+```
+1. Install the [rustup target](https://doc.rust-lang.org/nightly/rustc/platform-support.html#tier-1-with-host-tools) for your Linux target platform:
+```bash
+ARCH=x86_64
+rustup target add ${ARCH}-unknown-linux-musl
+```
+1. Install LLVM with brew:
+```bash
+brew install llvm
+```
+
+1. Install the musl cross compiler:
+```bash
+brew install FiloSottile/musl-cross/musl-cross`
+```
+See [homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross)
+for platform-specific options.
+
+1. Install bpf-linker:
+```bash
+LLVM_SYS_160_PREFIX=$(brew --prefix llvm) cargo install bpf-linker --no-default-features
+```
+1. Build BPF object files:
+```bash
+cargo xtask build-ebpf --release
+```
+1. Build the userspace code:
+```bash
+RUSTFLAGS="-Clinker=${ARCH}-linux-musl-ld" cargo build --release
+--target=${ARCH}-unknown-linux-musl
 ```
 The cross-compiled program  
-`target/x86_64-unknown-linux-musl/release/<program_name>`
+`target/${ARCH}-unknown-linux-musl/release/<program_name>`  
 can be copied to a Linux server or VM and run there.
