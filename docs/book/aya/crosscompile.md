@@ -9,7 +9,7 @@ to add instructions to do that soon (PRs welcome!).
 Cross compilation should work on both Intel and Apple Silicon Macs.
 
 1. Install `rustup` following the instructions on <https://rustup.rs/>
-1. Install a rust stable and nightly toolchains:
+1. Install the stable and nightly rust toolchains:
 ```bash
 rustup install stable
 rustup toolchain install nightly --component rust-src
@@ -26,7 +26,7 @@ brew install llvm
 
 1. Install the musl cross compiler:
 ```bash
-brew install FiloSottile/musl-cross/musl-cross`
+brew install FiloSottile/musl-cross/musl-cross
 ```
 See [homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross)
 for platform-specific options.
@@ -41,8 +41,7 @@ cargo xtask build-ebpf --release
 ```
 1. Build the userspace code:
 ```bash
-RUSTFLAGS="-Clinker=${ARCH}-linux-musl-ld" cargo build --release
---target=${ARCH}-unknown-linux-musl
+RUSTFLAGS="-Clinker=${ARCH}-linux-musl-ld" cargo build --release --target=${ARCH}-unknown-linux-musl
 ```
 The cross-compiled program  
 `target/${ARCH}-unknown-linux-musl/release/<program_name>`  
