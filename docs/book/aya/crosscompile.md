@@ -24,12 +24,21 @@ rustup target add ${ARCH}-unknown-linux-musl
 brew install llvm
 ```
 
-1. Install the musl cross compiler:
+1. Install the musl cross compiler:  
+to cross-compile for only `x86_64` targets (the default in musl-cross):
 ```bash
 brew install FiloSottile/musl-cross/musl-cross
 ```
+to cross-compile for only `aarch64` targets:
+```bash
+brew install FiloSottile/musl-cross/musl-cross --without-x86_64 --with-aarch64
+```
+to cross-compile for both `x86_64` and `aarch64` targets:
+```bash
+brew install FiloSottile/musl-cross/musl-cross --with-aarch64
+```
 See [homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross)
-for platform-specific options.
+for additional platform-specific options.
 
 1. Install bpf-linker:
 ```bash
