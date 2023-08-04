@@ -73,6 +73,7 @@ nav:
       - Reading Values From A Context: book/aya/context.md
       - Using aya-tool: book/aya/aya-tool.md
       - Using aya-log: book/aya/aya-log.md
+      - Cross-compilation: book/aya/crosscompile.md
     - Program Types:
       - book/programs/index.md
       - Probes: book/programs/probes.md
