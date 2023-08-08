@@ -34,7 +34,7 @@ Some of the major features provided include:
 
 ## Who's Using Aya
 
-### [![Deepfence](https://deepfence.io/wp-content/themes/deepfence/public/img/logo.svg){ width="150"}](https://deepfence.io/)
+### [![Deepfence](https://uploads-ssl.webflow.com/63eaa07bbe370228bab003ea/640a069335cf3921e24def21_Deepfence%20Line.svg){ width="150"}](https://deepfence.io/)
 Deepfence is using Aya with XDP/TC as their packet filtering stack. See more [here](https://deepfence.io/aya-your-trusty-ebpf-companion/).
 
 ### [![Exein](https://blog.exein.io/content/images/2023/03/logoexein.png){ width="150"}](https://exein.io)
