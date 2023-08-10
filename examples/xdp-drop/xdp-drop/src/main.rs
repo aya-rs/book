@@ -39,7 +39,8 @@ async fn main() -> Result<(), anyhow::Error> {
         // This can happen if you remove all log statements from your eBPF program.
         warn!("failed to initialize eBPF logger: {}", e);
     }
-    let program: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into()?;
+    let program: &mut Xdp =
+        bpf.program_mut("xdp_firewall").unwrap().try_into()?;
     program.load()?;
     program.attach(&opt.iface, XdpFlags::default())
         .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
