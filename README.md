@@ -4,6 +4,11 @@
 
 This book is a living document, and is updated continuously.
 
+[![Build status][build-badge]][build-url]
+
+[build-badge]: https://img.shields.io/github/actions/workflow/status/aya-rs/book/ci.yml
+[build-url]: https://github.com/aya-rs/book/actions/workflows/ci.yml
+
 ## Local Render
 ```
 virtualenv .venv
