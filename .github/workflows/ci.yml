@@ -49,7 +49,9 @@ jobs:
 
       - uses: taiki-e/install-action@v2
         with:
-          tool: bpf-linker
+          tool: cargo-binstall
+
+      - run: cargo binstall --force --no-confirm --locked bpf-linker
 
       - name: Set up Python
         uses: actions/setup-python@v4
