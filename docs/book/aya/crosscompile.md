@@ -42,7 +42,7 @@ for additional platform-specific options.
 
 1. Install bpf-linker:
 ```bash
-LLVM_SYS_160_PREFIX=$(brew --prefix llvm) cargo install bpf-linker --no-default-features
+LLVM_SYS_170_PREFIX=$(brew --prefix llvm) cargo install bpf-linker --no-default-features
 ```
 1. Build BPF object files:
 ```bash
