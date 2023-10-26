@@ -43,8 +43,6 @@ Exein is using Aya in [Pulsar](https://pulsar.sh/), a Runtime Security Observabi
 ### [![Red Hat](https://www.redhat.com/cms/managed-files/Asset-Red_Hat-Logo_page-Logo-RGB.svg?itok=yWDK-rRz){ width="150"}](https://redhat.com)
 Red Hat is using Aya to develop [bpfd](https://github.com/redhat-et/bpfd), an eBPF program loading daemon.
 
-
-
 ### [![Kubernetes SIGs](https://github.com/aya-rs/book/assets/5332524/d115083d-139b-4dc3-84eb-22a8ad26d344){ width="150" }](https://github.com/kubernetes-sigs).
 [Kubernetes Special Interest Groups (SIGs)](https://github.com/kubernetes-sigs) is using Aya to develop [Blixt](https://github.com/kubernetes-sigs/blixt), a load-balancer implemented in eBPF
 that supports the development and maintenance of the [Gateway API project](https://github.com/kubernetes-sigs/gateway-api).
