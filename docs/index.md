@@ -40,5 +40,10 @@ Deepfence is using Aya with XDP/TC as their packet filtering stack. See more [he
 ### [![Exein](https://blog.exein.io/content/images/2023/03/logoexein.png){ width="150"}](https://exein.io)
 Exein is using Aya in [Pulsar](https://pulsar.sh/), a Runtime Security Observability Tool for IoT. See more [here](https://github.com/Exein-io/pulsar).
 
+### [![Kubernetes SIGs](https://github.com/aya-rs/book/assets/5332524/abde6552-10ed-4c52-9717-732d1ec7ea6c){ width="150" }](https://github.com/kubernetes-sigs)
+The [Kubernetes Special Interest Groups (SIGs)](https://github.com/kubernetes-sigs) are using Aya to develop
+[Blixt](https://github.com/kubernetes-sigs/blixt), a load-balancer that supports the development and maintenance
+of the [Gateway API project](https://github.com/kubernetes-sigs/gateway-api).
+
 ### [![Red Hat](https://www.redhat.com/cms/managed-files/Asset-Red_Hat-Logo_page-Logo-RGB.svg?itok=yWDK-rRz){ width="150"}](https://redhat.com)
 Red Hat is using Aya to develop [bpfd](https://github.com/redhat-et/bpfd), an eBPF program loading daemon.
