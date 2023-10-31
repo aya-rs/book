@@ -40,7 +40,9 @@ brew install FiloSottile/musl-cross/musl-cross --with-aarch64
 See [homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross)
 for additional platform-specific options.
 
-1. Install bpf-linker:
+1. Install bpf-linker. Change the version number in `LLVM_SYS_<version>_PREFIX` to correspond
+to the major version of the [llvm-sys](https://crates.io/crates/llvm-sys) crate:
+
 ```bash
 LLVM_SYS_170_PREFIX=$(brew --prefix llvm) cargo install bpf-linker --no-default-features
 ```
