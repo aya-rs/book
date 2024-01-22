@@ -18,7 +18,7 @@ tokio = { version = "1.25", features = [
     "net",
     "signal",
 ] }
-env_logger = "0.10"
+env_logger = "0.11"
 
 [[bin]]
 name = "lsm-nice"
