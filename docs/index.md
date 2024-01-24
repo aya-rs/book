@@ -46,4 +46,4 @@ The [Kubernetes Special Interest Groups (SIGs)](https://github.com/kubernetes-si
 of the [Gateway API project](https://github.com/kubernetes-sigs/gateway-api).
 
 ### [![Red Hat](https://www.redhat.com/cms/managed-files/Asset-Red_Hat-Logo_page-Logo-RGB.svg?itok=yWDK-rRz){ width="150"}](https://redhat.com)
-Red Hat is using Aya to develop [bpfd](https://github.com/redhat-et/bpfd), an eBPF program loading daemon.
+Red Hat is using Aya to develop [bpfman](https://github.com/bpfman/bpfman), an eBPF program loading daemon.
