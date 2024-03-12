@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use aya_bpf::{
+use aya_ebpf::{
     macros::{cgroup_skb, map},
     maps::{HashMap, PerfEventArray},
     programs::SkBuffContext,

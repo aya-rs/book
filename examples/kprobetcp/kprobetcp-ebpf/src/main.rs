@@ -9,7 +9,7 @@ mod binding;
 
 use crate::binding::{sock, sock_common};
 
-use aya_bpf::{
+use aya_ebpf::{
     helpers::bpf_probe_read_kernel, macros::kprobe, programs::ProbeContext,
 };
 use aya_log_ebpf::info;

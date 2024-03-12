@@ -7,7 +7,7 @@
 #[allow(dead_code)]
 mod vmlinux;
 
-use aya_bpf::{
+use aya_ebpf::{
     cty::{c_int, c_ulong},
     macros::{lsm, map},
     maps::HashMap,

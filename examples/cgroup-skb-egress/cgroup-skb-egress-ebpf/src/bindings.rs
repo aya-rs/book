@@ -86,9 +86,9 @@ where
         }
     }
 }
-pub type __u8 = ::aya_bpf::cty::c_uchar;
-pub type __u16 = ::aya_bpf::cty::c_ushort;
-pub type __u32 = ::aya_bpf::cty::c_uint;
+pub type __u8 = ::aya_ebpf::cty::c_uchar;
+pub type __u16 = ::aya_ebpf::cty::c_ushort;
+pub type __u32 = ::aya_ebpf::cty::c_uint;
 pub type __be16 = __u16;
 pub type __be32 = __u32;
 pub type __sum16 = __u16;
