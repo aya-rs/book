@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use aya_bpf::{
+use aya_ebpf::{
     bindings::{TC_ACT_PIPE, TC_ACT_SHOT},
     macros::{classifier, map},
     maps::HashMap,

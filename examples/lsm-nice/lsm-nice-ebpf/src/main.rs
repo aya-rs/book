@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use aya_bpf::{cty::c_int, macros::lsm, programs::LsmContext};
+use aya_ebpf::{cty::c_int, macros::lsm, programs::LsmContext};
 use aya_log_ebpf::info;
 
 // (1)

@@ -1,7 +1,7 @@
 #![no_std] // (1)
 #![no_main] // (2)
 
-use aya_bpf::{bindings::xdp_action, macros::xdp, programs::XdpContext};
+use aya_ebpf::{bindings::xdp_action, macros::xdp, programs::XdpContext};
 use aya_log_ebpf::info;
 
 #[xdp] // (4)
