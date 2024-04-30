@@ -25,7 +25,7 @@ Along with XDP, a new addres familiy entered in the Linux kernel, starting at 4.
 If you want a more extensive explanation about `AF_XDP`, you can find it in the [kernel documentation](https://www.kernel.org/doc/html/latest/networking/af_xdp.html).
 
 ## XDP Operation Modes
-You can connect an XDP program to an interface using the following models:
+You can connect an XDP program to an interface using the following modes:
 
 ### Generic XDP
 * XDP programs are loaded into the kernel as part of the ordinary network path
