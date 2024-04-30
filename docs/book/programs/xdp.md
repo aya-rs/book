@@ -19,8 +19,8 @@ The XDP program is allowed to edit the packet data and, after the XDP program re
 * `XDP_REDIRECT`: redirect the packet to another NIC or user space socket via the [`AF_XDP`](https://www.kernel.org/doc/html/latest/networking/af_xdp.html) address family
 
 ## AF_XDP
-Along with XDP, a new addres familiy entered in the Linux kernel, starting at 4.18.
-`AF_XDP`, formerly known as `AF_PACKETv4` (which was never included in the mainline kernel), is a raw socket optimized for high performance packet processing and allows zero-copy between kernel and applications. As the socket can be used for both receiving and transmitting, it supportshigh performance network applications purely in user-space.
+Along with XDP, a new address familiy entered in the Linux kernel, starting at 4.18.
+`AF_XDP`, formerly known as `AF_PACKETv4` (which was never included in the mainline kernel), is a raw socket optimized for high performance packet processing and allows zero-copy between kernel and applications. As the socket can be used for both receiving and transmitting, it supports high performance network applications purely in user-space.
 
 If you want a more extensive explanation about `AF_XDP`, you can find it in the [kernel documentation](https://www.kernel.org/doc/html/latest/networking/af_xdp.html).
 
@@ -76,12 +76,13 @@ You can use the following command to check your interface's network driver name:
 Currently, only the Netronome NFP drivers have support for offloaded XDP.
 
 ## Example Project
-Now that you have a little more understanding about what XDP is and does, let's follow up with a practical example. We are going to write a simple XDP Program that drops packets incoming from certain IPs.
+Now that you have a little more understanding about XDP, let's follow up with a practical example.
+We are going to write a simple XDP Program that drops packets incoming from certain IPs.
 
 ### Setting up the development environment
 Make sure you already have the [prerequisites](https://aya-rs.dev/book/start/development/).
 
-Since we are writing an XDP program, we will going to be using the XDP template with `cargo generate`:
+Since we are writing an XDP program, we will use the XDP template (created with `cargo generate`):
 
 ```
 cargo generate --name simple-xdp-program -d program_type=xdp https://github.com/aya-rs/aya-template
@@ -90,7 +91,7 @@ cargo generate --name simple-xdp-program -d program_type=xdp https://github.com/
 ### Creating the eBPF Component
 First, we must create the eBPF component for our program, in this component, we will decide what to do with the incoming packets.
 
-Since we want to drop packets incoming from certain IPs, we are going to use the `XDP_DROP` action code for our blacklist, and everything else will be treated with the `XDP_PASS` action code.
+Since we want to drop the incoming packets from certain IPs, we are going to use the `XDP_DROP` action code whenever the IP is in our blacklist, and everything else will be treated with the `XDP_PASS` action code.
 
 ```rust
 #![no_std]
@@ -131,7 +132,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 }
 ```
 
-We add an eBPF-compatible panic handler is provided because eBPF programs cannot use the default panic behavior.
+An eBPF-compatible panic handler is provided because eBPF programs cannot use the default panic behavior.
 
 ```rust
 #[map]
@@ -199,11 +200,11 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
 
 The `block_ip` function checks if a given IP address (address) exists in the blocklist.
 
-As said before, the `try_xdp_firewall` contains the main logic for our firewall, we first retrieve the Ethernet header from the `XdpContext` with the `ptr_at` function, the header is located at the beginning of the `XdpContext`, therefore we use `0` as an offset.
+As said before, the `try_xdp_firewall` contains the main logic for our firewall. We first retrieve the Ethernet header from the `XdpContext` with the `ptr_at` function, the header is located at the beginning of the `XdpContext`, therefore we use `0` as an offset.
 
 If the packet is not IPv4 (`ether_type` check), the function returns `xdp_action::XDP_PASS` and allows the packet to pass through the network stack.
 
-`ipv4hdr` is used to retrieve the IPv4 header, `source` is used to store the source IP address from the IPv4 header. We then compare the IP address with those that are in our blocklist, using the `block_ip` function we created earlier. If `block_ip` matches, meaning that the IP is in the blocklist, we use the `XDP_DROP` action code so that it doesn't get through the network stack, otherwise we let it pass with the `XDP_PASS` action code.
+`ipv4hdr` is used to retrieve the IPv4 header, `source` is used to store the source IP address from the IPv4 header. We then compare the IP address with those that are in our blocklist using the `block_ip` function we created earlier. If `block_ip` matches, meaning that the IP is in the blocklist, we use the `XDP_DROP` action code so that it doesn't get through the network stack, otherwise we let it pass with the `XDP_PASS` action code.
 
 Lastly, we log the activity, `SRC` is the source IP address and `ACTION` is the action code that has been used on it. We then return `Ok(action)` as a result.
 
