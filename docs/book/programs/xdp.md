@@ -7,7 +7,7 @@
 
 ## What is XDP in eBPF?
 
-XBP (eXpress Data Path) is a type of eBPF program that attaches to the network interface. It allows for the processing of network packets as soon as they are received from the network driver, even before they enter the networking stack. XDP enables efficient packet filtering, manipulation and redirection at the earliest possible stage, resulting in low-latency and high-throughput.
+XDP (eXpress Data Path) is a type of eBPF program that attaches to the network interface. It enables filtering, manipulation and refirection of network packets as soon as they are received from the network driver, even before they enter the Linux kernel networking stack, resulting in low latency and high throughput.
 
 The idea behind XDP is to add an early hook in the `RX` path of the kernel, and let a user supplied eBPF program decide the fate of the packet. The hook is placed in the NIC driver just after the interrupt processing, and before any memory allocation needed by the network stack itself.
 
