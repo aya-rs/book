@@ -5,7 +5,7 @@
     Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/xdp-drop)
 
 
-## What is XBP in eBPF?
+## What is XDP in eBPF?
 
 XBP (eXpress Data Path) is a type of eBPF program that attaches to the network interface. It allows for the processing of network packets as soon as they are received from the network driver, even before they enter the networking stack. XDP enables efficient packet filtering, manipulation and redirection at the earliest possible stage, resulting in low-latency and high-throughput.
 
