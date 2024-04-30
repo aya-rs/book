@@ -6,7 +6,6 @@
 
 
 ## What is XDP in eBPF?
-
 XDP (eXpress Data Path) is a type of eBPF program that attaches to the network interface. It enables filtering, manipulation and refirection of network packets as soon as they are received from the network driver, even before they enter the Linux kernel networking stack, resulting in low latency and high throughput.
 
 The idea behind XDP is to add an early hook in the `RX` path of the kernel, and let a user supplied eBPF program decide the fate of the packet. The hook is placed in the NIC driver just after the interrupt processing, and before any memory allocation needed by the network stack itself.
@@ -18,8 +17,6 @@ The XDP program is allowed to edit the packet data and, after the XDP program re
 * `XDP_ABORTED`: drop the packet with trace point exception
 * `XDP_TX`: bounce the packet back to the same NIC it arrived on
 * `XDP_REDIRECT`: redirect the packet to another NIC or user space socket via the [`AF_XDP`](https://www.kernel.org/doc/html/latest/networking/af_xdp.html) address family
-
-XDP requires support in the NIC driver but, as not all drivers support it, it can fallback to a generic operation mode, which performs the eBPF processing in the network stack, though with slower performance.
 
 ## AF_XDP
 Along with XDP, a new addres familiy entered in the Linux kernel, starting at 4.18.
@@ -76,15 +73,12 @@ You can use the following command to check your interface's network driver name:
 `ethtool -i <interface>`.
 
 ## Driver support for offloaded XDP
-
 Currently, only the Netronome NFP drivers have support for offloaded XDP.
 
 ## Example Project
-
 Now that you have a little more understanding about what XDP is and does, let's follow up with a practical example. We are going to write a simple XDP Program that drops packets incoming from certain IPs.
 
 ### Setting up the development environment
-
 Make sure you already have the [prerequisites](https://aya-rs.dev/book/start/development/).
 
 Since we are writing an XDP program, we will going to be using the XDP template with `cargo generate`:
@@ -94,7 +88,6 @@ cargo generate --name simple-xdp-program -d program_type=xdp https://github.com/
 ```
 
 ### Creating the eBPF Component
-
 First, we must create the eBPF component for our program, in this component, we will decide what to do with the incoming packets.
 
 Since we want to drop packets incoming from certain IPs, we are going to use the `XDP_DROP` action code for our blacklist, and everything else will be treated with the `XDP_PASS` action code.
@@ -290,7 +283,6 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
 ```
 
 ### Populating our map from user-space
-
 In order to add the addresses to block, we first need to get a reference to the `BLOCKLIST` map.
 
 Once we have it, it's simply a case of calling `ip_blocklist.insert()` to insert the ips into the blocklist.
@@ -394,28 +386,22 @@ async fn main() -> Result<(), anyhow::Error> {
 ```
 
 ##### Parsing command-line arguments
-
 Inside the `main` function, we first parse the command-line arguments, using [`Opt::parse()`](https://docs.rs/clap/latest/clap/trait.Parser.html#method.parse) and the struct defined earlier.
 
 ##### Initializing environment logging
-
 Logging is initialized using [`env_logger::init()`](https://docs.rs/env_logger/latest/env_logger/fn.init.html), we will make use of the environment logger later in our code.
 
 ##### Loading the eBPF program
-
 The eBPF program is loaded using `Bpf::load()`, choosing the debug or release version based on the build configuration (`debug_assertions`).
 
 ##### Loading and attaching our XDP
-
 The XDP program named `xdp_firewall` is retrieved from the eBPF program we defined earlier using `bpf.program_mut()`. The XDP program is then loaded and attached to our network interface.
 
 ##### Setting up the ip blocklist
-
 The IP blocklist (`BLOCKLIST` map) is loaded from the eBPF program and converted to a `HashMap`.
 The IP `1.1.1.1` is added to the blocklist.
 
 ##### Waiting for the exit signal
-
 The program awais the `CTRL+C` signal asynchronously using `signal::ctrl_c().await`, once received, it logs an exit message and returns `Ok(())`.
 
 #### Full user-space code
