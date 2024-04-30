@@ -36,7 +36,7 @@ To generate the scaffolding for your project, you're going to need
     ```
 
 And finally to generate bindings for kernel data structures, you must install
-`bpftool`, either from your distribution or building it from
+`bpftool`. This tool is part of the package `linux-tools-common`, `linux-lowlatency-tools-common` or you can build it from
 [source](https://github.com/libbpf/bpftool).
 
 !!! bug "Running on Ubuntu 20.04 LTS (Focal)?"
