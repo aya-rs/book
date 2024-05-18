@@ -1,0 +1,2 @@
+[workspace]
+members = ["xtask", "aya-tracepoint-echo-open", "aya-tracepoint-echo-open-common"]
