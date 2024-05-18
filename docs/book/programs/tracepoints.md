@@ -2,7 +2,7 @@
 
 !!! example "Source Code"
 
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/aya-tracepoint-echo-open). 
+    Full code for the example in this chapter is available [here](https://github.com/nsengupta/book/tree/main/examples/aya-tracepoint-echo-open). 
     
 # What are the tracepoints in eBPF?
 
