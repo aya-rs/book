@@ -44,7 +44,7 @@ for additional platform-specific options.
 to the major version of the [llvm-sys](https://crates.io/crates/llvm-sys) crate:
 
 ```bash
-LLVM_SYS_170_PREFIX=$(brew --prefix llvm) cargo install bpf-linker --no-default-features
+LLVM_SYS_180_PREFIX=$(brew --prefix llvm) cargo install bpf-linker --no-default-features
 ```
 1. Build BPF object files:
 ```bash
