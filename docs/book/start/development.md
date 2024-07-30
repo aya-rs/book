@@ -24,7 +24,7 @@ install the newest stable version of LLVM first (for example, with `brew install
 then install the linker with:
 
 ```console
-cargo install --no-default-features bpf-linker
+LLVM_SYS_180_PREFIX=$(brew --prefix llvm) cargo install --no-default-features bpf-linker
 ```
 
 To generate the scaffolding for your project, you're going to need
