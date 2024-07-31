@@ -18,8 +18,7 @@ mod bindings;
 use bindings::iphdr;
 
 #[map]
-static EVENTS: PerfEventArray<PacketLog> =
-    PerfEventArray::with_max_entries(1024, 0);
+static EVENTS: PerfEventArray<PacketLog> = PerfEventArray::new(0);
 
 #[map] // (1)
 static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
