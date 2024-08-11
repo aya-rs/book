@@ -29,12 +29,10 @@ include:
   * creating and binding sockets
   * receiving and sending messages
 
-Each of those actions has a corresponding LSM hook. All LSM hooks are listed in
-the [lsm_hooks.h](https://github.com/torvalds/linux/blob/master/include/linux/lsm_hooks.h)
-header inside the Linux kernel source code. Each hook takes a number of
-arguments, which provide context based on which programs can implement policy
-decisions and are listed in the
-[lsm_hook_defs.h](https://github.com/torvalds/linux/blob/master/include/linux/lsm_hook_defs.h)
+Each of those actions has a corresponding LSM hook. Each hook takes a number of
+arguments, which provides context about the program and it's operation in order
+to implement policy decisions. The list of hooks with their arguments can be 
+found in the [lsm_hook_defs.h](https://github.com/torvalds/linux/blob/master/include/linux/lsm_hook_defs.h)
 header.
 
 For example, consider the `task_setnice` hook, which has the following
