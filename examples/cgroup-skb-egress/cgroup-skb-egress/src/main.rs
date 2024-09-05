@@ -3,7 +3,7 @@ use std::net::Ipv4Addr;
 use aya::{
     include_bytes_aligned,
     maps::{perf::AsyncPerfEventArray, HashMap},
-    programs::{CgroupSkb, CgroupSkbAttachType},
+    programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
     Bpf,
 };
@@ -44,7 +44,11 @@ async fn main() -> Result<(), anyhow::Error> {
     // (1)
     program.load()?;
     // (2)
-    program.attach(cgroup, CgroupSkbAttachType::Egress)?;
+    program.attach(
+        cgroup,
+        CgroupSkbAttachType::Egress,
+        CgroupAttachMode::Single,
+    )?;
 
     let mut blocklist: HashMap<_, u32, u32> =
         HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
