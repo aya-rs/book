@@ -3,9 +3,9 @@ use std::net::Ipv4Addr;
 use aya::{
     include_bytes_aligned,
     maps::{perf::AsyncPerfEventArray, HashMap},
-    programs::{CgroupSkb, CgroupSkbAttachType},
+    programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
-    Bpf,
+    Ebpf,
 };
 use bytes::BytesMut;
 use clap::Parser;
@@ -29,13 +29,13 @@ async fn main() -> Result<(), anyhow::Error> {
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
-    // reach for `Bpf::load_file` instead.
+    // reach for `Ebpf::load_file` instead.
     #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/cgroup-skb-egress"
     ))?;
     #[cfg(not(debug_assertions))]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/cgroup-skb-egress"
     ))?;
     let program: &mut CgroupSkb =
@@ -44,7 +44,11 @@ async fn main() -> Result<(), anyhow::Error> {
     // (1)
     program.load()?;
     // (2)
-    program.attach(cgroup, CgroupSkbAttachType::Egress)?;
+    program.attach(
+        cgroup,
+        CgroupSkbAttachType::Egress,
+        CgroupAttachMode::Single,
+    )?;
 
     let mut blocklist: HashMap<_, u32, u32> =
         HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
