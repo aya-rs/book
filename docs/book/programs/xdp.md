@@ -62,33 +62,8 @@ You can connect an XDP program to an interface using the following modes:
 
 ## Driver support for native XDP
 
-A list of drivers supporting native XDP can be found in the table below:
-
-| Vendor            | Driver     | XDP Support |
-| ----------------- | ---------- | ----------- |
-| Amazon            | ena        | >=5.6       |
-| Broadcom          | bnxt_en    | >=4.11      |
-| Cavium            | thunderx   | >=4.12      |
-| Freescale         | dpaa2      | >=5.0       |
-| Intel             | ixgbe      | >=4.12      |
-| Intel             | ixgbevf    | >=4.17      |
-| Intel             | i40e       | >=4.13      |
-| Intel             | ice        | >=5.5       |
-| Marvell           | mvneta     | >=5.5       |
-| Mellanox          | mlx4       | >=4.8       |
-| Mellanox          | mlx5       | >=4.9       |
-| Microsoft         | hv_netvsc  | >=5.6       |
-| Netronome         | nfp        | >=4.10      |
-| Others            | virtio_net | >=4.10      |
-| Others            | tun/tap    | >=4.14      |
-| Others            | bond       | >=5.15      |
-| Qlogic            | qede       | >=4.10      |
-| Socionext         | netsec     | >=5.3       |
-| Solarflare        | sfc        | >=5.5       |
-| Texas Instruments | cpsw       | >=5.3       |
-
-You can use the following command to check your interface's network driver name:
-`ethtool -i <interface>`.
+For more information, please visit the [Cilium XDP documentation](https://docs.cilium.io/en/latest/bpf/progtypes/#xdp)
+under `Drivers supporting native XDP`.
 
 ## Driver support for offloaded XDP
 
@@ -464,7 +439,7 @@ The IP `1.1.1.1` is added to the blocklist.
 
 ##### Waiting for the exit signal
 
-The program awais the `CTRL+C` signal asynchronously using `signal::ctrl_c().await`,
+The program awaits the `CTRL+C` signal asynchronously using `signal::ctrl_c().await`,
 once received, it logs an exit message and returns `Ok(())`.
 
 #### Full user-space code
