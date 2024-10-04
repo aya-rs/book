@@ -61,7 +61,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut perf_array =
         AsyncPerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;
 
-    for cpu_id in online_cpus()? {
+    for cpu_id in online_cpus().map_err(|(_, error) error)? {
         let mut buf = perf_array.open(cpu_id, None)?;
 
         task::spawn(async move {
