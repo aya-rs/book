@@ -2,7 +2,8 @@
 
 !!! example "Source Code"
 
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/tc-egress)
+    Full code for the example in this chapter is available
+    [here](https://github.com/aya-rs/book/tree/main/examples/tc-egress)
 
 ## What is Classifier in eBPF?
 
@@ -16,11 +17,11 @@ traffic. When attaching Classifier program to an interface,
 
 ## What's the difference between Classifiers and XDP?
 
-* Classifier is older than XDP, it's available since kernel 4.1, while XDP -
+- Classifier is older than XDP, it's available since kernel 4.1, while XDP -
   since 4.8.
-* Classifier can inspect both ingress and egress traffic. XDP is limited to
+- Classifier can inspect both ingress and egress traffic. XDP is limited to
   ingress.
-* XDP provides better performance, because it's executed earlier - it receives
+- XDP provides better performance, because it's executed earlier - it receives
   a raw packet from the NIC driver, before it goes to any layers of kernel
   networking stack and gets parsed to the `sk_buff` structure.
 
@@ -56,13 +57,13 @@ Classifier programs and qdisc filters.
 
 Here's how the eBPF code looks like:
 
-```rust linenums="1" title="tc-egress-ebpf/src/main.rs"
---8<-- "examples/tc-egress/tc-egress-ebpf/src/main.rs"
-```
+    ```rust linenums="1" title="tc-egress-ebpf/src/main.rs"
+    --8<-- "examples/tc-egress/tc-egress-ebpf/src/main.rs"
+    ```
 
 1. Create our map.
-2. Check if we should allow or deny our packet.
-3. Return the correct action.
+1. Check if we should allow or deny our packet.
+1. Return the correct action.
 
 ## Userspace code
 
@@ -73,13 +74,13 @@ In this example, we'll block all egress traffic going to `1.1.1.1`.
 
 Here's how the code looks like:
 
-```rust linenums="1" title="tc-egress/src/main.rs"
---8<-- "examples/tc-egress/tc-egress/src/main.rs"
-```
+    ```rust linenums="1" title="tc-egress/src/main.rs"
+    --8<-- "examples/tc-egress/tc-egress/src/main.rs"
+    ```
 
 1. Get a reference to the map.
-2. Create an IPv4Addr.
-3. Populate the map with remote IP addresses which we want to prevent the
+1. Create an IPv4Addr.
+1. Populate the map with remote IP addresses which we want to prevent the
    egress traffic to.
 
 The third thing is done with getting a reference to the `BLOCKLIST` map and
@@ -89,16 +90,16 @@ is an appropriate type to use in eBPF maps.
 
 ## Running the program
 
-```console
-$ RUST_LOG=info cargo xtask run
-LOG: SRC 1.1.1.1, ACTION 2
-LOG: SRC 35.186.224.47, ACTION 3
-LOG: SRC 35.186.224.47, ACTION 3
-LOG: SRC 1.1.1.1, ACTION 2
-LOG: SRC 168.100.68.32, ACTION 3
-LOG: SRC 168.100.68.239, ACTION 3
-LOG: SRC 168.100.68.32, ACTION 3
-LOG: SRC 168.100.68.239, ACTION 3
-LOG: SRC 1.1.1.1, ACTION 2
-LOG: SRC 13.248.212.111, ACTION 3
-```
+    ```console
+    $ RUST_LOG=info cargo xtask run
+    LOG: SRC 1.1.1.1, ACTION 2
+    LOG: SRC 35.186.224.47, ACTION 3
+    LOG: SRC 35.186.224.47, ACTION 3
+    LOG: SRC 1.1.1.1, ACTION 2
+    LOG: SRC 168.100.68.32, ACTION 3
+    LOG: SRC 168.100.68.239, ACTION 3
+    LOG: SRC 168.100.68.32, ACTION 3
+    LOG: SRC 168.100.68.239, ACTION 3
+    LOG: SRC 1.1.1.1, ACTION 2
+    LOG: SRC 13.248.212.111, ACTION 3
+    ```
