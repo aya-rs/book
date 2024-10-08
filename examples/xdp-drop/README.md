@@ -8,7 +8,7 @@
 
 ## Build eBPF
 
-```bash
+```console
 cargo xtask build-ebpf
 ```
 
@@ -17,12 +17,12 @@ You may also change the target architecture with the `--target` flag
 
 ## Build Userspace
 
-```bash
+```console
 cargo build
 ```
 
 ## Run
 
-```bash
+```console
 cargo xtask run
 ```

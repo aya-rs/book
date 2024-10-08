@@ -31,13 +31,13 @@ keep this logic in a function called `block_ip`.
 
 Here's what the code looks like now:
 
-```rust linenums="1" title="xdp-drop-ebpf/src/main.rs"
---8<-- "examples/xdp-drop/xdp-drop-ebpf/src/main.rs"
-```
+    ```rust linenums="1" title="xdp-drop-ebpf/src/main.rs"
+    --8<-- "examples/xdp-drop/xdp-drop-ebpf/src/main.rs"
+    ```
 
 1. Create our map
-2. Check if we should allow or deny our packet
-3. Return the correct action
+1. Check if we should allow or deny our packet
+1. Return the correct action
 
 ## Populating our map from userspace
 
@@ -60,24 +60,25 @@ traffic originating from `1.1.1.1` in this example.
 
 Here's how the userspace code looks:
 
-```rust linenums="1" title="xdp-drop/src/main.rs"
---8<-- "examples/xdp-drop/xdp-drop/src/main.rs"
-```
+    ```rust linenums="1" title="xdp-drop/src/main.rs"
+    --8<-- "examples/xdp-drop/xdp-drop/src/main.rs"
+    ```
 
 1. Get a reference to the map
-2. Create an IPv4Addr
-3. Write this to our map
+1. Create an IPv4Addr
+1. Write this to our map
+
 ## Running the program
 
-```console
-$ RUST_LOG=info cargo xtask run
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 192.168.1.21, ACTION: 2
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 192.168.1.21, ACTION: 2
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 18.168.253.132, ACTION: 2
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 18.168.253.132, ACTION: 2
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 18.168.253.132, ACTION: 2
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
-[2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 140.82.121.6, ACTION: 2
-```
+    ```console
+    $ RUST_LOG=info cargo xtask run
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 192.168.1.21, ACTION: 2
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 192.168.1.21, ACTION: 2
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 18.168.253.132, ACTION: 2
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 18.168.253.132, ACTION: 2
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 18.168.253.132, ACTION: 2
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
+    [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 140.82.121.6, ACTION: 2
+    ```
