@@ -2,11 +2,12 @@
 
 !!! example "Source Code"
 
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/aya-tool)
+    Full code for the example in this chapter is available
+    [here](https://github.com/aya-rs/book/tree/main/examples/aya-tool)
 
 Very often you will need to use type definitions that your running Linux kernel
 uses in its source code. For example, you might need a definition of
-[task_struct](https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723),
+[task_struct][task-struct],
 because you are about to write a BPF program which receives an
 information about new scheduled process/task. Aya doesn't provide any
 definition of this structure. What should be done to get that definition? And
@@ -17,40 +18,40 @@ bindings for specific kernel structures.
 
 It can be installed with the following commands:
 
-```console
-$ cargo install bindgen-cli
-$ cargo install --git https://github.com/aya-rs/aya -- aya-tool
-```
+    ```console
+    $ cargo install bindgen-cli
+    $ cargo install --git https://github.com/aya-rs/aya -- aya-tool
+    ```
 
-Ensure that you have `bpftool` and `bindgen` installed in your system, `aya-tool` is not going
-to work without it.
+Ensure that you have `bpftool` and `bindgen` installed in your system,
+`aya-tool` is not going to work without it.
 
 The syntax of the command is:
 
-```console
-$ aya-tool
-aya-tool 
+    ```console
+    $ aya-tool
+    aya-tool
 
-USAGE:
-    aya-tool <SUBCOMMAND>
+    USAGE:
+        aya-tool <SUBCOMMAND>
 
-OPTIONS:
-    -h, --help    Print help information
+    OPTIONS:
+        -h, --help    Print help information
 
-SUBCOMMANDS:
-    generate    Generate Rust bindings to Kernel types using bpftool
-    help        Print this message or the help of the given subcommand(s)
-```
+    SUBCOMMANDS:
+        generate    Generate Rust bindings to Kernel types using bpftool
+        help        Print this message or the help of the given subcommand(s)
+    ```
 
 Let's assume that we want to generate Rust definition of
-[task_struct](https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723).
-Let's also assume that your project is called `myapp`. Your userspace part is
-in `myapp` subdirectory, your eBPF part is in `myapp-ebpf`. We need to generate
-the bindings for the eBPF part, which can be done with:
+[task_struct][task-struct]. Let's also assume that your project is called
+`myapp`. Your userspace part is in `myapp` subdirectory, your eBPF part is in
+`myapp-ebpf`. We need to generate the bindings for the eBPF part, which can be
+done with:
 
-```console
-$ aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
-```
+    ```console
+    $ aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
+    ```
 
 !!! tip "Generating for multiple types"
 
@@ -63,9 +64,9 @@ $ aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
 Then we can use `vmlinux` as a module with `mod vmlinux` in our eBPF program,
 like here:
 
-```rust linenums="1" title="myapp-ebpf/src/main.rs"
---8<-- "examples/aya-tool/myapp-ebpf/src/main.rs"
-```
+    ```rust linenums="1" title="myapp-ebpf/src/main.rs"
+    --8<-- "examples/aya-tool/myapp-ebpf/src/main.rs"
+    ```
 
 ## Portability and different kernel versions
 
@@ -75,3 +76,5 @@ versions thanks to mechanism called
 The structures are not simply generated from kernel headers. However, the
 target kernel (regardless of version) should have `CONFIG_DEBUG_INFO_BTF`
 option enabled.
+
+[task-struct]: https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723
