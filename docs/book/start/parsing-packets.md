@@ -57,13 +57,13 @@ going to use the memoffset crate, let's add a dependency for it in
 
 The resulting code looks like this:
 
-```rust linenums="1" title="xdp-log-ebpf/src/main.rs"
---8<-- "examples/xdp-log/xdp-log-ebpf/src/main.rs"
-```
+    ```rust linenums="1" title="xdp-log-ebpf/src/main.rs"
+    --8<-- "examples/xdp-log/xdp-log-ebpf/src/main.rs"
+    ```
 
 1. Here we define `ptr_at` to ensure that packet access is always bound checked.
-2. Use `ptr_at` to read our ethernet header.
-3. Here we log IP and port.
+1. Use `ptr_at` to read our ethernet header.
+1. Here we log IP and port.
 
 Don't forget to rebuild your eBPF program!
 
@@ -72,20 +72,20 @@ Don't forget to rebuild your eBPF program!
 Our user-space code doesn't really differ from the previous chapter, but for the
 reference, here's the code:
 
-```rust linenums="1" title="xdp-log/src/main.rs"
---8<-- "examples/xdp-log/xdp-log/src/main.rs"
-```
+    ```rust linenums="1" title="xdp-log/src/main.rs"
+    --8<-- "examples/xdp-log/xdp-log/src/main.rs"
+    ```
 
 ## Running the program
 
 As before, the interface can be overwritten by providing the interface name as a
 parameter, for example, `RUST_LOG=info cargo xtask run -- --iface wlp2s0`.
 
-```console
-$ RUST_LOG=info cargo xtask run
-[2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
-[2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
-[2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
-[2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
-[2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 234.130.159.162, SRC PORT: 443
-```
+    ```console
+    $ RUST_LOG=info cargo xtask run
+    [2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
+    [2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
+    [2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
+    [2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 172.52.22.104, SRC PORT: 443
+    [2022-12-22T11:32:21Z INFO  xdp_log] SRC IP: 234.130.159.162, SRC PORT: 443
+    ```
