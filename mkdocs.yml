@@ -69,11 +69,10 @@ nav:
       - Dropping Packets: book/start/dropping-packets.md
     - Working With Aya:
       - book/aya/index.md
-      - Program Lifecycle: book/aya/lifecycle.md 
+      - Program Lifecycle: book/aya/lifecycle.md
       - Reading Values From A Context: book/aya/context.md
       - Using aya-tool: book/aya/aya-tool.md
       - Using aya-log: book/aya/aya-log.md
-      - Cross-compilation: book/aya/crosscompile.md
     - Program Types:
       - book/programs/index.md
       - Probes: book/programs/probes.md
