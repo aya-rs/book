@@ -67,6 +67,7 @@ nav:
       - Hello XDP!: book/start/hello-xdp.md
       - Parsing packets: book/start/parsing-packets.md
       - Dropping Packets: book/start/dropping-packets.md
+      - Getting data to user-space: book/start/getting-data-to-user-space.md
     - Working With Aya:
       - book/aya/index.md
       - Program Lifecycle: book/aya/lifecycle.md
