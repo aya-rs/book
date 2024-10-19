@@ -20,7 +20,8 @@ unsafe fn try_xdp_hello(ctx: XdpContext) -> Result<u32, u32> {
     Ok(xdp_action::XDP_PASS)
 }
 
+#[cfg(not(test))]
 #[panic_handler] // (3)
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unsafe { core::hint::unreachable_unchecked() }
+    loop {}
 }

@@ -65,7 +65,8 @@ fn try_kprobetcp(ctx: ProbeContext) -> Result<u32, i64> {
     }
 }
 
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unsafe { core::hint::unreachable_unchecked() }
+    loop {}
 }
