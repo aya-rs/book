@@ -127,9 +127,10 @@ map definitions (for our HashMap) and XDP program macros (`macros::{map, xdp}`)
 Here's how the code looks:
 
 ```rust
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unsafe { core::hint::unreachable_unchecked() }
+    loop {}
 }
 ```
 
@@ -245,9 +246,10 @@ use network_types::{
     ip::Ipv4Hdr,
 };
 
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unsafe { core::hint::unreachable_unchecked() }
+    loop {}
 }
 
 #[map]
