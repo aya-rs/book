@@ -1,2 +1,3 @@
 [workspace]
-members = ["myapp", "myapp-common", "xtask"]
+members = ["xtask", "myapp", "myapp-common", "myapp-ebpf"]
+default-members = ["xtask", "myapp", "myapp-common"]

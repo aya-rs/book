@@ -1,2 +1,3 @@
 [workspace]
-members = ["tc-egress", "tc-egress-common", "xtask"]
+members = ["xtask", "tc-egress", "tc-egress-common", "tc-egress-ebpf"]
+default-members = ["xtask", "tc-egress", "tc-egress-common"]

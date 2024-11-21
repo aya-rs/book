@@ -1,2 +1,3 @@
 [workspace]
-members = ["lsm-nice", "lsm-nice-common", "xtask"]
+members = ["xtask", "lsm-nice", "lsm-nice-common", "lsm-nice-ebpf"]
+default-members = ["xtask", "lsm-nice", "lsm-nice-common"]
