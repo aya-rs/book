@@ -1,2 +1,3 @@
 [workspace]
-members = ["xdp-log", "xdp-log-common", "xtask"]
+members = ["xtask", "xdp-log", "xdp-log-common", "xdp-log-ebpf"]
+default-members = ["xtask", "xdp-log", "xdp-log-common"]

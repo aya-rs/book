@@ -1,2 +1,3 @@
 [workspace]
-members = ["kprobetcp", "kprobetcp-common", "xtask"]
+members = ["xtask", "kprobetcp", "kprobetcp-common", "kprobetcp-ebpf"]
+default-members = ["xtask", "kprobetcp", "kprobetcp-common"]

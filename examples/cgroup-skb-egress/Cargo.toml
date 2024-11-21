@@ -1,2 +1,3 @@
 [workspace]
-members = ["cgroup-skb-egress", "cgroup-skb-egress-common", "xtask"]
+members = ["xtask", "cgroup-skb-egress", "cgroup-skb-egress-common", "cgroup-skb-egress-ebpf"]
+default-members = ["xtask", "cgroup-skb-egress", "cgroup-skb-egress-common"]

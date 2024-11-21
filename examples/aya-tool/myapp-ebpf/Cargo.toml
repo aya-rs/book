@@ -20,6 +20,3 @@ overflow-checks = false
 
 [profile.release]
 panic = "abort"
-
-[workspace]
-members = []
