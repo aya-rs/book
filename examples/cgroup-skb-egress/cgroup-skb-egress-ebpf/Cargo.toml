@@ -7,7 +7,7 @@ edition = "2021"
 aya-ebpf = { git = "https://github.com/aya-rs/aya" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 cgroup-skb-egress-common = { path = "../cgroup-skb-egress-common" }
-memoffset = "0.8"
+memoffset = "0.9"
 
 [[bin]]
 name = "cgroup-skb-egress"
