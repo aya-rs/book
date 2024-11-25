@@ -8,7 +8,7 @@ aya-ebpf = { git = "https://github.com/aya-rs/aya" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 tc-egress-common = { path = "../tc-egress-common" }
 memoffset = "0.9"
-network-types = "0.0.4"
+network-types = "0.0.7"
 
 [[bin]]
 name = "tc-egress"
