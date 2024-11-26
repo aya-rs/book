@@ -85,10 +85,10 @@ Make sure you already have the [prerequisites][prerequisites].
 Since we are writing an XDP program, we will use the XDP template (created with
 `cargo generate`):
 
-    ```console
-    cargo generate --name simple-xdp-program -d program_type=xdp \
-        https://github.com/aya-rs/aya-template
-    ```
+```console
+cargo generate --name simple-xdp-program -d program_type=xdp \
+    https://github.com/aya-rs/aya-template
+```
 
 ### Creating the eBPF component
 
@@ -99,25 +99,25 @@ Since we want to drop the incoming packets from certain IPs, we are going to
 use the `XDP_DROP` action code whenever the IP is in our blacklist, and
 everything else will be treated with the `XDP_PASS` action code.
 
-    ```rust
-    #![no_std]
-    #![no_main]
+```rust
+#![no_std]
+#![no_main]
 
-    use aya_ebpf::{
-        bindings::xdp_action,
-        macros::{map, xdp},
-        maps::HashMap,
-        programs::XdpContext,
-    };
+use aya_ebpf::{
+    bindings::xdp_action,
+    macros::{map, xdp},
+    maps::HashMap,
+    programs::XdpContext,
+};
 
-    use aya_log_ebpf::info;
+use aya_log_ebpf::info;
 
-    use core::mem;
-    use network_types::{
-        eth::{EthHdr, EtherType},
-        ip::Ipv4Hdr,
-    };
-    ```
+use core::mem;
+use network_types::{
+    eth::{EthHdr, EtherType},
+    ip::Ipv4Hdr,
+};
+```
 
 We import the necessary dependencies:
 
@@ -133,78 +133,78 @@ We import the necessary dependencies:
 
 Here's how the code looks:
 
-    ```rust
-    #[cfg(not(test))]
-    #[panic_handler]
-    fn panic(_info: &core::panic::PanicInfo) -> ! {
-        loop {}
-    }
-    ```
+```rust
+#[cfg(not(test))]
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    loop {}
+}
+```
 
 An eBPF-compatible panic handler is provided because
 eBPF programs cannot use the default panic behavior.
 
-    ```rust
-    #[map]
-    static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
-    ```
+```rust
+#[map]
+static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
+```
 
 Here, we define our blocklist with a `HashMap`,
 which stores integers (u32), with a maximum of 1024 entries.
 
-    ```rust
-    #[xdp]
-    pub fn xdp_firewall(ctx: XdpContext) -> u32 {
-        match try_xdp_firewall(ctx) {
-            Ok(ret) => ret,
-            Err(_) => xdp_action::XDP_ABORTED,
-        }
-    ```
+```rust
+#[xdp]
+pub fn xdp_firewall(ctx: XdpContext) -> u32 {
+    match try_xdp_firewall(ctx) {
+        Ok(ret) => ret,
+        Err(_) => xdp_action::XDP_ABORTED,
+    }
+```
 
 An eBPF-compatible panic handler is provided, because eBPF programs cannot use
 the default panic behavior.
 
-    ```rust
-    #[map]
-    static BLOCKLIST: HashMap<u32, u32> =
-        HashMap::<u32, u32>::with_max_entries(1024, 0);
-    ```
+```rust
+#[map]
+static BLOCKLIST: HashMap<u32, u32> =
+    HashMap::<u32, u32>::with_max_entries(1024, 0);
+```
 
 Here, we define our blocklist with a `HashMap`, which stores integers (`u32`),
 with a maximum of 1024 entries.
 
-    ```rust
-    #[xdp]
-    pub fn xdp_firewall(ctx: XdpContext) -> u32 {
-        match try_xdp_firewall(ctx) {
-            Ok(ret) => ret,
-            Err(_) => xdp_action::XDP_ABORTED,
-        }
+```rust
+#[xdp]
+pub fn xdp_firewall(ctx: XdpContext) -> u32 {
+    match try_xdp_firewall(ctx) {
+        Ok(ret) => ret,
+        Err(_) => xdp_action::XDP_ABORTED,
     }
-    ```
+}
+```
 
 The `xdp_firewall` function (picked up in user-space) accepts an `XdpContext`
 and returns a `u32`. It delegates the main packet processing logic to the
 `try_xdp_firewall` function. If an error occurs, the function returns
 `xdp_action::XDP_ABORTED` (which is equal to the `u32` `0`).
 
-    ```rust
-    #[inline(always)]
-    unsafe fn ptr_at<T>(
-        ctx: &XdpContext, offset: usize
-    ) -> Result<*const T, ()> {
-        let start = ctx.data();
-        let end = ctx.data_end();
-        let len = mem::size_of::<T>();
+```rust
+#[inline(always)]
+unsafe fn ptr_at<T>(
+    ctx: &XdpContext, offset: usize
+) -> Result<*const T, ()> {
+    let start = ctx.data();
+    let end = ctx.data_end();
+    let len = mem::size_of::<T>();
 
-        if start + offset + len > end {
-            return Err(());
-        }
-
-        let ptr = (start + offset) as *const T;
-        Ok(&*ptr)
+    if start + offset + len > end {
+        return Err(());
     }
-    ```
+
+    let ptr = (start + offset) as *const T;
+    Ok(&*ptr)
+}
+```
 
 Our `ptr_at` function is designed to provide safe access to a generic type `T`
 within an `XdpContext` at a specified offset. It performs bounds checking by
@@ -213,32 +213,32 @@ the data (`end`). If the access is within bounds, it returns a pointer to the
 specified type; otherwise, it returns an error. We are going to use this
 function to retrieve data from the `XdpContext`.
 
-    ```rust
+```rust
 
-    fn block_ip(address: u32) -> bool {
-        unsafe { BLOCKLIST.get(&address).is_some() }
+fn block_ip(address: u32) -> bool {
+    unsafe { BLOCKLIST.get(&address).is_some() }
+}
+
+fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
+    let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
+    match unsafe { (*ethhdr).ether_type } {
+        EtherType::Ipv4 => {}
+        _ => return Ok(xdp_action::XDP_PASS),
     }
 
-    fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
-        let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
-        match unsafe { (*ethhdr).ether_type } {
-            EtherType::Ipv4 => {}
-            _ => return Ok(xdp_action::XDP_PASS),
-        }
+    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
+    let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
 
-        let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
-        let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
+    let action = if block_ip(source) {
+        xdp_action::XDP_DROP
+    } else {
+        xdp_action::XDP_PASS
+    };
+    info!(&ctx, "SRC: {:i}, ACTION: {}", source, action);
 
-        let action = if block_ip(source) {
-            xdp_action::XDP_DROP
-        } else {
-            xdp_action::XDP_PASS
-        };
-        info!(&ctx, "SRC: {:i}, ACTION: {}", source, action);
-
-        Ok(action)
-    }
-    ```
+    Ok(action)
+}
+```
 
 The `block_ip` function checks if a given IP address (address) exists in the
 blocklist.
@@ -263,16 +263,76 @@ action code that has been used on it. We then return `Ok(action)` as a result.
 
 The full code:
 
-    ```rust
-    #![no_std]
-    #![no_main]
-    #![allow(nonstandard_style, dead_code)]
+```rust
+#![no_std]
+#![no_main]
+#![allow(nonstandard_style, dead_code)]
 
-    use aya_ebpf::{
-        bindings::xdp_action,
-        macros::{map, xdp},
-        maps::HashMap,
-        programs::XdpContext,
+use aya_ebpf::{
+    bindings::xdp_action,
+    macros::{map, xdp},
+    maps::HashMap,
+    programs::XdpContext,
+};
+use aya_log_ebpf::info;
+
+use core::mem;
+use network_types::{
+    eth::{EthHdr, EtherType},
+    ip::Ipv4Hdr,
+};
+
+#[cfg(not(test))]
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    loop {}
+}
+
+#[map]
+static IP_BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
+
+#[xdp]
+pub fn xdp_firewall(ctx: XdpContext) -> u32 {
+    match try_xdp_firewall(ctx) {
+        Ok(ret) => ret,
+        Err(_) => xdp_action::XDP_ABORTED,
+    }
+}
+
+#[inline(always)]
+unsafe fn ptr_at<T>(
+    ctx: &XdpContext, offset: usize,
+) -> Result<*const T, ()> {
+    let start = ctx.data();
+    let end = ctx.data_end();
+    let len = mem::size_of::<T>();
+
+    if start + offset + len > end {
+        return Err(());
+    }
+
+    let ptr = (start + offset) as *const T;
+    Ok(&*ptr)
+}
+
+fn block_ip(address: u32) -> bool {
+    unsafe { IP_BLOCKLIST.get(&address).is_some() }
+}
+
+fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
+    let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
+    match unsafe { (*ethhdr).ether_type } {
+        EtherType::Ipv4 => {}
+        _ => return Ok(xdp_action::XDP_PASS),
+    }
+
+    let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
+    let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
+
+    let action = if block_ip(source) {
+        xdp_action::XDP_DROP
+    } else {
+        xdp_action::XDP_PASS
     };
     use aya_log_ebpf::info;
 
@@ -282,14 +342,14 @@ The full code:
         ip::Ipv4Hdr,
     };
 
-    #[cfg(not(test))]
     #[panic_handler]
     fn panic(_info: &core::panic::PanicInfo) -> ! {
-        loop {}
+        unsafe { core::hint::unreachable_unchecked() }
     }
 
     #[map]
-    static IP_BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
+    static IP_BLOCKLIST: HashMap<u32, u32> =
+        HashMap::<u32, u32>::with_max_entries(1024, 0);
 
     #[xdp]
     pub fn xdp_firewall(ctx: XdpContext) -> u32 {
@@ -301,7 +361,7 @@ The full code:
 
     #[inline(always)]
     unsafe fn ptr_at<T>(
-        ctx: &XdpContext, offset: usize,
+        ctx: &XdpContext, offset: usize
     ) -> Result<*const T, ()> {
         let start = ctx.data();
         let end = ctx.data_end();
@@ -334,71 +394,11 @@ The full code:
         } else {
             xdp_action::XDP_PASS
         };
-        use aya_log_ebpf::info;
+        info!(&ctx, "SRC: {:i}, ACTION: {}", source, action);
 
-        use core::mem;
-        use network_types::{
-            eth::{EthHdr, EtherType},
-            ip::Ipv4Hdr,
-        };
-
-        #[panic_handler]
-        fn panic(_info: &core::panic::PanicInfo) -> ! {
-            unsafe { core::hint::unreachable_unchecked() }
-        }
-
-        #[map]
-        static IP_BLOCKLIST: HashMap<u32, u32> =
-            HashMap::<u32, u32>::with_max_entries(1024, 0);
-
-        #[xdp]
-        pub fn xdp_firewall(ctx: XdpContext) -> u32 {
-            match try_xdp_firewall(ctx) {
-                Ok(ret) => ret,
-                Err(_) => xdp_action::XDP_ABORTED,
-            }
-        }
-
-        #[inline(always)]
-        unsafe fn ptr_at<T>(
-            ctx: &XdpContext, offset: usize
-        ) -> Result<*const T, ()> {
-            let start = ctx.data();
-            let end = ctx.data_end();
-            let len = mem::size_of::<T>();
-
-            if start + offset + len > end {
-                return Err(());
-            }
-
-            let ptr = (start + offset) as *const T;
-            Ok(&*ptr)
-        }
-
-        fn block_ip(address: u32) -> bool {
-            unsafe { IP_BLOCKLIST.get(&address).is_some() }
-        }
-
-        fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
-            let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
-            match unsafe { (*ethhdr).ether_type } {
-                EtherType::Ipv4 => {}
-                _ => return Ok(xdp_action::XDP_PASS),
-            }
-
-            let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
-            let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
-
-            let action = if block_ip(source) {
-                xdp_action::XDP_DROP
-            } else {
-                xdp_action::XDP_PASS
-            };
-            info!(&ctx, "SRC: {:i}, ACTION: {}", source, action);
-
-            Ok(action)
-        }
-    ```
+        Ok(action)
+    }
+```
 
 ### Populating our map from user-space
 
@@ -428,20 +428,20 @@ Let's begin with writing the user-space code:
 
 #### Importing dependencies
 
-    ```rust
-    use anyhow::Context;
-    use aya::{
-        include_bytes_aligned,
-        maps::HashMap,
-        programs::{Xdp, XdpFlags},
-        Ebpf,
-    };
-    use aya_log::EbpfLogger;
-    use clap::Parser;
-    use log::{info, warn};
-    use std::net::Ipv4Addr;
-    use tokio::signal;
-    ```
+```rust
+use anyhow::Context;
+use aya::{
+    include_bytes_aligned,
+    maps::HashMap,
+    programs::{Xdp, XdpFlags},
+    Ebpf,
+};
+use aya_log::EbpfLogger;
+use clap::Parser;
+use log::{info, warn};
+use std::net::Ipv4Addr;
+use tokio::signal;
+```
 
 - `anyhow::Context`: Provides additional context for error handling
 - `aya`: Provides the Bpf structure and related functions for loading eBPF
@@ -463,13 +463,13 @@ we use for informational and warning messages
 
 #### Defining command-line arguments
 
-    ```rust
-    #[derive(Debug, Parser)]
-    struct Opt {
-        #[clap(short, long, default_value = "eth0")]
-        iface: String,
-    }
-    ```
+```rust
+#[derive(Debug, Parser)]
+struct Opt {
+    #[clap(short, long, default_value = "eth0")]
+    iface: String,
+}
+```
 
 A simple struct is defined for command-line parsing using
 [clap's derive feature][clap-derive], with the optional argument `iface` to
@@ -477,45 +477,45 @@ provide our network interface name.
 
 #### Main function
 
-    ```rust
-    #[tokio::main]
-    async fn main() -> Result<(), anyhow::Error> {
-        let opt = Opt::parse();
+```rust
+#[tokio::main]
+async fn main() -> Result<(), anyhow::Error> {
+    let opt = Opt::parse();
 
-        env_logger::init();
+    env_logger::init();
 
-        #[cfg(debug_assertions)]
-        let mut bpf = Ebpf::load(include_bytes_aligned!(
-            "../../target/bpfel-unknown-none/debug/simple-xdp-program"
-        ))?;
-        #[cfg(not(debug_assertions))]
-        let mut bpf = Ebpf::load(include_bytes_aligned!(
-            "../../target/bpfel-unknown-none/release/xdp-simple-xdp-program"
-        ))?;
-        if let Err(e) = EbpfLogger::init(&mut bpf) {
-            warn!("failed to initialize eBPF logger: {}", e);
-        }
-        let program: &mut Xdp =
-            bpf.program_mut("xdp_firewall").unwrap().try_into()?;
-        program.load()?;
-        program.attach(&opt.iface, XdpFlags::default())
-            .context("failed to attach the XDP program with default flags - "
-                     "try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
-
-        let mut blocklist: HashMap<_, u32, u32> =
-            HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
-
-        let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
-
-        blocklist.insert(block_addr, 0, 0)?;
-
-        info!("Waiting for Ctrl-C...");
-        signal::ctrl_c().await?;
-        info!("Exiting...");
-
-        Ok(())
+    #[cfg(debug_assertions)]
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/debug/simple-xdp-program"
+    ))?;
+    #[cfg(not(debug_assertions))]
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/release/xdp-simple-xdp-program"
+    ))?;
+    if let Err(e) = EbpfLogger::init(&mut bpf) {
+        warn!("failed to initialize eBPF logger: {}", e);
     }
-    ```
+    let program: &mut Xdp =
+        bpf.program_mut("xdp_firewall").unwrap().try_into()?;
+    program.load()?;
+    program.attach(&opt.iface, XdpFlags::default())
+        .context("failed to attach the XDP program with default flags - "
+                    "try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
+
+    let mut blocklist: HashMap<_, u32, u32> =
+        HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
+
+    let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
+
+    blocklist.insert(block_addr, 0, 0)?;
+
+    info!("Waiting for Ctrl-C...");
+    signal::ctrl_c().await?;
+    info!("Exiting...");
+
+    Ok(())
+}
+```
 
 ##### Parsing command-line arguments
 
@@ -551,79 +551,79 @@ The program awaits the `CTRL+C` signal asynchronously using
 
 #### Full user-space code
 
-    ```rust
-    use anyhow::Context;
-    use aya::{
-        include_bytes_aligned,
-        maps::HashMap,
-        programs::{Xdp, XdpFlags},
-        Ebpf,
-    };
-    use aya_log::EbpfLogger;
-    use clap::Parser;
-    use log::{info, warn};
-    use std::net::Ipv4Addr;
-    use tokio::signal;
+```rust
+use anyhow::Context;
+use aya::{
+    include_bytes_aligned,
+    maps::HashMap,
+    programs::{Xdp, XdpFlags},
+    Ebpf,
+};
+use aya_log::EbpfLogger;
+use clap::Parser;
+use log::{info, warn};
+use std::net::Ipv4Addr;
+use tokio::signal;
 
-    #[derive(Debug, Parser)]
-    struct Opt {
-        #[clap(short, long, default_value = "eth0")]
-        iface: String,
+#[derive(Debug, Parser)]
+struct Opt {
+    #[clap(short, long, default_value = "eth0")]
+    iface: String,
+}
+
+#[tokio::main]
+async fn main() -> Result<(), anyhow::Error> {
+    let opt = Opt::parse();
+
+    env_logger::init();
+
+    #[cfg(debug_assertions)]
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/debug/simple-xdp-program"
+    ))?;
+    #[cfg(not(debug_assertions))]
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
+        "../../target/bpfel-unknown-none/release/xdp-simple-xdp-program"
+    ))?;
+    if let Err(e) = EbpfLogger::init(&mut bpf) {
+        warn!("failed to initialize eBPF logger: {}", e);
     }
+    let program: &mut Xdp =
+        bpf.program_mut("xdp_firewall").unwrap().try_into()?;
+    program.load()?;
+    program.attach(&opt.iface, XdpFlags::default())
+        .context("failed to attach the XDP program with default flags - "
+                    "try changing XdpFlags::default() to "
+                    "XdpFlags::SKB_MODE")?;
 
-    #[tokio::main]
-    async fn main() -> Result<(), anyhow::Error> {
-        let opt = Opt::parse();
+    let mut blocklist: HashMap<_, u32, u32> =
+        HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
 
-        env_logger::init();
+    let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
 
-        #[cfg(debug_assertions)]
-        let mut bpf = Ebpf::load(include_bytes_aligned!(
-            "../../target/bpfel-unknown-none/debug/simple-xdp-program"
-        ))?;
-        #[cfg(not(debug_assertions))]
-        let mut bpf = Ebpf::load(include_bytes_aligned!(
-            "../../target/bpfel-unknown-none/release/xdp-simple-xdp-program"
-        ))?;
-        if let Err(e) = EbpfLogger::init(&mut bpf) {
-            warn!("failed to initialize eBPF logger: {}", e);
-        }
-        let program: &mut Xdp =
-            bpf.program_mut("xdp_firewall").unwrap().try_into()?;
-        program.load()?;
-        program.attach(&opt.iface, XdpFlags::default())
-            .context("failed to attach the XDP program with default flags - "
-                     "try changing XdpFlags::default() to "
-                     "XdpFlags::SKB_MODE")?;
+    blocklist.insert(block_addr, 0, 0)?;
 
-        let mut blocklist: HashMap<_, u32, u32> =
-            HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
+    info!("Waiting for Ctrl-C...");
+    signal::ctrl_c().await?;
+    info!("Exiting...");
 
-        let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
-
-        blocklist.insert(block_addr, 0, 0)?;
-
-        info!("Waiting for Ctrl-C...");
-        signal::ctrl_c().await?;
-        info!("Exiting...");
-
-        Ok(())
-    }
-    ```
+    Ok(())
+}
+```
 
 ### Running our program
 
 Now that we have all the pieces for our eBPF program, we can run it using:
 
-    ```console
-    RUST_LOG=info cargo xtask run
-    ```
+```console
+RUST_LOG=info cargo xtask run
+```
 
 or
 
-    ```console
-    RUST_LOG=info cargo xtask run -- --iface <interface>
-    ```
+```console
+RUST_LOG=info cargo xtask run -- --iface <interface>
+```
 
 if you want to provide another network interface name. note that you can also
 use `cargo xtask run` without the rest, but you won't get any logging.

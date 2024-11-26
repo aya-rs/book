@@ -18,30 +18,30 @@ bindings for specific kernel structures.
 
 It can be installed with the following commands:
 
-    ```console
-    $ cargo install bindgen-cli
-    $ cargo install --git https://github.com/aya-rs/aya -- aya-tool
-    ```
+```console
+cargo install bindgen-cli
+cargo install --git https://github.com/aya-rs/aya -- aya-tool
+```
 
 Ensure that you have `bpftool` and `bindgen` installed in your system,
 `aya-tool` is not going to work without it.
 
 The syntax of the command is:
 
-    ```console
-    $ aya-tool
-    aya-tool
+```console
+$ aya-tool
+aya-tool
 
-    USAGE:
-        aya-tool <SUBCOMMAND>
+USAGE:
+    aya-tool <SUBCOMMAND>
 
-    OPTIONS:
-        -h, --help    Print help information
+OPTIONS:
+    -h, --help    Print help information
 
-    SUBCOMMANDS:
-        generate    Generate Rust bindings to Kernel types using bpftool
-        help        Print this message or the help of the given subcommand(s)
-    ```
+SUBCOMMANDS:
+    generate    Generate Rust bindings to Kernel types using bpftool
+    help        Print this message or the help of the given subcommand(s)
+```
 
 Let's assume that we want to generate Rust definition of
 [task_struct][task-struct]. Let's also assume that your project is called
@@ -49,9 +49,9 @@ Let's assume that we want to generate Rust definition of
 `myapp-ebpf`. We need to generate the bindings for the eBPF part, which can be
 done with:
 
-    ```console
-    $ aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
-    ```
+```console
+aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
+```
 
 !!! tip "Generating for multiple types"
 
@@ -64,9 +64,9 @@ done with:
 Then we can use `vmlinux` as a module with `mod vmlinux` in our eBPF program,
 like here:
 
-    ```rust linenums="1" title="myapp-ebpf/src/main.rs"
-    --8<-- "examples/aya-tool/myapp-ebpf/src/main.rs"
-    ```
+```rust linenums="1" title="myapp-ebpf/src/main.rs"
+--8<-- "examples/aya-tool/myapp-ebpf/src/main.rs"
+```
 
 ## Portability and different kernel versions
 

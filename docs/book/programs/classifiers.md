@@ -57,9 +57,9 @@ Classifier programs and qdisc filters.
 
 Here's how the eBPF code looks like:
 
-    ```rust linenums="1" title="tc-egress-ebpf/src/main.rs"
-    --8<-- "examples/tc-egress/tc-egress-ebpf/src/main.rs"
-    ```
+  ```rust linenums="1" title="tc-egress-ebpf/src/main.rs"
+  --8<-- "examples/tc-egress/tc-egress-ebpf/src/main.rs"
+  ```
 
 1. Create our map.
 1. Check if we should allow or deny our packet.
@@ -74,9 +74,9 @@ In this example, we'll block all egress traffic going to `1.1.1.1`.
 
 Here's how the code looks like:
 
-    ```rust linenums="1" title="tc-egress/src/main.rs"
-    --8<-- "examples/tc-egress/tc-egress/src/main.rs"
-    ```
+  ```rust linenums="1" title="tc-egress/src/main.rs"
+  --8<-- "examples/tc-egress/tc-egress/src/main.rs"
+  ```
 
 1. Get a reference to the map.
 1. Create an IPv4Addr.
@@ -90,16 +90,16 @@ is an appropriate type to use in eBPF maps.
 
 ## Running the program
 
-    ```console
-    $ RUST_LOG=info cargo xtask run
-    LOG: SRC 1.1.1.1, ACTION 2
-    LOG: SRC 35.186.224.47, ACTION 3
-    LOG: SRC 35.186.224.47, ACTION 3
-    LOG: SRC 1.1.1.1, ACTION 2
-    LOG: SRC 168.100.68.32, ACTION 3
-    LOG: SRC 168.100.68.239, ACTION 3
-    LOG: SRC 168.100.68.32, ACTION 3
-    LOG: SRC 168.100.68.239, ACTION 3
-    LOG: SRC 1.1.1.1, ACTION 2
-    LOG: SRC 13.248.212.111, ACTION 3
-    ```
+  ```console
+  $ RUST_LOG=info cargo xtask run
+  LOG: SRC 1.1.1.1, ACTION 2
+  LOG: SRC 35.186.224.47, ACTION 3
+  LOG: SRC 35.186.224.47, ACTION 3
+  LOG: SRC 1.1.1.1, ACTION 2
+  LOG: SRC 168.100.68.32, ACTION 3
+  LOG: SRC 168.100.68.239, ACTION 3
+  LOG: SRC 168.100.68.32, ACTION 3
+  LOG: SRC 168.100.68.239, ACTION 3
+  LOG: SRC 1.1.1.1, ACTION 2
+  LOG: SRC 13.248.212.111, ACTION 3
+  ```

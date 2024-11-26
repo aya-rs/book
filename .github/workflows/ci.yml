@@ -26,6 +26,7 @@ jobs:
 
       - uses: DavidAnson/markdownlint-cli2-action@v18
         with:
+          config: .markdownlint.json
           globs: '**/*.md'
 
       - uses: dtolnay/rust-toolchain@nightly

@@ -23,9 +23,9 @@ This is a minimal generated XDP program that permits all traffic.
 The logic for this program is located in `xdp-hello-ebpf/src/main.rs` and
 currently looks like this:
 
-    ```rust linenums="1" title="xdp-hello-ebpf/src/main.rs"
-    --8<-- "examples/xdp-hello/xdp-hello-ebpf/src/main.rs"
-    ```
+```rust linenums="1" title="xdp-hello-ebpf/src/main.rs"
+--8<-- "examples/xdp-hello/xdp-hello-ebpf/src/main.rs"
+```
 
 1. `#![no_std]` is required since we cannot use the standard library.
 1. `#![no_main]` is required as we have no main function.
@@ -45,61 +45,61 @@ Let's take a look at the compiled eBPF program:
 
 <!-- markdownlint-disable MD010 -->
 
-    ```console
-    $ llvm-objdump -S target/bpfel-unknown-none/debug/xdp-hello
+```console
+$ llvm-objdump -S target/bpfel-unknown-none/debug/xdp-hello
 
-    target/bpfel-unknown-none/debug/xdp-hello:	file format elf64-bpf
+target/bpfel-unknown-none/debug/xdp-hello:	file format elf64-bpf
 
-    Disassembly of section .text:
+Disassembly of section .text:
 
-    0000000000000000 <memset>:
-           0:	15 03 06 00 00 00 00 00	if r3 == 0 goto +6 <LBB1_3>
-           1:	b7 04 00 00 00 00 00 00	r4 = 0
+0000000000000000 <memset>:
+        0:	15 03 06 00 00 00 00 00	if r3 == 0 goto +6 <LBB1_3>
+        1:	b7 04 00 00 00 00 00 00	r4 = 0
 
-    0000000000000010 <LBB1_2>:
-           2:	bf 15 00 00 00 00 00 00	r5 = r1
-           3:	0f 45 00 00 00 00 00 00	r5 += r4
-           4:	73 25 00 00 00 00 00 00	*(u8 *)(r5 + 0) = r2
-           5:	07 04 00 00 01 00 00 00	r4 += 1
-           6:	2d 43 fb ff 00 00 00 00	if r3 > r4 goto -5 <LBB1_2>
+0000000000000010 <LBB1_2>:
+        2:	bf 15 00 00 00 00 00 00	r5 = r1
+        3:	0f 45 00 00 00 00 00 00	r5 += r4
+        4:	73 25 00 00 00 00 00 00	*(u8 *)(r5 + 0) = r2
+        5:	07 04 00 00 01 00 00 00	r4 += 1
+        6:	2d 43 fb ff 00 00 00 00	if r3 > r4 goto -5 <LBB1_2>
 
-    0000000000000038 <LBB1_3>:
-           7:	95 00 00 00 00 00 00 00	exit
+0000000000000038 <LBB1_3>:
+        7:	95 00 00 00 00 00 00 00	exit
 
-    0000000000000040 <memcpy>:
-           8:	15 03 09 00 00 00 00 00	if r3 == 0 goto +9 <LBB2_3>
-           9:	b7 04 00 00 00 00 00 00	r4 = 0
+0000000000000040 <memcpy>:
+        8:	15 03 09 00 00 00 00 00	if r3 == 0 goto +9 <LBB2_3>
+        9:	b7 04 00 00 00 00 00 00	r4 = 0
 
-    0000000000000050 <LBB2_2>:
-          10:	bf 15 00 00 00 00 00 00	r5 = r1
-          11:	0f 45 00 00 00 00 00 00	r5 += r4
-          12:	bf 20 00 00 00 00 00 00	r0 = r2
-          13:	0f 40 00 00 00 00 00 00	r0 += r4
-          14:	71 00 00 00 00 00 00 00	r0 = *(u8 *)(r0 + 0)
-          15:	73 05 00 00 00 00 00 00	*(u8 *)(r5 + 0) = r0
-          16:	07 04 00 00 01 00 00 00	r4 += 1
-          17:	2d 43 f8 ff 00 00 00 00	if r3 > r4 goto -8 <LBB2_2>
+0000000000000050 <LBB2_2>:
+        10:	bf 15 00 00 00 00 00 00	r5 = r1
+        11:	0f 45 00 00 00 00 00 00	r5 += r4
+        12:	bf 20 00 00 00 00 00 00	r0 = r2
+        13:	0f 40 00 00 00 00 00 00	r0 += r4
+        14:	71 00 00 00 00 00 00 00	r0 = *(u8 *)(r0 + 0)
+        15:	73 05 00 00 00 00 00 00	*(u8 *)(r5 + 0) = r0
+        16:	07 04 00 00 01 00 00 00	r4 += 1
+        17:	2d 43 f8 ff 00 00 00 00	if r3 > r4 goto -8 <LBB2_2>
 
-    0000000000000090 <LBB2_3>:
-          18:	95 00 00 00 00 00 00 00	exit
+0000000000000090 <LBB2_3>:
+        18:	95 00 00 00 00 00 00 00	exit
 
-    Disassembly of section xdp/xdp_hello:
+Disassembly of section xdp/xdp_hello:
 
-    0000000000000000 <xdp_hello>:
-           0:	bf 16 00 00 00 00 00 00	r6 = r1
-           1:	b7 07 00 00 00 00 00 00	r7 = 0
-           2:	63 7a fc ff 00 00 00 00	*(u32 *)(r10 - 4) = r7
-           3:	bf a2 00 00 00 00 00 00	r2 = r10
-    :
-         245:	18 03 00 00 ff ff ff ff 00 00 00 00 00 00 00 00	r3 = 4294967295 ll
-         247:	bf 04 00 00 00 00 00 00	r4 = r0
-         248:	b7 05 00 00 aa 00 00 00	r5 = 170
-         249:	85 00 00 00 19 00 00 00	call 25
+0000000000000000 <xdp_hello>:
+        0:	bf 16 00 00 00 00 00 00	r6 = r1
+        1:	b7 07 00 00 00 00 00 00	r7 = 0
+        2:	63 7a fc ff 00 00 00 00	*(u32 *)(r10 - 4) = r7
+        3:	bf a2 00 00 00 00 00 00	r2 = r10
+:
+        245:	18 03 00 00 ff ff ff ff 00 00 00 00 00 00 00 00	r3 = 4294967295 ll
+        247:	bf 04 00 00 00 00 00 00	r4 = r0
+        248:	b7 05 00 00 aa 00 00 00	r5 = 170
+        249:	85 00 00 00 19 00 00 00	call 25
 
-    00000000000007d0 <LBB0_2>:
-         250:	b7 00 00 00 02 00 00 00	r0 = 2
-         251:	95 00 00 00 00 00 00 00	exit
-    ```
+00000000000007d0 <LBB0_2>:
+        250:	b7 00 00 00 02 00 00 00	r0 = 2
+        251:	95 00 00 00 00 00 00 00	exit
+```
 
 <!-- markdownlint-enable MD010 -->
 
@@ -121,9 +121,9 @@ program ready in `xdp-hello/src/main.rs` which is going to do that for us.
 
 Let's look at the details of our generated user-space application:
 
-    ```rust linenums="1" title="xdp-hello/src/main.rs"
-    --8<-- "examples/xdp-hello/xdp-hello/src/main.rs"
-    ```
+```rust linenums="1" title="xdp-hello/src/main.rs"
+--8<-- "examples/xdp-hello/xdp-hello/src/main.rs"
+```
 
 1. `tokio` is the async library we're using, which provides our
    [Ctrl-C handler][ctrl-c-handler]. It will come in useful later as we expand
@@ -141,22 +141,22 @@ Let's look at the details of our generated user-space application:
 
 Let's try it out!
 
-    ```console
-    $ cargo xtask run -- -h
-        Finished dev [unoptimized + debuginfo] target(s) in 0.05s
-         Running `target/debug/xtask run -- -h`
-    :
-        Finished dev [optimized] target(s) in 0.90s
-        Finished dev [unoptimized + debuginfo] target(s) in 0.60s
-    xdp-hello
+```console
+$ cargo xtask run -- -h
+    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
+        Running `target/debug/xtask run -- -h`
+:
+    Finished dev [optimized] target(s) in 0.90s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.60s
+xdp-hello
 
-    USAGE:
-        xdp-hello [OPTIONS]
+USAGE:
+    xdp-hello [OPTIONS]
 
-    OPTIONS:
-        -h, --help             Print help information
-        -i, --iface <IFACE>    [default: eth0]
-    ```
+OPTIONS:
+    -h, --help             Print help information
+    -i, --iface <IFACE>    [default: eth0]
+```
 
 !!! note "Interface Name"
 
@@ -165,15 +165,15 @@ Let's try it out!
     `RUST_LOG=info cargo xtask run -- --iface wlp2s0`, where  `wlp2s0` is your
     interface.
 
-    ```console
-    $ RUST_LOG=info cargo xtask run
-    [2022-12-21T18:03:09Z INFO  xdp_hello] Waiting for Ctrl-C...
-    [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
-    [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
-    [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
-    [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
-    ^C[2022-12-21T18:03:11Z INFO  xdp_hello] Exiting...
-    ```
+```console
+$ RUST_LOG=info cargo xtask run
+[2022-12-21T18:03:09Z INFO  xdp_hello] Waiting for Ctrl-C...
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+[2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
+^C[2022-12-21T18:03:11Z INFO  xdp_hello] Exiting...
+```
 
 So everytime a packet was received on the interface, a log was printed!
 
@@ -190,12 +190,12 @@ On exit, Aya takes care of detaching the program for us.
 If you issue the `sudo bpftool prog list` command when `xdp_hello` is running
 you can verify that it is loaded:
 
-    ```console
-    958: xdp  name xdp_hello  tag 0137ce4fce70b467  gpl
-      loaded_at 2022-06-23T13:55:28-0400  uid 0
-      xlated 2016B  jited 1138B  memlock 4096B  map_ids 275,274,273
-      pids xdp-hello(131677)
-    ```
+```console
+958: xdp  name xdp_hello  tag 0137ce4fce70b467  gpl
+    loaded_at 2022-06-23T13:55:28-0400  uid 0
+    xlated 2016B  jited 1138B  memlock 4096B  map_ids 275,274,273
+    pids xdp-hello(131677)
+```
 
 Running the command again once `xdp_hello` has exited will show that the
 program is no longer running.
