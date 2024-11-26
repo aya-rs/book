@@ -1,3 +1,10 @@
 [workspace]
 members = ["xtask", "myapp", "myapp-common", "myapp-ebpf"]
+
+resolver = "2"
+
 default-members = ["xtask", "myapp", "myapp-common"]
+
+[profile.release.package.myapp-ebpf]
+debug = 2
+codegen-units = 1

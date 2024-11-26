@@ -11,6 +11,3 @@ lsm-nice-common = { path = "../lsm-nice-common" }
 [[bin]]
 name = "lsm-nice"
 path = "src/main.rs"
-
-[profile.release]
-panic = "abort"

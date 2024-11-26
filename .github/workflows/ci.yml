@@ -28,16 +28,14 @@ jobs:
         with:
           globs: '**/*.md'
 
-      - name: Install latest stable
-        uses: dtolnay/rust-toolchain@master
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt,rust-src
+
+      # Installed *after* nightly so it is the default.
+      - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-
-      - name: Install latest nightly
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: nightly
-          components: rust-src
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -67,11 +65,5 @@ jobs:
         run: mkdocs build
 
       - name: Check Examples
-        run: |
-          for dir in ./examples/*/ ; do
-            pushd "${dir}"
-            echo "Example: ${dir}."
-            cargo xtask build-ebpf --release
-            cargo build --release
-            popd
-          done
+        working-directory: examples
+        run: ./test.sh

@@ -1,3 +1,11 @@
 [workspace]
 members = ["xtask", "lsm-nice", "lsm-nice-common", "lsm-nice-ebpf"]
+
+resolver = "2"
+
 default-members = ["xtask", "lsm-nice", "lsm-nice-common"]
+
+
+[profile.release.package.lsm-nice-ebpf]
+debug = 2
+codegen-units = 1

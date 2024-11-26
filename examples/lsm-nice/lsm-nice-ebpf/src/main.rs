@@ -5,10 +5,12 @@ use aya_ebpf::{cty::c_int, macros::lsm, programs::LsmContext};
 use aya_log_ebpf::info;
 
 // (1)
-#[allow(non_upper_case_globals)]
-#[allow(non_snake_case)]
-#[allow(non_camel_case_types)]
+#[allow(clippy::all)]
 #[allow(dead_code)]
+#[allow(non_camel_case_types)]
+#[allow(non_snake_case)]
+#[allow(non_upper_case_globals)]
+#[rustfmt::skip]
 mod vmlinux;
 
 use vmlinux::task_struct;

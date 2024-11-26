@@ -3,9 +3,9 @@ use aya::{
     include_bytes_aligned,
     maps::HashMap,
     programs::{Xdp, XdpFlags},
-    Bpf,
+    Ebpf,
 };
-use aya_log::BpfLogger;
+use aya_log::EbpfLogger;
 use clap::Parser;
 use log::{info, warn};
 use std::net::Ipv4Addr;
@@ -26,16 +26,16 @@ async fn main() -> Result<(), anyhow::Error> {
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
-    // reach for `Bpf::load_file` instead.
+    // reach for `Ebpf::load_file` instead.
     #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/xdp-drop"
     ))?;
     #[cfg(not(debug_assertions))]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
+    let mut bpf = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/xdp-drop"
     ))?;
-    if let Err(e) = BpfLogger::init(&mut bpf) {
+    if let Err(e) = EbpfLogger::init(&mut bpf) {
         // This can happen if you remove all log statements from your eBPF program.
         warn!("failed to initialize eBPF logger: {}", e);
     }
@@ -50,7 +50,7 @@ async fn main() -> Result<(), anyhow::Error> {
         HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
 
     // (2)
-    let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
+    let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
 
     // (3)
     blocklist.insert(block_addr, 0, 0)?;

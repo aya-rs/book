@@ -1,3 +1,11 @@
 [workspace]
 members = ["xtask", "kprobetcp", "kprobetcp-common", "kprobetcp-ebpf"]
+
+resolver = "2"
+
 default-members = ["xtask", "kprobetcp", "kprobetcp-common"]
+
+
+[profile.release.package.kprobetcp-ebpf]
+debug = 2
+codegen-units = 1
