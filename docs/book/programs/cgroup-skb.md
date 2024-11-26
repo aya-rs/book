@@ -40,9 +40,9 @@ represents the IP protocol header. We need to generate Rust bindings to it.
 
 First, we must make sure that `bindgen` is installed.
 
-    ```sh
-    cargo install bindgen-cli
-    ```
+```sh
+cargo install bindgen-cli
+```
 
 Let's use `xtask` to automate the process of generating bindings so we can
 easily reproduce it in the future by adding the following code:
@@ -77,9 +77,9 @@ by returning `0`. Otherwise, we are going to accept it by returning `1`.
 
 Here's how the eBPF code looks like:
 
-    ```rust linenums="1" title="cgroup-skb-egress-ebpf/src/main.rs"
-    --8<-- "examples/cgroup-skb-egress/cgroup-skb-egress-ebpf/src/main.rs"
-    ```
+```rust linenums="1" title="cgroup-skb-egress-ebpf/src/main.rs"
+--8<-- "examples/cgroup-skb-egress/cgroup-skb-egress-ebpf/src/main.rs"
+```
 
 1. Create our map.
 1. Check if we should allow or deny our packet.
@@ -94,9 +94,9 @@ In this example, we'll block all egress traffic going to `1.1.1.1`.
 
 Here's how the code looks like:
 
-    ```rust linenums="1" title="cgroup-skb-egress/src/main.rs"
-    --8<-- "examples/cgroup-skb-egress/cgroup-skb-egress/src/main.rs"
-    ```
+```rust linenums="1" title="cgroup-skb-egress/src/main.rs"
+--8<-- "examples/cgroup-skb-egress/cgroup-skb-egress/src/main.rs"
+```
 
 1. Loading the eBPF program.
 1. Attaching it to the given cgroup.
@@ -112,60 +112,60 @@ is an appropriate type to use in eBPF maps.
 
 First, check where cgroups v2 are mounted:
 
-    ```console
-    $ mount | grep cgroup2
-    cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot)
-    ```
+```console
+$ mount | grep cgroup2
+cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot)
+```
 
 The most common locations are either `/sys/fs/cgroup` or `/sys/fs/cgroup/unified`.
 
 Inside that location, we need to create our new cgroup (as root):
 
-    ```console
-    # mkdir /sys/fs/cgroup/foo
-    ```
+```console
+# mkdir /sys/fs/cgroup/foo
+```
 
 Then run the program with:
 
-    ```console
-    RUST_LOG=info cargo xtask run
-    ```
+```console
+RUST_LOG=info cargo xtask run
+```
 
 And then, in a separate terminal, as root, try to access `1.1.1.1`:
 
-    ```console
-    # bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl 1.1.1.1"
-    ```
+```console
+# bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl 1.1.1.1"
+```
 
 That command should hang and the logs of our program should look like:
 
-    ```console
-    LOG: DST 1.1.1.1, ACTION 0
-    LOG: DST 1.1.1.1, ACTION 0
-    ```
+```console
+LOG: DST 1.1.1.1, ACTION 0
+LOG: DST 1.1.1.1, ACTION 0
+```
 
 On the other hand, accessing any other address should be successful, for
 example:
 
-    ```console
-    # bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl google.com"
-    <HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
-    <TITLE>301 Moved</TITLE></HEAD><BODY>
-    <H1>301 Moved</H1>
-    The document has moved
-    <A HREF="http://www.google.com/">here</A>.
-    </BODY></HTML>
-    ```
+```console
+# bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl google.com"
+<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>301 Moved</TITLE></HEAD><BODY>
+<H1>301 Moved</H1>
+The document has moved
+<A HREF="http://www.google.com/">here</A>.
+</BODY></HTML>
+```
 
 And should result in the following logs:
 
-    ```console
-    LOG: DST 192.168.88.10, ACTION 1
-    LOG: DST 192.168.88.10, ACTION 1
-    LOG: DST 172.217.19.78, ACTION 1
-    LOG: DST 172.217.19.78, ACTION 1
-    LOG: DST 172.217.19.78, ACTION 1
-    LOG: DST 172.217.19.78, ACTION 1
-    LOG: DST 172.217.19.78, ACTION 1
-    LOG: DST 172.217.19.78, ACTION 1
-    ```
+```console
+LOG: DST 192.168.88.10, ACTION 1
+LOG: DST 192.168.88.10, ACTION 1
+LOG: DST 172.217.19.78, ACTION 1
+LOG: DST 172.217.19.78, ACTION 1
+LOG: DST 172.217.19.78, ACTION 1
+LOG: DST 172.217.19.78, ACTION 1
+LOG: DST 172.217.19.78, ACTION 1
+LOG: DST 172.217.19.78, ACTION 1
+```
