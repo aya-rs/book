@@ -1,3 +1,15 @@
 [workspace]
-members = ["xtask", "cgroup-skb-egress", "cgroup-skb-egress-common", "cgroup-skb-egress-ebpf"]
+members = [
+  "xtask",
+  "cgroup-skb-egress",
+  "cgroup-skb-egress-common",
+  "cgroup-skb-egress-ebpf",
+]
+
+resolver = "2"
+
 default-members = ["xtask", "cgroup-skb-egress", "cgroup-skb-egress-common"]
+
+[profile.release.package.cgroup-skb-egress-ebpf]
+debug = 2
+codegen-units = 1

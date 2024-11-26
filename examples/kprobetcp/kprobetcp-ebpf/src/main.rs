@@ -1,10 +1,12 @@
 #![no_std]
 #![no_main]
 
+#[allow(clippy::all)]
 #[allow(non_upper_case_globals)]
 #[allow(non_snake_case)]
 #[allow(non_camel_case_types)]
 #[allow(dead_code)]
+#[rustfmt::skip]
 mod binding;
 
 use crate::binding::{sock, sock_common};
@@ -21,10 +23,7 @@ const AF_INET6: u16 = 10;
 pub fn kprobetcp(ctx: ProbeContext) -> u32 {
     match try_kprobetcp(ctx) {
         Ok(ret) => ret,
-        Err(ret) => match ret.try_into() {
-            Ok(rt) => rt,
-            Err(_) => 1,
-        },
+        Err(ret) => ret.try_into().unwrap_or(1),
     }
 }
 
@@ -32,8 +31,7 @@ fn try_kprobetcp(ctx: ProbeContext) -> Result<u32, i64> {
     let sock: *mut sock = ctx.arg(0).ok_or(1i64)?;
     let sk_common = unsafe {
         bpf_probe_read_kernel(&(*sock).__sk_common as *const sock_common)
-            .map_err(|e| e)?
-    };
+    }?;
     match sk_common.skc_family {
         AF_INET => {
             let src_addr = u32::from_be(unsafe {

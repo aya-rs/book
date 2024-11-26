@@ -1,3 +1,11 @@
 [workspace]
 members = ["xtask", "tc-egress", "tc-egress-common", "tc-egress-ebpf"]
+
+resolver = "2"
+
 default-members = ["xtask", "tc-egress", "tc-egress-common"]
+
+
+[profile.release.package.tc-egress-ebpf]
+debug = 2
+codegen-units = 1

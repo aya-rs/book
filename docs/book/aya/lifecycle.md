@@ -12,7 +12,7 @@ use aya::programs::{Xdp, XdpFlags};
 fn main() {
     {
         // (1)
-        let mut bpf = Bpf::load_file("bpf.o"))?;
+        let mut bpf = Ebpf::load_file("bpf.o"))?;
 
         let program: &mut Xdp = bpf.program_mut("xdp").unwrap().try_into().unwrap();
         // (2)

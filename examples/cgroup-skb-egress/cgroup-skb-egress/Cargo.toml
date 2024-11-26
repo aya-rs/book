@@ -8,18 +8,18 @@ publish = false
 aya = { git = "https://github.com/aya-rs/aya", features = ["async_tokio"] }
 aya-log = { git = "https://github.com/aya-rs/aya" }
 cgroup-skb-egress-common = { path = "../cgroup-skb-egress-common", features = [
-    "user",
+  "user",
 ] }
 anyhow = "1"
 clap = { version = "4.1", features = ["derive"] }
 env_logger = "0.11"
 log = "0.4"
 tokio = { version = "1.25", features = [
-    "macros",
-    "rt",
-    "rt-multi-thread",
-    "net",
-    "signal",
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "net",
+  "signal",
 ] }
 bytes = "1"
 

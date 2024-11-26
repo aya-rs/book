@@ -133,7 +133,7 @@ Let's look at the details of our generated user-space application:
 1. Here's our main entry point
 1. `include_bytes_aligned!()` copies the contents of the BPF ELF object file at
    the compile time
-1. `Bpf::load()` reads the BPF ELF object file contents from the output of the
+1. `Ebpf::load()` reads the BPF ELF object file contents from the output of the
    previous command, creates any maps, performs BTF relocations
 1. We extract the XDP program
 1. And then load it in to the kernel

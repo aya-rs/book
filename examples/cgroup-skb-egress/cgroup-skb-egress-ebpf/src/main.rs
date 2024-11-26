@@ -10,10 +10,12 @@ use memoffset::offset_of;
 
 use cgroup_skb_egress_common::PacketLog;
 
+#[allow(clippy::all)]
 #[allow(non_upper_case_globals)]
 #[allow(non_snake_case)]
 #[allow(non_camel_case_types)]
 #[allow(dead_code)]
+#[rustfmt::skip]
 mod bindings;
 use bindings::iphdr;
 
@@ -25,10 +27,7 @@ static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
 
 #[cgroup_skb]
 pub fn cgroup_skb_egress(ctx: SkBuffContext) -> i32 {
-    match { try_cgroup_skb_egress(ctx) } {
-        Ok(ret) => ret,
-        Err(_) => 0,
-    }
+    try_cgroup_skb_egress(ctx).unwrap_or(0)
 }
 
 // (2)
@@ -49,7 +48,7 @@ fn try_cgroup_skb_egress(ctx: SkBuffContext) -> Result<i32, i64> {
 
     let log_entry = PacketLog {
         ipv4_address: destination,
-        action: action,
+        action,
     };
     EVENTS.output(&ctx, &log_entry, 0);
     Ok(action)

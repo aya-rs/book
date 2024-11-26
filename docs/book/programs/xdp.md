@@ -505,7 +505,7 @@ provide our network interface name.
         let mut blocklist: HashMap<_, u32, u32> =
             HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
 
-        let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
+        let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
 
         blocklist.insert(block_addr, 0, 0)?;
 
@@ -599,7 +599,7 @@ The program awaits the `CTRL+C` signal asynchronously using
         let mut blocklist: HashMap<_, u32, u32> =
             HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
 
-        let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).try_into()?;
+        let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
 
         blocklist.insert(block_addr, 0, 0)?;
 

@@ -42,23 +42,14 @@ pub struct Options {
 pub fn build_ebpf(opts: Options) -> Result<(), anyhow::Error> {
     let dir = PathBuf::from("xdp-hello-ebpf");
     let target = format!("--target={}", opts.target);
-    let mut args = vec![
-        "build",
-        target.as_str(),
-        "-Z",
-        "build-std=core",
-    ];
+    let mut args = vec!["build", target.as_str(), "-Z", "build-std=core"];
     if opts.release {
         args.push("--release")
     }
 
-    // Command::new creates a child process which inherits all env variables. This means env
-    // vars set by the cargo xtask command are also inherited. RUSTUP_TOOLCHAIN is removed
-    // so the rust-toolchain.toml file in the -ebpf folder is honored.
-
     let status = Command::new("cargo")
+        .arg("+nightly")
         .current_dir(&dir)
-        .env_remove("RUSTUP_TOOLCHAIN")
         .args(&args)
         .status()
         .expect("failed to build bpf program");

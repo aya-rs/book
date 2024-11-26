@@ -1,3 +1,10 @@
 [workspace]
 members = ["xtask", "xdp-hello", "xdp-hello-common", "xdp-hello-ebpf"]
+
+resolver = "2"
+
 default-members = ["xtask", "xdp-hello", "xdp-hello-common"]
+
+[profile.release.package.xdp-hello-ebpf]
+debug = 2
+codegen-units = 1
