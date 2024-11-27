@@ -11,12 +11,9 @@ This book is a living document, and is updated continuously.
 
 ## Local Render
 
-    ```console
-    virtualenv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-    mkdocs serve
-    ```
+```console
+uv run mkdocs serve
+```
 
 ## License
 

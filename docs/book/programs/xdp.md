@@ -1,8 +1,7 @@
 # XDP
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/xdp-drop)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## What is XDP in eBPF?
 
@@ -128,8 +127,8 @@ We import the necessary dependencies:
 - `core::mem`: For memory manipulation
 - `network_types`: For Ethernet and IP header definitions
 
-!!! note "Important"
-    Make sure you add the `network_types` dependency in your `Cargo.toml`.
+> [!IMPORTANT]
+> Make sure you add the `network_types` dependency in your `Cargo.toml`.
 
 Here's how the code looks:
 
@@ -413,16 +412,15 @@ human-readable and can be easily converted to a u32.
 
 We'll block all traffic originating from `1.1.1.1` in this example.
 
-!!! note "Endianness"
-
-    IP addresses are always encoded in network byte order (big endian) within
-    packets. In our eBPF program, before checking the blocklist, we convert them
-    to host endian using `u32::from_be`. Therefore it's correct to write our IP
-    addresses in host endian format from userspace.
-
-    The other approach would work too: we could convert IPs to network endian
-    when inserting from userspace, and then we wouldn't need to convert when
-    indexing from the eBPF program.
+> [!NOTE] Endianness
+> IP addresses are always encoded in network byte order (big endian) within
+> packets. In our eBPF program, before checking the blocklist, we convert them
+> to host endian using `u32::from_be`. Therefore it's correct to write our IP
+> addresses in host endian format from userspace.
+>
+> The other approach would work too: we could convert IPs to network endian
+> when inserting from userspace, and then we wouldn't need to convert when
+> indexing from the eBPF program.
 
 Let's begin with writing the user-space code:
 
@@ -455,11 +453,11 @@ we use for informational and warning messages
 - `tokio::signal`: For handling signals asynchronously, see
   [this link][tokio-signal] for more information
 
-!!! note
-    `aya::Bpf` is deprecated since version `0.13.0` and `aya_log:BpfLogger`
-    since `0.2.1`. Use [`aya::Ebpf`][aya-ebpf] and
-    [`aya_log:EbpfLogger`][aya-ebpf-logger] instead if you are using the more
-    recent versions.
+> [!NOTE]
+> `aya::Bpf` is deprecated since version `0.13.0` and `aya_log:BpfLogger`
+> since `0.2.1`. Use [`aya::Ebpf`][aya-ebpf] and
+> [`aya_log:EbpfLogger`][aya-ebpf-logger] instead if you are using the more
+> recent versions.
 
 #### Defining command-line arguments
 
@@ -628,6 +626,7 @@ RUST_LOG=info cargo xtask run -- --iface <interface>
 if you want to provide another network interface name. note that you can also
 use `cargo xtask run` without the rest, but you won't get any logging.
 
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/xdp-drop
 [af-xdp]: https://www.kernel.org/doc/html/latest/networking/af_xdp.html
 [kernel-documentation]: https://www.kernel.org/doc/html/latest/networking/af_xdp.html
 [cilium-xdp]: https://docs.cilium.io/en/latest/bpf/progtypes/#xdp

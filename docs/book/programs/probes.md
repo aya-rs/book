@@ -1,9 +1,7 @@
 # Probes
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available
-    [here](https://github.com/aya-rs/book/tree/main/examples/kprobetcp).
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## What are the probes in eBPF?
 
@@ -67,5 +65,6 @@ $ RUST_LOG=info cargo xtask run --release
 
 <!-- markdownlint-enable MD013 -->
 
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/kprobetcp
 [kernel-docs]: https://docs.kernel.org/trace/kprobes.html
 [tcp-connect]: https://elixir.bootlin.com/linux/latest/source/net/ipv4/tcp_output.c#L3837

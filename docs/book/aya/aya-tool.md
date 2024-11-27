@@ -1,9 +1,7 @@
 # Using aya-tool
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available
-    [here](https://github.com/aya-rs/book/tree/main/examples/aya-tool)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 Very often you will need to use type definitions that your running Linux kernel
 uses in its source code. For example, you might need a definition of
@@ -53,13 +51,14 @@ done with:
 aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
 ```
 
-!!! tip "Generating for multiple types"
-
-    You can also specify multiple types to generate, for example:
-    ```console
-    $ aya-tool generate task_struct dentry > vmlinux.rs
-    ```
-    But in the following example, we will focus only on `task_struct`.
+> [!TIP] Generating for multiple types
+> You can also specify multiple types to generate, for example:
+>
+> ```console
+> aya-tool generate task_struct dentry > vmlinux.rs
+> ```
+>
+> But in the following example, we will focus only on `task_struct`.
 
 Then we can use `vmlinux` as a module with `mod vmlinux` in our eBPF program,
 like here:
@@ -77,4 +76,5 @@ The structures are not simply generated from kernel headers. However, the
 target kernel (regardless of version) should have `CONFIG_DEBUG_INFO_BTF`
 option enabled.
 
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/aya-tool
 [task-struct]: https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723

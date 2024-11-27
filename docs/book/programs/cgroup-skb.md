@@ -1,8 +1,7 @@
 # Cgroup SKB
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/cgroup-skb-egress)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## What is Cgroup SKB?
 
@@ -47,6 +46,8 @@ cargo install bindgen-cli
 Let's use `xtask` to automate the process of generating bindings so we can
 easily reproduce it in the future by adding the following code:
 
+<!-- markdownlint-disable MD046 -->
+
 === "xtask/src/codegen.rs"
 
     ```rust linenums="1"
@@ -64,6 +65,8 @@ easily reproduce it in the future by adding the following code:
     ```rust linenums="1"
     --8<-- "examples/cgroup-skb-egress/xtask/src/main.rs"
     ```
+
+<!-- markdownlint-enable MD046 -->
 
 Once we've generated our file using `cargo xtask codegen` from the root of the
 project, we can access it by including `mod bindings` from eBPF code.
@@ -169,3 +172,5 @@ LOG: DST 172.217.19.78, ACTION 1
 LOG: DST 172.217.19.78, ACTION 1
 LOG: DST 172.217.19.78, ACTION 1
 ```
+
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/cgroup-skb-egress
