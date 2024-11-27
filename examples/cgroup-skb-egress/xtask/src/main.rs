@@ -1,9 +1,4 @@
-mod build_ebpf;
-mod codegen;
-mod run;
-
-use std::process::exit;
-
+use anyhow::{Context as _, Result};
 use clap::Parser;
 
 #[derive(Debug, Parser)]
@@ -14,23 +9,22 @@ pub struct Options {
 
 #[derive(Debug, Parser)]
 enum Command {
-    BuildEbpf(build_ebpf::Options),
-    Run(run::Options),
-    Codegen,
+    Codegen { output: std::path::PathBuf },
 }
 
-fn main() {
-    let opts = Options::parse();
-
-    use Command::*;
-    let ret = match opts.command {
-        BuildEbpf(opts) => build_ebpf::build_ebpf(opts),
-        Run(opts) => run::run(opts),
-        Codegen => codegen::generate(),
-    };
-
-    if let Err(e) = ret {
-        eprintln!("{e:#}");
-        exit(1);
+fn main() -> Result<()> {
+    match Parser::parse() {
+        Command::Codegen { output } => {
+            let bindings = aya_tool::generate(
+                aya_tool::generate::InputFile::Btf(std::path::PathBuf::from(
+                    "/sys/kernel/btf/vmlinux",
+                )),
+                &["iphdr"],
+                &[],
+            )
+            .context("generate")?;
+            std::fs::write(&output, &bindings).context("write")?;
+        }
     }
+    Ok(())
 }

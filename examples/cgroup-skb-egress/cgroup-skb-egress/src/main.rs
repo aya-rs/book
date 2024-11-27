@@ -1,11 +1,9 @@
 use std::net::Ipv4Addr;
 
 use aya::{
-    include_bytes_aligned,
     maps::{perf::AsyncPerfEventArray, HashMap},
     programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
-    Ebpf,
 };
 use bytes::BytesMut;
 use clap::Parser;
@@ -30,14 +28,10 @@ async fn main() -> Result<(), anyhow::Error> {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Ebpf::load_file` instead.
-    #[cfg(debug_assertions)]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/cgroup-skb-egress"
-    ))?;
-    #[cfg(not(debug_assertions))]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/cgroup-skb-egress"
-    ))?;
+    let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
+        env!("OUT_DIR"),
+        "/cgroup-skb-egress"
+    )))?;
     let program: &mut CgroupSkb =
         bpf.program_mut("cgroup_skb_egress").unwrap().try_into()?;
     let cgroup = std::fs::File::open(opt.cgroup_path)?;

@@ -9,6 +9,9 @@ aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 cgroup-skb-egress-common = { path = "../cgroup-skb-egress-common" }
 memoffset = "0.9"
 
+[build-dependencies]
+which = { version = "6.0.0", default-features = false }
+
 [[bin]]
 name = "cgroup-skb-egress"
 path = "src/main.rs"

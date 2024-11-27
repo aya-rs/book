@@ -48,12 +48,6 @@ easily reproduce it in the future by adding the following code:
 
 <!-- markdownlint-disable MD046 -->
 
-=== "xtask/src/codegen.rs"
-
-    ```rust linenums="1"
-    --8<-- "examples/cgroup-skb-egress/xtask/src/codegen.rs"
-    ```
-
 === "xtask/Cargo.toml"
 
     ```toml linenums="1"
@@ -68,8 +62,9 @@ easily reproduce it in the future by adding the following code:
 
 <!-- markdownlint-enable MD046 -->
 
-Once we've generated our file using `cargo xtask codegen` from the root of the
-project, we can access it by including `mod bindings` from eBPF code.
+Once we've generated our file using
+`cargo xtask codegen cgroup-skb-egress-ebpf/src/bindings.rs` we can access it by
+including `mod bindings` from eBPF code.
 
 ## eBPF code
 
@@ -131,7 +126,7 @@ mkdir /sys/fs/cgroup/foo
 Then run the program with:
 
 ```console
-RUST_LOG=info cargo xtask run
+RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 ```
 
 And then, in a separate terminal, as root, try to access `1.1.1.1`:

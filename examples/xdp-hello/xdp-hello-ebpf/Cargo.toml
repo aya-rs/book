@@ -8,6 +8,9 @@ aya-ebpf = { git = "https://github.com/aya-rs/aya" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 xdp-hello-common = { path = "../xdp-hello-common" }
 
+[build-dependencies]
+which = { version = "6.0.0", default-features = false }
+
 [[bin]]
 name = "xdp-hello"
 path = "src/main.rs"

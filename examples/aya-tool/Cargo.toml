@@ -1,9 +1,9 @@
 [workspace]
-members = ["xtask", "myapp", "myapp-common", "myapp-ebpf"]
+members = ["myapp", "myapp-common", "myapp-ebpf"]
 
 resolver = "2"
 
-default-members = ["xtask", "myapp", "myapp-common"]
+default-members = ["myapp", "myapp-common"]
 
 [profile.release.package.myapp-ebpf]
 debug = 2

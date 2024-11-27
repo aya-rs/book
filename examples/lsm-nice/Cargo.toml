@@ -1,9 +1,9 @@
 [workspace]
-members = ["xtask", "lsm-nice", "lsm-nice-common", "lsm-nice-ebpf"]
+members = ["lsm-nice", "lsm-nice-common", "lsm-nice-ebpf"]
 
 resolver = "2"
 
-default-members = ["xtask", "lsm-nice", "lsm-nice-common"]
+default-members = ["lsm-nice", "lsm-nice-common"]
 
 
 [profile.release.package.lsm-nice-ebpf]
