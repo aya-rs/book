@@ -1,9 +1,7 @@
 # Classifiers
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available
-    [here](https://github.com/aya-rs/book/tree/main/examples/tc-egress)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## What is Classifier in eBPF?
 
@@ -48,18 +46,17 @@ packet. Otherwise, we are going to **pipe** it with `TC_ACT_PIPE` action - which
 means allowing it on our side, but let the packet be inspected also by another
 Classifier programs and qdisc filters.
 
-!!! note "TC_ACT_OK"
-
-    There is also a possibility to allow the packet while bypassing the other
-    programs and filters - `TC_ACT_OK`. We recommend that option only if absolutely
-    sure that you want your program to have a precedence over the other programs
-    or filters.
+> [!NOTE] TC_ACT_OK
+> There is also a possibility to allow the packet while bypassing the other
+> programs and filters - `TC_ACT_OK`. We recommend that option only if absolutely
+> sure that you want your program to have a precedence over the other programs
+> or filters.
 
 Here's how the eBPF code looks like:
 
-  ```rust linenums="1" title="tc-egress-ebpf/src/main.rs"
-  --8<-- "examples/tc-egress/tc-egress-ebpf/src/main.rs"
-  ```
+```rust linenums="1" title="tc-egress-ebpf/src/main.rs"
+--8<-- "examples/tc-egress/tc-egress-ebpf/src/main.rs"
+```
 
 1. Create our map.
 1. Check if we should allow or deny our packet.
@@ -74,9 +71,9 @@ In this example, we'll block all egress traffic going to `1.1.1.1`.
 
 Here's how the code looks like:
 
-  ```rust linenums="1" title="tc-egress/src/main.rs"
-  --8<-- "examples/tc-egress/tc-egress/src/main.rs"
-  ```
+```rust linenums="1" title="tc-egress/src/main.rs"
+--8<-- "examples/tc-egress/tc-egress/src/main.rs"
+```
 
 1. Get a reference to the map.
 1. Create an IPv4Addr.
@@ -90,16 +87,18 @@ is an appropriate type to use in eBPF maps.
 
 ## Running the program
 
-  ```console
-  $ RUST_LOG=info cargo xtask run
-  LOG: SRC 1.1.1.1, ACTION 2
-  LOG: SRC 35.186.224.47, ACTION 3
-  LOG: SRC 35.186.224.47, ACTION 3
-  LOG: SRC 1.1.1.1, ACTION 2
-  LOG: SRC 168.100.68.32, ACTION 3
-  LOG: SRC 168.100.68.239, ACTION 3
-  LOG: SRC 168.100.68.32, ACTION 3
-  LOG: SRC 168.100.68.239, ACTION 3
-  LOG: SRC 1.1.1.1, ACTION 2
-  LOG: SRC 13.248.212.111, ACTION 3
-  ```
+```console
+$ RUST_LOG=info cargo xtask run
+LOG: SRC 1.1.1.1, ACTION 2
+LOG: SRC 35.186.224.47, ACTION 3
+LOG: SRC 35.186.224.47, ACTION 3
+LOG: SRC 1.1.1.1, ACTION 2
+LOG: SRC 168.100.68.32, ACTION 3
+LOG: SRC 168.100.68.239, ACTION 3
+LOG: SRC 168.100.68.32, ACTION 3
+LOG: SRC 168.100.68.239, ACTION 3
+LOG: SRC 1.1.1.1, ACTION 2
+LOG: SRC 13.248.212.111, ACTION 3
+```
+
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/tc-egress

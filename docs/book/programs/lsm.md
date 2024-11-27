@@ -1,9 +1,7 @@
 # LSM
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available
-    [here](https://github.com/aya-rs/book/tree/main/examples/lsm-nice)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## What is LSM
 
@@ -204,6 +202,7 @@ renice: failed to set priority for 587184 (process ID): Operation not permitted
 If doing that resulted in `Operation not permitted`, congratulations, your LSM
 eBPF program works!
 
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/lsm-nice
 [lsm-wikipedia]: https://en.wikipedia.org/wiki/Linux_Security_Modules
 [lsm-kernel-docs]: https://www.kernel.org/doc/html/latest/security/lsm.html
 [lsm-hook-defs]: https://github.com/torvalds/linux/blob/master/include/linux/lsm_hook_defs.h

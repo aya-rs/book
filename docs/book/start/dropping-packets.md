@@ -3,9 +3,8 @@
 In the previous chapter our XDP program just logged traffic. In this chapter
 we're going to extend it to allow the dropping of traffic.
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/xdp-drop)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## Design
 
@@ -47,16 +46,15 @@ In order to add the addresses to block, we first need to get a reference to the
 as it's human-readable and can be easily converted to a `u32`. We'll block all
 traffic originating from `1.1.1.1` in this example.
 
-!!! note "Endianness"
-
-    IP addresses are always encoded in network byte order (big endian) within
-    packets. In our eBPF program, before checking the blocklist, we convert them
-    to host endian using `u32::from_be`. Therefore it's correct to write our IP
-    addresses in host endian format from userspace.
-
-    The other approach would work too: we could convert IPs to network endian
-    when inserting from userspace, and then we wouldn't need to convert when
-    indexing from the eBPF program.
+> [!NOTE] Endianness
+> IP addresses are always encoded in network byte order (big endian) within
+> packets. In our eBPF program, before checking the blocklist, we convert them
+> to host endian using `u32::from_be`. Therefore it's correct to write our IP
+> addresses in host endian format from userspace.
+>
+> The other approach would work too: we could convert IPs to network endian
+> when inserting from userspace, and then we wouldn't need to convert when
+> indexing from the eBPF program.
 
 Here's how the userspace code looks:
 
@@ -82,3 +80,5 @@ $ RUST_LOG=info cargo xtask run
 [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
 [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 140.82.121.6, ACTION: 2
 ```
+
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/xdp-drop

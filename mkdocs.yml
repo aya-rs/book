@@ -87,6 +87,7 @@ nav:
     - community/index.md
     - Code of Conduct: community/code_of_conduct.md
 plugins:
+  - callouts
   - search
 
 copyright: Copyright &copy; 2021-2022 The Aya Contribtutors
