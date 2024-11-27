@@ -10,6 +10,9 @@ tc-egress-common = { path = "../tc-egress-common" }
 memoffset = "0.9"
 network-types = "0.0.7"
 
+[build-dependencies]
+which = { version = "6.0.0", default-features = false }
+
 [[bin]]
 name = "tc-egress"
 path = "src/main.rs"

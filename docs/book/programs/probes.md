@@ -56,7 +56,7 @@ Here's how the code looks like:
 <!-- markdownlint-disable MD013 -->
 
 ```console
-$ RUST_LOG=info cargo xtask run --release
+$ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 [2022-12-28T20:50:00Z INFO  kprobetcp] Waiting for Ctrl-C...
 [2022-12-28T20:50:05Z INFO  kprobetcp] AF_INET6 src addr: 2001:4998:efeb:282::249, dest addr: 2606:2800:220:1:248:1893:25c8:1946
 [2022-12-28T20:50:11Z INFO  kprobetcp] AF_INET src address: 10.53.149.148, dest address: 10.87.116.72

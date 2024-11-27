@@ -429,10 +429,8 @@ Let's begin with writing the user-space code:
 ```rust
 use anyhow::Context;
 use aya::{
-    include_bytes_aligned,
     maps::HashMap,
     programs::{Xdp, XdpFlags},
-    Ebpf,
 };
 use aya_log::EbpfLogger;
 use clap::Parser;
@@ -482,14 +480,10 @@ async fn main() -> Result<(), anyhow::Error> {
 
     env_logger::init();
 
-    #[cfg(debug_assertions)]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/simple-xdp-program"
-    ))?;
-    #[cfg(not(debug_assertions))]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/xdp-simple-xdp-program"
-    ))?;
+    let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
+        env!("OUT_DIR"),
+        "/simple-xdp-program"
+    )))?;
     if let Err(e) = EbpfLogger::init(&mut bpf) {
         warn!("failed to initialize eBPF logger: {}", e);
     }
@@ -552,10 +546,8 @@ The program awaits the `CTRL+C` signal asynchronously using
 ```rust
 use anyhow::Context;
 use aya::{
-    include_bytes_aligned,
     maps::HashMap,
     programs::{Xdp, XdpFlags},
-    Ebpf,
 };
 use aya_log::EbpfLogger;
 use clap::Parser;
@@ -575,14 +567,10 @@ async fn main() -> Result<(), anyhow::Error> {
 
     env_logger::init();
 
-    #[cfg(debug_assertions)]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/simple-xdp-program"
-    ))?;
-    #[cfg(not(debug_assertions))]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/xdp-simple-xdp-program"
-    ))?;
+    let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
+        env!("OUT_DIR"),
+        "/simple-xdp-program"
+    )))?;
     if let Err(e) = EbpfLogger::init(&mut bpf) {
         warn!("failed to initialize eBPF logger: {}", e);
     }
@@ -614,17 +602,18 @@ async fn main() -> Result<(), anyhow::Error> {
 Now that we have all the pieces for our eBPF program, we can run it using:
 
 ```console
-RUST_LOG=info cargo xtask run
+RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 ```
 
 or
 
 ```console
-RUST_LOG=info cargo xtask run -- --iface <interface>
+RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"' -- \
+  --iface <interface>
 ```
 
 if you want to provide another network interface name. note that you can also
-use `cargo xtask run` without the rest, but you won't get any logging.
+omit `RUST_LOG=info`, but you won't get any logging.
 
 [source-code]: https://github.com/aya-rs/book/tree/main/examples/xdp-drop
 [af-xdp]: https://www.kernel.org/doc/html/latest/networking/af_xdp.html

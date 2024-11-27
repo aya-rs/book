@@ -1,9 +1,9 @@
 [workspace]
-members = ["xtask", "xdp-drop", "xdp-drop-common", "xdp-drop-ebpf"]
+members = ["xdp-drop", "xdp-drop-common", "xdp-drop-ebpf"]
 
 resolver = "2"
 
-default-members = ["xtask", "xdp-drop", "xdp-drop-common"]
+default-members = ["xdp-drop", "xdp-drop-common"]
 
 
 [profile.release.package.xdp-drop-ebpf]

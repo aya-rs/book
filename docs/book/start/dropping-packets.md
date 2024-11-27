@@ -69,7 +69,7 @@ Here's how the userspace code looks:
 ## Running the program
 
 ```console
-$ RUST_LOG=info cargo xtask run
+$ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 1.1.1.1, ACTION: 1
 [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 192.168.1.21, ACTION: 2
 [2022-10-04T12:46:05Z INFO  xdp_drop] SRC: 192.168.1.21, ACTION: 2

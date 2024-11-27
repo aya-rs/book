@@ -1,9 +1,9 @@
 [workspace]
-members = ["xtask", "xdp-log", "xdp-log-common", "xdp-log-ebpf"]
+members = ["xdp-log", "xdp-log-common", "xdp-log-ebpf"]
 
 resolver = "2"
 
-default-members = ["xtask", "xdp-log", "xdp-log-common"]
+default-members = ["xdp-log", "xdp-log-common"]
 
 [profile.release.package.xdp-log-ebpf]
 debug = 2

@@ -1,9 +1,5 @@
 use anyhow::Context;
-use aya::{
-    include_bytes_aligned,
-    programs::{Xdp, XdpFlags},
-    Ebpf,
-};
+use aya::programs::{Xdp, XdpFlags};
 use aya_log::EbpfLogger;
 use clap::Parser;
 use log::info;
@@ -27,14 +23,10 @@ async fn main() -> Result<(), anyhow::Error> {
     // reach for `Ebpf::load_file` instead.
     // (4)
     // (5)
-    #[cfg(debug_assertions)]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/xdp-hello"
-    ))?;
-    #[cfg(not(debug_assertions))]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/xdp-hello"
-    ))?;
+    let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
+        env!("OUT_DIR"),
+        "/xdp-hello"
+    )))?;
     EbpfLogger::init(&mut bpf)?;
     // (6)
     let program: &mut Xdp = bpf.program_mut("xdp_hello").unwrap().try_into()?;

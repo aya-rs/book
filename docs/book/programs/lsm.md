@@ -174,7 +174,7 @@ The final result should look like:
 After that, we can build and run our project with:
 
 ```console
-RUST_LOG=info cargo xtask run
+RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 ```
 
 The output should contain our log line showing the PID of the userspace
