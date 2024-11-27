@@ -1,8 +1,7 @@
 # Cgroup SKB
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/cgroup-skb-egress)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## What is Cgroup SKB?
 
@@ -49,21 +48,21 @@ easily reproduce it in the future by adding the following code:
 
 === "xtask/src/codegen.rs"
 
-    ```rust linenums="1"
-    --8<-- "examples/cgroup-skb-egress/xtask/src/codegen.rs"
-    ```
+```rust linenums="1"
+--8<-- "examples/cgroup-skb-egress/xtask/src/codegen.rs"
+```
 
 === "xtask/Cargo.toml"
 
-    ```toml linenums="1"
-    --8<-- "examples/cgroup-skb-egress/xtask/Cargo.toml"
-    ```
+```toml linenums="1"
+--8<-- "examples/cgroup-skb-egress/xtask/Cargo.toml"
+```
 
 === "xtask/src/main.rs"
 
-    ```rust linenums="1"
-    --8<-- "examples/cgroup-skb-egress/xtask/src/main.rs"
-    ```
+```rust linenums="1"
+--8<-- "examples/cgroup-skb-egress/xtask/src/main.rs"
+```
 
 Once we've generated our file using `cargo xtask codegen` from the root of the
 project, we can access it by including `mod bindings` from eBPF code.
@@ -169,3 +168,5 @@ LOG: DST 172.217.19.78, ACTION 1
 LOG: DST 172.217.19.78, ACTION 1
 LOG: DST 172.217.19.78, ACTION 1
 ```
+
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/cgroup-skb-egress

@@ -1,8 +1,7 @@
 # Hello XDP
 
-!!! example "Source Code"
-
-    Full code for the example in this chapter is available [here](https://github.com/aya-rs/book/tree/main/examples/xdp-hello)
+> [!EXAMPLE] Source Code
+> Full code for the example in this chapter is available [here][source-code].
 
 ## Example Project
 
@@ -158,12 +157,11 @@ OPTIONS:
     -i, --iface <IFACE>    [default: eth0]
 ```
 
-!!! note "Interface Name"
-
-    This command assumes the interface is `eth0` by default. If you wish to
-    attach to an interface with another name, use
-    `RUST_LOG=info cargo xtask run -- --iface wlp2s0`, where  `wlp2s0` is your
-    interface.
+> [!NOTE] Interface Name
+> This command assumes the interface is `eth0` by default. If you wish to
+> attach to an interface with another name, use
+> `RUST_LOG=info cargo xtask run -- --iface wlp2s0`, where  `wlp2s0` is your
+> interface.
 
 ```console
 $ RUST_LOG=info cargo xtask run
@@ -175,12 +173,11 @@ $ RUST_LOG=info cargo xtask run
 ^C[2022-12-21T18:03:11Z INFO  xdp_hello] Exiting...
 ```
 
-So everytime a packet was received on the interface, a log was printed!
+So every time a packet was received on the interface, a log was printed!
 
-!!! bug "Error Loading Program?"
-
-    If you get an error loading the program, try changing `XdpFlags::default()`
-    to `XdpFlags::SKB_MODE`
+> [!BUG] Error Loading Program?
+> If you get an error loading the program, try changing `XdpFlags::default()`
+> to `XdpFlags::SKB_MODE`
 
 ### The Lifecycle of an eBPF Program
 
@@ -200,4 +197,5 @@ you can verify that it is loaded:
 Running the command again once `xdp_hello` has exited will show that the
 program is no longer running.
 
+[source-code]: https://github.com/aya-rs/book/tree/main/examples/xdp-hello
 [ctrl-c-handler]: https://docs.rs/tokio/latest/tokio/signal/fn.ctrl_c.html
