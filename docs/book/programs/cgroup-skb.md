@@ -125,7 +125,7 @@ The most common locations are either `/sys/fs/cgroup` or `/sys/fs/cgroup/unified
 Inside that location, we need to create our new cgroup (as root):
 
 ```console
-# mkdir /sys/fs/cgroup/foo
+mkdir /sys/fs/cgroup/foo
 ```
 
 Then run the program with:
@@ -137,7 +137,7 @@ RUST_LOG=info cargo xtask run
 And then, in a separate terminal, as root, try to access `1.1.1.1`:
 
 ```console
-# bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl 1.1.1.1"
+bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl 1.1.1.1"
 ```
 
 That command should hang and the logs of our program should look like:
@@ -151,7 +151,7 @@ On the other hand, accessing any other address should be successful, for
 example:
 
 ```console
-# bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl google.com"
+$ bash -c "echo \$$ >> /sys/fs/cgroup/foo/cgroup.procs && curl google.com"
 <HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
 <TITLE>301 Moved</TITLE></HEAD><BODY>
 <H1>301 Moved</H1>
