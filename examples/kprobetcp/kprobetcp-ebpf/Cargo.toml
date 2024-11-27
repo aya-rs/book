@@ -8,6 +8,9 @@ aya-ebpf = { git = "https://github.com/aya-rs/aya" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 kprobetcp-common = { path = "../kprobetcp-common" }
 
+[build-dependencies]
+which = { version = "6.0.0", default-features = false }
+
 [[bin]]
 name = "kprobetcp"
 path = "src/main.rs"

@@ -10,25 +10,12 @@ sockets for the TCP connections (IPv4 and IPv6).
 1. Install a rust nightly toolchain: `rustup install nightly`
 1. Install bpf-linker: `cargo install bpf-linker`
 
-## Build eBPF
+## Build & Run
 
-```console
-cargo xtask build-ebpf
-```
+Use `cargo build`, `cargo check`, etc. as normal. Run your program with:
 
-To perform a release build you can use the `--release` flag.
-You may also change the target architecture with the `--target` flag.
-
-## Build Userspace
-
-```console
-cargo build
-```
-
-## Run
-
-```console
-RUST_LOG=info cargo xtask run
+```shell
+RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 ```
 
 Execute some TCP connection in a different terminal, such as

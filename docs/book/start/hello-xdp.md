@@ -36,7 +36,7 @@ currently looks like this:
 1. Write a log entry every time a packet is received.
 1. This function returns a `Result` that permits all traffic.
 
-Now we can compile this using `cargo xtask build-ebpf`.
+Now we can compile this using `cargo build`.
 
 ### Verifying The Program
 
@@ -141,10 +141,7 @@ Let's look at the details of our generated user-space application:
 Let's try it out!
 
 ```console
-$ cargo xtask run -- -h
-    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
-        Running `target/debug/xtask run -- -h`
-:
+$ cargo run -- -h
     Finished dev [optimized] target(s) in 0.90s
     Finished dev [unoptimized + debuginfo] target(s) in 0.60s
 xdp-hello
@@ -160,11 +157,16 @@ OPTIONS:
 > [!NOTE] Interface Name
 > This command assumes the interface is `eth0` by default. If you wish to
 > attach to an interface with another name, use
-> `RUST_LOG=info cargo xtask run -- --iface wlp2s0`, where  `wlp2s0` is your
-> interface.
+>
+> ```console
+> RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"' -- \
+>   --iface wlp2s0
+> ```
+>
+> where  `wlp2s0` is your interface.
 
 ```console
-$ RUST_LOG=info cargo xtask run
+$ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 [2022-12-21T18:03:09Z INFO  xdp_hello] Waiting for Ctrl-C...
 [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
 [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet

@@ -1,9 +1,9 @@
 [workspace]
-members = ["xtask", "kprobetcp", "kprobetcp-common", "kprobetcp-ebpf"]
+members = ["kprobetcp", "kprobetcp-common", "kprobetcp-ebpf"]
 
 resolver = "2"
 
-default-members = ["xtask", "kprobetcp", "kprobetcp-common"]
+default-members = ["kprobetcp", "kprobetcp-common"]
 
 
 [profile.release.package.kprobetcp-ebpf]

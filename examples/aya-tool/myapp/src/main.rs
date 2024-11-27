@@ -1,4 +1,4 @@
-use aya::{include_bytes_aligned, programs::Lsm, Btf, Ebpf};
+use aya::{programs::Lsm, Btf};
 use log::info;
 use std::{
     sync::{
@@ -22,14 +22,10 @@ fn try_main() -> Result<(), anyhow::Error> {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Ebpf::load_file` instead.
-    #[cfg(debug_assertions)]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/myapp"
-    ))?;
-    #[cfg(not(debug_assertions))]
-    let mut bpf = Ebpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/myapp"
-    ))?;
+    let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
+        env!("OUT_DIR"),
+        "/myapp"
+    )))?;
 
     let btf = Btf::from_sys_fs()?;
     let program: &mut Lsm =
