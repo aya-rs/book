@@ -19,7 +19,7 @@ the rust toolchain if you are running **on a linux x86_64 system** with:
 cargo install bpf-linker
 ```
 
-> On Debian based distributions, you need to install the `llvm-19-dev`, 
+> On Debian based distributions, you need to install the `llvm-19-dev`,
 > `libclang-19-dev` and `libpolly-19-dev` packages (suppose LLVM 19 is used).
 
 If you are running **macos, or linux on any other architecture**, you need to
