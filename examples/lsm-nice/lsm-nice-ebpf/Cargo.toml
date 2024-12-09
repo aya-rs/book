@@ -9,7 +9,7 @@ aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 lsm-nice-common = { path = "../lsm-nice-common" }
 
 [build-dependencies]
-which = { version = "6.0.0", default-features = false }
+which = { version = "7.0.0", default-features = false }
 
 [[bin]]
 name = "lsm-nice"
