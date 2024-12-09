@@ -3,37 +3,9 @@
 
 version: 2
 updates:
-  # TODO(https://github.com/dependabot/dependabot-core/issues/2178): reduce repetition.
   - package-ecosystem: "cargo"
-    directory: "/examples/aya-tool"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "cargo"
-    directory: "/examples/cgroup-skb-egress"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "cargo"
-    directory: "/examples/kprobetcp"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "cargo"
-    directory: "/examples/lsm-nice"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "cargo"
-    directory: "/examples/tc-egress"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "cargo"
-    directory: "/examples/xdp-drop"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "cargo"
-    directory: "/examples/xdp-hello"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "cargo"
-    directory: "/examples/xdp-log"
+    directories:
+      - "/examples/*"
     schedule:
       interval: "weekly"
 
