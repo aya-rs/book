@@ -10,7 +10,7 @@ xdp-log-common = { path = "../xdp-log-common" }
 network-types = "0.0.7"
 
 [build-dependencies]
-which = { version = "6.0.0", default-features = false }
+which = { version = "7.0.0", default-features = false }
 
 [[bin]]
 name = "xdp-log"
