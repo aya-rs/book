@@ -15,7 +15,7 @@ enum Command {
 fn main() -> Result<()> {
     match Parser::parse() {
         Command::Codegen { output } => {
-            let bindings = aya_tool::generate(
+            let bindings = aya_tool::generate::generate(
                 aya_tool::generate::InputFile::Btf(std::path::PathBuf::from(
                     "/sys/kernel/btf/vmlinux",
                 )),
