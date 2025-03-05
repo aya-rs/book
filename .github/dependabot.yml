@@ -2,6 +2,7 @@
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
+enable-beta-ecosystems: true
 updates:
   - package-ecosystem: "cargo"
     directories:
@@ -17,7 +18,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    enable-beta-ecosystems: true
     groups:
       python-packages:
         patterns:
