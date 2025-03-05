@@ -1,9 +1,9 @@
 [project]
-name = "book"
+name = "aya-book"
 version = "0.1.0"
-description = "Add your description here"
+description = "The book of Aya"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.13"
 dependencies = [
     "mkdocs-material>=9.5.46",
     "mkdocs>=1.6.1",
