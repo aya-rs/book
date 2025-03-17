@@ -164,7 +164,7 @@ wheels = [
 
 [[package]]
 name = "mkdocs-callouts"
-version = "1.14.1"
+version = "1.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mkdocs" },
@@ -190,7 +190,7 @@ wheels = [
 
 [[package]]
 name = "mkdocs-material"
-version = "9.5.46"
+version = "9.6.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "babel" },
