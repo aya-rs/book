@@ -133,7 +133,7 @@ We import the necessary dependencies:
 Here's how the code looks:
 
 ```rust
-#[cfg(not(test))]
+#[cfg(target_arch = "bpf)]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
@@ -260,7 +260,7 @@ use network_types::{
     ip::Ipv4Hdr,
 };
 
-#[cfg(not(test))]
+#[cfg(target_arch = "bpf)]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}

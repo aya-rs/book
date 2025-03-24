@@ -49,7 +49,7 @@ fn try_tc_egress(ctx: TcContext) -> Result<i32, ()> {
     Ok(action)
 }
 
-#[cfg(not(test))]
+#[cfg(target_arch = "bpf")]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}

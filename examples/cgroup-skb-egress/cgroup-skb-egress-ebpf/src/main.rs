@@ -56,7 +56,7 @@ fn try_cgroup_skb_egress(ctx: SkBuffContext) -> Result<i32, i64> {
 
 const ETH_P_IP: u32 = 8;
 
-#[cfg(not(test))]
+#[cfg(target_arch = "bpf")]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}

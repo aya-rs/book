@@ -63,7 +63,7 @@ fn try_kprobetcp(ctx: ProbeContext) -> Result<u32, i64> {
     }
 }
 
-#[cfg(not(test))]
+#[cfg(target_arch = "bpf")]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}

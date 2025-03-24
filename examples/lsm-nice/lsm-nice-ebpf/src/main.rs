@@ -50,7 +50,7 @@ unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
     Ok(0)
 }
 
-#[cfg(not(test))]
+#[cfg(target_arch = "bpf")]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
