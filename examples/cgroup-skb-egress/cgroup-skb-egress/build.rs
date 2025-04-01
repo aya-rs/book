@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context as _};
-use aya_build::cargo_metadata;
+use aya_build::{cargo_metadata, Toolchain};
 
 fn main() -> anyhow::Result<()> {
     let cargo_metadata::Metadata { packages, .. } =
@@ -13,5 +13,5 @@ fn main() -> anyhow::Result<()> {
             name == "cgroup-skb-egress-ebpf"
         })
         .ok_or_else(|| anyhow!("cgroup-skb-egress-ebpf package not found"))?;
-    aya_build::build_ebpf([ebpf_package])
+    aya_build::build_ebpf([ebpf_package], Toolchain::default())
 }
