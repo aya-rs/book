@@ -34,6 +34,11 @@ Some of the major features provided include:
 
 ## Who's Using Aya
 
+### [![Anza][anza-logo]{ width="150" }][anza]
+
+Anza is using Aya with XDP in [Agave][agave], a [Solana][solana] validator
+implementation. See more [here][agave-xdp-github].
+
 ### [![Deepfence][deepfence-logo]{ width="150"}][deepfence]
 
 Deepfence is using Aya with XDP/TC as their packet filtering stack. See more
@@ -54,6 +59,11 @@ maintenance of the [Gateway API project][gateway-api].
 
 Red Hat is using Aya to develop [bpfman][bpfman], an eBPF program loading daemon.
 
+[agave]: https://github.com/anza-xyz/agave/
+[agave-xdp-github]: https://github.com/anza-xyz/agave/tree/master/xdp
+[anza-logo]: https://docs.anza.xyz/img/logo-horizontal.svg
+[anza]: https://www.anza.xyz/
+[solana]: https://solana.com/
 [deepfence-logo]: https://uploads-ssl.webflow.com/63eaa07bbe370228bab003ea/640a069335cf3921e24def21_Deepfence%20Line.svg
 [deepfence]: https://deepfence.io/
 [deepfence-aya-article]: https://deepfence.io/aya-your-trusty-ebpf-companion/
