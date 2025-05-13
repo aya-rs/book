@@ -39,12 +39,12 @@ Some of the major features provided include:
 Anza is using Aya with XDP in [Agave][agave], a [Solana][solana] validator
 implementation. See more [here][agave-xdp-github].
 
-### [![Deepfence][deepfence-logo]{ width="150"}][deepfence]
+### [![Deepfence][deepfence-logo]{ width="150" }][deepfence]
 
 Deepfence is using Aya with XDP/TC as their packet filtering stack. See more
 [here][deepfence-aya-article].
 
-### [![Exein][exein-logo]{ width="150"}][exein]
+### [![Exein][exein-logo]{ width="150" }][exein]
 
 Exein is using Aya in [Pulsar][pulsar], a Runtime Security Observability Tool
 for IoT. See more [here][pulsar-github].
@@ -55,7 +55,7 @@ The [Kubernetes Special Interest Groups (SIGs)][kubernetes-sigs] are using Aya
 to develop [Blixt][blixt], a load-balancer that supports the development and
 maintenance of the [Gateway API project][gateway-api].
 
-### [![Red Hat][redhat-logo]{ width="150"}][redhat]
+### [![Red Hat][redhat-logo]{ width="150" }][redhat]
 
 Red Hat is using Aya to develop [bpfman][bpfman], an eBPF program loading daemon.
 
