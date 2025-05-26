@@ -205,7 +205,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     }
 
     let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
-    let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
+    let source = u32::from_be_bytes(unsafe { (*ipv4hdr).src_addr });
 
     let action = if block_ip(source) {
         xdp_action::XDP_DROP
@@ -305,7 +305,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     }
 
     let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
-    let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
+    let source = u32::from_be_bytes(unsafe { (*ipv4hdr).src_addr });
 
     let action = if block_ip(source) {
         xdp_action::XDP_DROP
@@ -334,8 +334,8 @@ We'll block all traffic originating from `1.1.1.1` in this example.
 > [!NOTE] Endianness
 > IP addresses are always encoded in network byte order (big endian) within
 > packets. In our eBPF program, before checking the blocklist, we convert them
-> to host endian using `u32::from_be`. Therefore it's correct to write our IP
-> addresses in host endian format from userspace.
+> to host endian using `u32::from_be_bytes`. Therefore it's correct to write our
+> IP addresses in host endian format from userspace.
 >
 > The other approach would work too: we could convert IPs to network endian
 > when inserting from userspace, and then we wouldn't need to convert when

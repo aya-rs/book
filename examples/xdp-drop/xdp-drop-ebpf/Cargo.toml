@@ -7,7 +7,7 @@ edition = "2021"
 aya-ebpf = { git = "https://github.com/aya-rs/aya" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 xdp-drop-common = { path = "../xdp-drop-common" }
-network-types = "0.0.7"
+network-types = "0.0.8"
 
 [build-dependencies]
 which = { version = "7.0.0", default-features = false }

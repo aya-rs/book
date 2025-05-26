@@ -49,8 +49,8 @@ traffic originating from `1.1.1.1` in this example.
 > [!NOTE] Endianness
 > IP addresses are always encoded in network byte order (big endian) within
 > packets. In our eBPF program, before checking the blocklist, we convert them
-> to host endian using `u32::from_be`. Therefore it's correct to write our IP
-> addresses in host endian format from userspace.
+> to host endian using `u32::from_be_bytes`. Therefore it's correct to write
+> our IP addresses in host endian format from userspace.
 >
 > The other approach would work too: we could convert IPs to network endian
 > when inserting from userspace, and then we wouldn't need to convert when
