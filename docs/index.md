@@ -37,17 +37,17 @@ Some of the major features provided include:
 ### [![Anza][anza-logo]{ width="150" }][anza]
 
 Anza is using Aya with XDP in [Agave][agave], a [Solana][solana] validator
-implementation. See more [here][agave-xdp-github].
+implementation. See [source code][agave-xdp-github].
 
 ### [![Deepfence][deepfence-logo]{ width="150" }][deepfence]
 
-Deepfence is using Aya with XDP/TC as their packet filtering stack. See more
-[here][deepfence-aya-article].
+Deepfence is using Aya with XDP/TC as their packet filtering stack. See
+[article][deepfence-aya-article].
 
 ### [![Exein][exein-logo]{ width="150" }][exein]
 
 Exein is using Aya in [Pulsar][pulsar], a Runtime Security Observability Tool
-for IoT. See more [here][pulsar-github].
+for IoT. See [pulsar on GitHub][pulsar-github].
 
 ### [![Kubernetes SIGs][kubernetes-logo]{ width="150" }][kubernetes-sigs]
 

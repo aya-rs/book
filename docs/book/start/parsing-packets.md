@@ -9,7 +9,7 @@ While we could go all out and parse data all the way up to L7, we'll constrain
 our example to L3, and to make things easier, IPv4 only.
 
 > [!EXAMPLE] Source Code
-> Full code for the example in this chapter is available [here][source-code].
+> Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## Using network types
 

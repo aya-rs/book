@@ -4,7 +4,7 @@ In the previous chapter our XDP program just logged traffic. In this chapter
 we're going to extend it to allow the dropping of traffic.
 
 > [!EXAMPLE] Source Code
-> Full code for the example in this chapter is available [here][source-code].
+> Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## Design
 
