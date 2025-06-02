@@ -10,6 +10,7 @@ use aya_log_ebpf::info;
 #[allow(non_camel_case_types)]
 #[allow(non_snake_case)]
 #[allow(non_upper_case_globals)]
+#[allow(unnecessary_transmutes)]
 #[rustfmt::skip]
 mod vmlinux;
 
