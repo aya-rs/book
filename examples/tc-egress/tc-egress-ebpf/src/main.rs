@@ -36,7 +36,7 @@ fn try_tc_egress(ctx: TcContext) -> Result<i32, ()> {
     }
 
     let ipv4hdr: Ipv4Hdr = ctx.load(EthHdr::LEN).map_err(|_| ())?;
-    let destination = u32::from_be(ipv4hdr.dst_addr);
+    let destination = u32::from_be_bytes(ipv4hdr.dst_addr);
 
     let action = if block_ip(destination) {
         TC_ACT_SHOT

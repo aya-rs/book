@@ -61,7 +61,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     }
 
     let ipv4hdr: *const Ipv4Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
-    let source = u32::from_be(unsafe { (*ipv4hdr).src_addr });
+    let source = u32::from_be_bytes(unsafe { (*ipv4hdr).src_addr });
 
     // (3)
     let action = if block_ip(source) {
