@@ -10,7 +10,7 @@ fn main() -> anyhow::Result<()> {
     let ebpf_package = packages
         .into_iter()
         .find(|cargo_metadata::Package { name, .. }| {
-            name == "cgroup-skb-egress-ebpf"
+            name.as_str() == "cgroup-skb-egress-ebpf"
         })
         .ok_or_else(|| anyhow!("cgroup-skb-egress-ebpf package not found"))?;
     aya_build::build_ebpf([ebpf_package], Toolchain::default())
