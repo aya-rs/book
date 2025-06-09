@@ -30,7 +30,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@nightly
         with:
-          components: rustfmt,rust-src
+          components: rustfmt,rust-src,clippy
 
       # Installed *after* nightly so it is the default.
       - uses: dtolnay/rust-toolchain@stable
