@@ -9,7 +9,7 @@ aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 myapp-common = { path = "../myapp-common" }
 
 [build-dependencies]
-which = { version = "7.0.0", default-features = false }
+which = { version = "8.0.0", default-features = false, features = ["real-sys"] }
 
 [[bin]]
 name = "myapp"
