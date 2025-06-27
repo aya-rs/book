@@ -10,8 +10,7 @@ for dir in *; do
   pushd "${dir}"
 
   cargo +nightly fmt --check
-  cargo build "$@"
-  cargo build "$@" --release
+
   bpf_crate=$dir-ebpf
   if [ "${dir}" == "aya-tool" ]; then
     bpf_crate=myapp-ebpf
@@ -24,6 +23,19 @@ for dir in *; do
   # supported without -Zpanic_abort_tests.
   cargo clippy "$@" --exclude "${bpf_crate}" --all-targets --workspace -- --deny warnings
   cargo clippy "$@" --package "${bpf_crate}" -- --deny warnings -C panic=abort
+
+  popd
+done
+
+for dir in *; do
+  if [ ! -d "${dir}" ]; then
+    continue;
+  fi
+
+  pushd "${dir}"
+
+  cargo build "$@"
+  cargo build "$@" --release
 
   popd
 done
