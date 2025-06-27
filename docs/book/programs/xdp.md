@@ -404,7 +404,7 @@ async fn main() -> Result<(), anyhow::Error> {
         "/simple-xdp-program"
     )))?;
     if let Err(e) = EbpfLogger::init(&mut bpf) {
-        warn!("failed to initialize eBPF logger: {}", e);
+        warn!("failed to initialize eBPF logger: {e}");
     }
     let program: &mut Xdp =
         bpf.program_mut("xdp_firewall").unwrap().try_into()?;
@@ -491,7 +491,7 @@ async fn main() -> Result<(), anyhow::Error> {
         "/simple-xdp-program"
     )))?;
     if let Err(e) = EbpfLogger::init(&mut bpf) {
-        warn!("failed to initialize eBPF logger: {}", e);
+        warn!("failed to initialize eBPF logger: {e}");
     }
     let program: &mut Xdp =
         bpf.program_mut("xdp_firewall").unwrap().try_into()?;
