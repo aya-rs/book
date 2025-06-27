@@ -11,7 +11,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
     // (1)
     let pid = process::id() as i32;
-    info!("PID: {}", pid);
+    info!("PID: {pid}");
 
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
@@ -22,7 +22,7 @@ async fn main() -> Result<(), anyhow::Error> {
     )?;
     if let Err(e) = EbpfLogger::init(&mut bpf) {
         // This can happen if you remove all log statements from your eBPF program.
-        warn!("failed to initialize eBPF logger: {}", e);
+        warn!("failed to initialize eBPF logger: {e}");
     }
     let btf = Btf::from_sys_fs()?;
     let program: &mut Lsm =
