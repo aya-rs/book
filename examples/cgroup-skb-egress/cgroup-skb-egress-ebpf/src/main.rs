@@ -10,11 +10,14 @@ use memoffset::offset_of;
 
 use cgroup_skb_egress_common::PacketLog;
 
-#[allow(clippy::all)]
-#[allow(non_upper_case_globals)]
-#[allow(non_snake_case)]
-#[allow(non_camel_case_types)]
-#[allow(dead_code)]
+#[allow(
+    clippy::all,
+    dead_code,
+    non_camel_case_types,
+    non_snake_case,
+    non_upper_case_globals,
+    unnecessary_transmutes,
+)]
 #[rustfmt::skip]
 mod bindings;
 use bindings::iphdr;
