@@ -9,6 +9,7 @@
     non_snake_case,
     non_upper_case_globals,
     unnecessary_transmutes,
+    unsafe_op_in_unsafe_fn,
 )]
 #[rustfmt::skip]
 mod vmlinux;
@@ -34,12 +35,11 @@ pub fn task_alloc(ctx: LsmContext) -> i32 {
 }
 
 unsafe fn try_task_alloc(ctx: LsmContext) -> Result<i32, i32> {
-    let task: *const task_struct = ctx.arg(0);
-    let _clone_flags: c_ulong = ctx.arg(1);
-    let retval: c_int = ctx.arg(2);
-
+    let (pid, _clone_flags, retval): (_, c_ulong, c_int) = unsafe {
+        let task: *const task_struct = ctx.arg(0);
+        ((*task).pid, ctx.arg(1), ctx.arg(2))
+    };
     // Save the PID of a new process in map.
-    let pid = (*task).pid;
     PROCESSES.insert(&pid, &pid, 0).map_err(|e| e as i32)?;
 
     // Handle results of previous LSM programs.

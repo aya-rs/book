@@ -5,6 +5,8 @@ resolver = "2"
 
 default-members = ["xdp-drop", "xdp-drop-common"]
 
+[workspace.package]
+edition = "2024"
 
 [profile.release.package.xdp-drop-ebpf]
 debug = 2

@@ -2,7 +2,7 @@ use std::net::Ipv4Addr;
 
 use aya::{
     maps::HashMap,
-    programs::{tc, SchedClassifier, TcAttachType},
+    programs::{SchedClassifier, TcAttachType, tc},
 };
 use aya_log::EbpfLogger;
 use clap::Parser;

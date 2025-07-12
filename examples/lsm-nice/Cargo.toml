@@ -5,6 +5,8 @@ resolver = "2"
 
 default-members = ["lsm-nice", "lsm-nice-common"]
 
+[workspace.package]
+edition = "2024"
 
 [profile.release.package.lsm-nice-ebpf]
 debug = 2

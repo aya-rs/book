@@ -5,6 +5,8 @@ resolver = "2"
 
 default-members = ["tc-egress", "tc-egress-common"]
 
+[workspace.package]
+edition = "2024"
 
 [profile.release.package.tc-egress-ebpf]
 debug = 2

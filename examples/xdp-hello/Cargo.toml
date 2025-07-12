@@ -5,6 +5,9 @@ resolver = "2"
 
 default-members = ["xdp-hello", "xdp-hello-common"]
 
+[workspace.package]
+edition = "2024"
+
 [profile.release.package.xdp-hello-ebpf]
 debug = 2
 codegen-units = 1

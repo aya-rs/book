@@ -13,6 +13,7 @@ use aya_log_ebpf::info;
     non_snake_case,
     non_upper_case_globals,
     unnecessary_transmutes,
+    unsafe_op_in_unsafe_fn,
 )]
 #[rustfmt::skip]
 mod vmlinux;
@@ -21,7 +22,7 @@ use vmlinux::task_struct;
 
 // (2)
 /// PID of the process for which setting a negative nice value is denied.
-#[no_mangle]
+#[unsafe(no_mangle)]
 static PID: i32 = 0;
 
 #[lsm(hook = "task_setnice")]
@@ -34,15 +35,24 @@ pub fn task_setnice(ctx: LsmContext) -> i32 {
 
 // (3)
 unsafe fn try_task_setnice(ctx: LsmContext) -> Result<i32, i32> {
-    let p: *const task_struct = ctx.arg(0);
-    let nice: c_int = ctx.arg(1);
-    let ret: c_int = ctx.arg(2);
-    let global_pid: c_int = core::ptr::read_volatile(&PID);
-    let pid: c_int = (*p).pid;
+    let (pid, nice, ret, global_pid): (c_int, c_int, c_int, c_int) = unsafe {
+        let p: *const task_struct = ctx.arg(0);
+        (
+            (*p).pid,
+            ctx.arg(1),
+            ctx.arg(2),
+            core::ptr::read_volatile(&PID),
+        )
+    };
 
-    info!(&ctx,
-          "The PID supplied to this program is: {}, with nice value {} and return value {}. Monitoring for changes in PID: {}",
-          pid, nice, ret, global_pid);
+    info!(
+        &ctx,
+        "The PID supplied to this program is: {}, with nice value {} and return value {}. Monitoring for changes in PID: {}",
+        pid,
+        nice,
+        ret,
+        global_pid
+    );
     if ret != 0 {
         return Err(ret);
     }

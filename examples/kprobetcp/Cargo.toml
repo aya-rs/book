@@ -5,6 +5,8 @@ resolver = "2"
 
 default-members = ["kprobetcp", "kprobetcp-common"]
 
+[workspace.package]
+edition = "2024"
 
 [profile.release.package.kprobetcp-ebpf]
 debug = 2

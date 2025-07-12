@@ -5,6 +5,9 @@ resolver = "2"
 
 default-members = ["myapp", "myapp-common"]
 
+[workspace.package]
+edition = "2024"
+
 [profile.release.package.myapp-ebpf]
 debug = 2
 codegen-units = 1

@@ -1,9 +1,9 @@
-use aya::{programs::Lsm, Btf};
+use aya::{Btf, programs::Lsm};
 use log::info;
 use std::{
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
     thread,
     time::Duration,

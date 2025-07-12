@@ -1,6 +1,6 @@
 use std::process;
 
-use aya::{programs::Lsm, Btf};
+use aya::{Btf, programs::Lsm};
 use aya_log::EbpfLogger;
 use log::{info, warn};
 use tokio::signal;
