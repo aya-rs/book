@@ -1,7 +1,7 @@
 use std::net::Ipv4Addr;
 
 use aya::{
-    maps::{perf::AsyncPerfEventArray, HashMap},
+    maps::{perf::PerfEventArray, HashMap},
     programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
 };
@@ -53,10 +53,14 @@ async fn main() -> Result<(), anyhow::Error> {
     blocklist.insert(block_addr, 0, 0)?;
 
     let mut perf_array =
-        AsyncPerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;
+        PerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;
 
     for cpu_id in online_cpus().map_err(|(_, error)| error)? {
-        let mut buf = perf_array.open(cpu_id, None)?;
+        let buf = perf_array.open(cpu_id, None)?;
+        let mut buf = tokio::io::unix::AsyncFd::with_interest(
+            buf,
+            tokio::io::Interest::READABLE,
+        )?;
 
         task::spawn(async move {
             let mut buffers = (0..10)
@@ -64,7 +68,10 @@ async fn main() -> Result<(), anyhow::Error> {
                 .collect::<Vec<_>>();
 
             loop {
-                let events = buf.read_events(&mut buffers).await.unwrap();
+                let mut guard = buf.readable_mut().await.unwrap();
+                let events =
+                    guard.get_inner_mut().read_events(&mut buffers).unwrap();
+                guard.clear_ready();
                 for buf in buffers.iter_mut().take(events.read) {
                     let ptr = buf.as_ptr() as *const PacketLog;
                     let data = unsafe { ptr.read_unaligned() };

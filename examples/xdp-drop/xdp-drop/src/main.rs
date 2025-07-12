@@ -29,9 +29,24 @@ async fn main() -> Result<(), anyhow::Error> {
         env!("OUT_DIR"),
         "/xdp-drop"
     )))?;
-    if let Err(e) = EbpfLogger::init(&mut bpf) {
-        // This can happen if you remove all log statements from your eBPF program.
-        warn!("failed to initialize eBPF logger: {e}");
+    match EbpfLogger::init(&mut bpf) {
+        Err(e) => {
+            // This can happen if you remove all log statements from your eBPF program.
+            warn!("failed to initialize eBPF logger: {e}");
+        }
+        Ok(logger) => {
+            let mut logger = tokio::io::unix::AsyncFd::with_interest(
+                logger,
+                tokio::io::Interest::READABLE,
+            )?;
+            tokio::task::spawn(async move {
+                loop {
+                    let mut guard = logger.readable_mut().await.unwrap();
+                    guard.get_inner_mut().flush();
+                    guard.clear_ready();
+                }
+            });
+        }
     }
     let program: &mut Xdp =
         bpf.program_mut("xdp_firewall").unwrap().try_into()?;
