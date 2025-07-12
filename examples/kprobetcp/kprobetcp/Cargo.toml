@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 # TODO: change to the stable version by the next release = 0.12
-aya = { git = "https://github.com/aya-rs/aya", features = ["async_tokio"] }
+aya = { git = "https://github.com/aya-rs/aya" }
 aya-log = { git = "https://github.com/aya-rs/aya" }
 kprobetcp-common = { path = "../kprobetcp-common", features = ["user"] }
 anyhow = "1"

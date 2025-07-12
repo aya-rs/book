@@ -1,7 +1,10 @@
 use std::net::Ipv4Addr;
 
 use aya::{
-    maps::{perf::AsyncPerfEventArray, HashMap},
+    maps::{
+        perf::{Events, PerfEventArray},
+        HashMap,
+    },
     programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
 };
@@ -53,24 +56,39 @@ async fn main() -> Result<(), anyhow::Error> {
     blocklist.insert(block_addr, 0, 0)?;
 
     let mut perf_array =
-        AsyncPerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;
+        PerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;
 
     for cpu_id in online_cpus().map_err(|(_, error)| error)? {
-        let mut buf = perf_array.open(cpu_id, None)?;
+        let buf = perf_array.open(cpu_id, None)?;
+        let mut buf = tokio::io::unix::AsyncFd::with_interest(
+            buf,
+            tokio::io::Interest::READABLE,
+        )?;
 
         task::spawn(async move {
-            let mut buffers = (0..10)
-                .map(|_| BytesMut::with_capacity(1024))
-                .collect::<Vec<_>>();
+            let mut buffers =
+                std::iter::repeat_with(|| BytesMut::with_capacity(1024))
+                    .take(10)
+                    .collect::<Vec<_>>();
 
             loop {
-                let events = buf.read_events(&mut buffers).await.unwrap();
-                for buf in buffers.iter_mut().take(events.read) {
-                    let ptr = buf.as_ptr() as *const PacketLog;
-                    let data = unsafe { ptr.read_unaligned() };
-                    let src_addr = Ipv4Addr::from(data.ipv4_address);
-                    info!("LOG: DST {}, ACTION {}", src_addr, data.action);
+                let mut guard = buf.readable_mut().await.unwrap();
+                loop {
+                    let Events { read, lost: _ } = guard
+                        .get_inner_mut()
+                        .read_events(&mut buffers)
+                        .unwrap();
+                    for buf in buffers.iter_mut().take(read) {
+                        let ptr = buf.as_ptr() as *const PacketLog;
+                        let data = unsafe { ptr.read_unaligned() };
+                        let src_addr = Ipv4Addr::from(data.ipv4_address);
+                        info!("LOG: DST {}, ACTION {}", src_addr, data.action);
+                    }
+                    if read != buffers.len() {
+                        break;
+                    }
                 }
+                guard.clear_ready();
             }
         });
     }
