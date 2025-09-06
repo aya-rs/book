@@ -1,0 +1,3 @@
+{
+  "rust-analyzer.linkedProjects": ["Cargo.toml", "xdp-perfbuf-custom-data-ebpf/Cargo.toml"]
+}
