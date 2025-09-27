@@ -67,4 +67,4 @@ $ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 
 [source-code]: https://github.com/aya-rs/book/tree/main/examples/kprobetcp
 [kernel-docs]: https://docs.kernel.org/trace/kprobes.html
-[tcp-connect]: https://elixir.bootlin.com/linux/latest/source/net/ipv4/tcp_output.c#L3837
+[tcp-connect]: https://elixir.bootlin.com/linux/v6.16.9/source/net/ipv4/tcp_output.c#L4073
