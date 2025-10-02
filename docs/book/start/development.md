@@ -32,11 +32,7 @@ LLVM_SYS_180_PREFIX=$(brew --prefix llvm) cargo install \
 ```
 
 To generate the scaffolding for your project, you're going to need
-`cargo-generate`, which you can install with:
-
-```console
-cargo install cargo-generate
-```
+`cargo-generate`, which you can install folowing [these instructions][cargo-generate-install].
 
 And finally to generate bindings for kernel data structures, you must install
 `bpftool`, either from your distribution or building it from
@@ -75,3 +71,5 @@ See [the cargo-generate.toml file (in the aya-template repository)][cargo-genera
 for the full list of available options.
 
 [cargo-generate-toml]: https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml
+
+[cargo-generate-install]: https://cargo-generate.github.io/cargo-generate/installation.html
