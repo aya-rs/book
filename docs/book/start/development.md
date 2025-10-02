@@ -38,6 +38,9 @@ To generate the scaffolding for your project, you're going to need
 cargo install cargo-generate
 ```
 
+> On Debian based distributions, you might need to install
+> `libssl-dev` if the above command fails.
+
 And finally to generate bindings for kernel data structures, you must install
 `bpftool`, either from your distribution or building it from
 [source](https://github.com/libbpf/bpftool).
