@@ -32,7 +32,8 @@ LLVM_SYS_180_PREFIX=$(brew --prefix llvm) cargo install \
 ```
 
 To generate the scaffolding for your project, you're going to need
-`cargo-generate`, which you can install folowing [these instructions][cargo-generate-install].
+`cargo-generate`, which you can install following [these
+instructions][cargo-generate-install].
 
 And finally to generate bindings for kernel data structures, you must install
 `bpftool`, either from your distribution or building it from
