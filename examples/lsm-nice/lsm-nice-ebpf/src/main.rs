@@ -8,6 +8,7 @@ use aya_log_ebpf::info;
 #[allow(
     clippy::all,
     dead_code,
+    improper_ctypes_definitions,
     non_camel_case_types,
     non_snake_case,
     non_upper_case_globals,
