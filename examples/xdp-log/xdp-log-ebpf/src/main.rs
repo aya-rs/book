@@ -41,8 +41,8 @@ fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     let ethhdr: *const EthHdr = ptr_at(&ctx, 0)?; // (2)
-    match unsafe { (*ethhdr).ether_type } {
-        EtherType::Ipv4 => {}
+    match unsafe { (*ethhdr).ether_type() } {
+        Ok(EtherType::Ipv4) => {}
         _ => return Ok(xdp_action::XDP_PASS),
     }
 
@@ -53,12 +53,12 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
         IpProto::Tcp => {
             let tcphdr: *const TcpHdr =
                 ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN)?;
-            u16::from_be(unsafe { (*tcphdr).source })
+            u16::from_be_bytes(unsafe { (*tcphdr).source })
         }
         IpProto::Udp => {
             let udphdr: *const UdpHdr =
                 ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN)?;
-            u16::from_be_bytes(unsafe { (*udphdr).source })
+            unsafe { (*udphdr).src_port() }
         }
         _ => return Err(()),
     };

@@ -30,8 +30,8 @@ fn block_ip(address: u32) -> bool {
 
 fn try_tc_egress(ctx: TcContext) -> Result<i32, ()> {
     let ethhdr: EthHdr = ctx.load(0).map_err(|_| ())?;
-    match ethhdr.ether_type {
-        EtherType::Ipv4 => {}
+    match ethhdr.ether_type() {
+        Ok(EtherType::Ipv4) => {}
         _ => return Ok(TC_ACT_PIPE),
     }
 

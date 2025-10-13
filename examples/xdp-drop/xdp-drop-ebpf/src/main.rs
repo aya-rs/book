@@ -55,8 +55,8 @@ fn block_ip(address: u32) -> bool {
 
 fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
-    match unsafe { (*ethhdr).ether_type } {
-        EtherType::Ipv4 => {}
+    match unsafe { (*ethhdr).ether_type() } {
+        Ok(EtherType::Ipv4) => {}
         _ => return Ok(xdp_action::XDP_PASS),
     }
 
