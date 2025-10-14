@@ -32,39 +32,17 @@ We're going to:
   make a policy decision (pass or drop).
 - Add entries to the blocklist from userspace.
 
-## Generating bindings to vmlinux.h
+## Using network types
 
-In this example, we are going to use one kernel structure called `iphdr`, which
-represents the IP protocol header. We need to generate Rust bindings to it.
+In this example, we are going to read the IPv4 protocol header. We need to use
+the [network-types][network-types] crate that provides it, as well as many
+other type definitions of the common Internet protocols.
 
-First, we must make sure that `bindgen` is installed.
+Let's add it to `cgroup-skb-egress-ebpf/Cargo.toml`:
 
-```sh
-cargo install bindgen-cli
+```toml linenums="1" title="cgroup-skb-egress-ebpf/Cargo.toml"
+--8<-- "examples/cgroup-skb-egress/cgroup-skb-egress-ebpf/Cargo.toml"
 ```
-
-Let's use `xtask` to automate the process of generating bindings so we can
-easily reproduce it in the future by adding the following code:
-
-<!-- markdownlint-disable MD046 -->
-
-=== "xtask/Cargo.toml"
-
-    ```toml linenums="1"
-    --8<-- "examples/cgroup-skb-egress/xtask/Cargo.toml"
-    ```
-
-=== "xtask/src/main.rs"
-
-    ```rust linenums="1"
-    --8<-- "examples/cgroup-skb-egress/xtask/src/main.rs"
-    ```
-
-<!-- markdownlint-enable MD046 -->
-
-Once we've generated our file using
-`cargo xtask codegen cgroup-skb-egress-ebpf/src/bindings.rs` we can access it by
-including `mod bindings` from eBPF code.
 
 ## eBPF code
 
@@ -169,3 +147,4 @@ LOG: DST 172.217.19.78, ACTION 1
 ```
 
 [source-code]: https://github.com/aya-rs/book/tree/main/examples/cgroup-skb-egress
+[network-types]: https://crates.io/crates/network-types
