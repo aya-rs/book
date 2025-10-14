@@ -7,20 +7,9 @@ use aya_ebpf::{
     programs::SkBuffContext,
 };
 use memoffset::offset_of;
+use network_types::ip::Ipv4Hdr;
 
 use cgroup_skb_egress_common::PacketLog;
-
-#[allow(
-    clippy::all,
-    dead_code,
-    non_camel_case_types,
-    non_snake_case,
-    non_upper_case_globals,
-    unnecessary_transmutes,
-)]
-#[rustfmt::skip]
-mod bindings;
-use bindings::iphdr;
 
 #[map]
 static EVENTS: PerfEventArray<PacketLog> = PerfEventArray::new(0);
@@ -44,7 +33,8 @@ fn try_cgroup_skb_egress(ctx: SkBuffContext) -> Result<i32, i64> {
         return Ok(1);
     }
 
-    let destination = u32::from_be_bytes(ctx.load(offset_of!(iphdr, daddr))?);
+    let destination =
+        u32::from_be_bytes(ctx.load(offset_of!(Ipv4Hdr, dst_addr))?);
 
     // (3)
     let action = if block_ip(destination) { 0 } else { 1 };

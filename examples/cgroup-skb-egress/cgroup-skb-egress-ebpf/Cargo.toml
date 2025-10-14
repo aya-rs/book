@@ -8,6 +8,7 @@ aya-ebpf = { git = "https://github.com/aya-rs/aya" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 cgroup-skb-egress-common = { path = "../cgroup-skb-egress-common" }
 memoffset = "0.9"
+network-types = "0.1.0"
 
 [build-dependencies]
 which = { version = "8.0.0", default-features = false, features = ["real-sys"] }
