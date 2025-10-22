@@ -17,9 +17,12 @@ async fn main() -> Result<(), anyhow::Error> {
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
     // reach for `Ebpf::load_file` instead.
-    let mut bpf = aya::EbpfLoader::new().set_global("PID", &pid, true).load(
-        aya::include_bytes_aligned!(concat!(env!("OUT_DIR"), "/lsm-nice")),
-    )?;
+    let mut bpf = aya::EbpfLoader::new()
+        .override_global("PID", &pid, true)
+        .load(aya::include_bytes_aligned!(concat!(
+            env!("OUT_DIR"),
+            "/lsm-nice"
+        )))?;
     match EbpfLogger::init(&mut bpf) {
         Err(e) => {
             // This can happen if you remove all log statements from your eBPF program.
