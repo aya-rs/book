@@ -1,3 +1,168 @@
 # Tracepoints
 
-This page is a work in progress, please feel free to open a Pull Request!
+!!! example "Source Code"
+
+    Full code for the example in this chapter is available [here](https://github.com/nsengupta/book/tree/main/examples/aya-tracepoint-echo-open). 
+    
+# What are the tracepoints in eBPF?
+
+In the Linux kernel, tracepoints are 'hooks' which are left by the kernel developers, at predefined points in the code. These points are statically defined, in the sense that a given kernel provides these hooks, by default. One can provide code to be clasped with these hooks, and crucially, at _runtime_! If such a clasped code exists at a tracepoint, the kernel calls it. 
+
+You can find more information about tracepoints in the [kernel documentation](https://docs.kernel.org/trace/tracepoints.html).
+
+--------------------------------
+
+Just as a side note: tracepoints are not exclusive to eBPF. The need for such hooks into the kernel was felt as far back as 2005, accordingly to this [article] (https://lwn.net/Articles/852112/). 
+
+--------------------------------
+
+How does one know which are these tracepoints? On a Ubuntu 22.04, running Linux kernel version 6.5.0-28-generic, the list is available by firing the command:
+
+ `sudo cat   /sys/kernel/debug/tracing/available_events`
+
+ The output looks like this:
+
+```bash
+.....
+irq:softirq_exit
+irq:softirq_entry
+irq:irq_handler_exit
+irq:irq_handler_entry
+syscalls:sys_exit_capset
+syscalls:sys_enter_capset
+syscalls:sys_exit_capget
+.....
+```
+
+There are 2180 events availble!
+
+In order to avoid name collision, the pattern followed is "\<subsystem name\>:\<tracepoint name\>", as can be seen from the output above.
+
+## Example project
+
+To illustrate tracepoints using Aya, let's write a program which informs us whenever any file is opened by any process running in the system. 
+The kernel tracepoint `syscalls:sys_openat` lets us do this. We will use `cargo generate` utility to build the template code structure:
+
+```bash
+cargo generate https://github.com/aya-rs/aya-template
+ Favorite `https://github.com/aya-rs/aya-template` not found in config, using it as a git repository: https://github.com/aya-rs/aya-template
+ Project Name: aya-tracepoint-echo-open
+ Destination: /home/nirmalya/Workspace-Rust/eBPF/my-second-ebpf/aya-tracepoint-echo-open ...
+ project-name: aya-tracepoint-echo-open ...
+ Generating template ...
+✔  Which type of eBPF program? · tracepoint
+ Which tracepoint category? (e.g sched, net etc...): syscalls
+ Which tracepoint name? (e.g sched_switch, net_dev_queue): sys_enter_openat
+ Moving generated files into: `<Current working directory>/aya-tracepoint-echo-open`...
+ Initializing a fresh Git repository
+ Done! New project created <Current working directory>/aya-tracepoint-echo-open
+```
+
+Note that the project's name is _aya-tracepoint-echo-open_, type of eBPF program is _tracepoint_ (from the menu), category is _syscalls_ and name of tracepoint is _sys_enter_openat_ .
+
+The directory structure is similar to what is described [here](https://aya-rs.dev/book/start/#the-lifecycle-of-an-ebpf-program).
+
+To build the application, move to the directory `aya-tracepoint-echo-open` and fire the following commands:
+
+```bash
+# First, build the application
+cargo xtask build-ebpf
+# And, then run
+RUST_LOG=info cargo xtask run
+```
+
+The output on the screen will be:
+
+```bash
+[2024-05-12T02:30:29Z INFO  aya_tracepoint_echo_open] Waiting for Ctrl-C...
+[2024-05-12T02:30:29Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called
+[2024-05-12T02:30:29Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called
+[2024-05-12T02:30:29Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called
+[2024-05-12T02:30:29Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called
+...
+```
+
+So, the program is running but it is incomplete. We don't know which files are being opened. Let's modify the code, to see the names of those files.
+
+## The modified code
+
+```rust linenums="1" title="aya-tracepoint-echo-open-ebpf/src/main.rs"
+--8<-- "examples/aya-tracepoint-echo-open/aya-tracepoint-echo-open-ebpf/src/main.rs"
+```
+
+1. Design Attempt 1: Delegate to a simple implementation (commented because it is not the right solution).
+2. Design Attempt 1: A simple implementation which assumes that the maximum Path String of files opened is 16.
+3. Design Attempt 1: Using Kernel's internal String, copy into a stack location.
+4. Design Attempt 2: The maximum length of path to the file being opened.
+5. Design Attempt 2: A `struct` that encapsulates the space for holding the Path String.
+6. Design Attempt 2: The 'map' is created.
+7. Design Attempt 2: The _buffer_ in the map is accessed.
+8. Design Attempt 2: Contents of the bytes pointed to by `filename_addr` is copied.
+
+Note: We are going to rely on `aya-log` to print filenames from the eBPF program.
+
+## eBPF code
+
+- This is the code (its skeleton is generated by `cargo generate`) that runs in the Kernel's eBPF Virtual Machine. The
+  pattern highlights how aya programs are structured: `aya_tracepoint_echo_open(ctx: TracePointContext)` is a public function; it delegates the actual eBPF task to a another function ( `try_aya_tracepoint_echo_open(ctx: TracePointContext) -> Result<u32, i64>`).
+- The `TracePointContext` is one of goodies that Aya brings in. This works as a Rust-aware facade of the internal nuts and bolts that interact with the kernel's own APIs written in 'C'.
+- The name of the file is a `string`  in 'C' (a null-terminated array of `char` s). To access that string, we need to have the address of the byte at the start of the string. The offset at which this address resides, is 24 according to the kernel's documentation (available through the `cat` command mentioned in the code block above). Using the context's `read_at()` function, the address is obtained and held in `filename_addr`.
+- The content of what `filename_addr` is pointing to, is the Path String of the file opened and we are intenested in.
+- Our aim is to access that content and print as an UTF-8 string.
+
+As it turns out, we can attempt a simpler yet incomplete implementation (attempt 1) and then improve upon it 
+(attempt 2).
+
+## Design (attempt 1)
+
+Because at the tracepoint `sys_enter_openat`, the kernel knows the name of the file (the path to the file, including relative path), we should be able to ask kernel to share that with us. Then, we can print the complete name of the file that is being opened.
+
+Refer to the function:
+```rust
+fn try_aya_tracepoint_echo_open_small_file_path(ctx: TracePointContext) -> Result<u32, i64> {
+    // ..
+}
+```
+When called from inside 
+```rust
+aya_tracepoint_echo_open(ctx: TracePointContext) -> u32 {
+```
+it works. The output is like this:
+
+```console
+$ RUST_LOG=info cargo xtask run
+[2024-05-16T15:32:29Z INFO  aya_tracepoint_echo_open] Waiting for Ctrl-C...
+[2024-05-16T15:32:30Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called, filename  /proc/meminfo
+[2024-05-16T15:32:30Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called, filename  /sys/fs/cgroup/
+[2024-05-16T15:32:30Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called, filename  /sys/fs/cgroup/
+[2024-05-16T15:32:30Z INFO  aya_tracepoint_echo_open] tracepoint sys_enter_openat called, filename  /sys/fs/cgroup/
+```
+
+But the program is not designed correctly. Why? There are two reasons:
+
+1. The `buf` array is only of 16 bytes. The Path String of files being opened are likely to be much longer than this.
+   The contents of such Path Strings (note: the kernel can accommodate 4096 bytes of Path String) cannot be copied 
+   to a small sized `buf`. Thus, we will not know all the files that are opened.
+
+2. It is not possible to hold 4096 bytes in the eBPF stack (the limit is 512 bytes). Therefore, we have to resort to 
+   some other mechanism to deal with this.
+
+As it happens, _Aya_ provides a mechanism to do this, in the form of **eBPF Maps**. These maps are structured to accommodate data which are not bounded by the limit of 512 bytes. Moreover, these maps are a means to share data between eBPF programs and User-space programs. 
+
+## Design (attempt 2)
+
+We create a data structure `Buf` that can hold a buffer 4K long. Thereafter, an eBPF Map `BUF: PerCpuArray<Buf>`i s 
+initiaized. The `filename`'s length can be as long as 4K (4096) bytes but we can hold that in the map's own space. We 
+are not bound by eBPF's stack-size limitation any more.
+
+When run, the output is the same as earlier:
+
+```console
+$ RUST_LOG=info cargo xtask run 
+[2024-05-17T10:13:16Z INFO  aya_tracepoint_echo_open] Waiting for Ctrl-C...
+[2024-05-17T10:13:16Z INFO  aya_tracepoint_echo_open] Kernel tracepoint sys_enter_openat called,  filename /proc/33769/oom_score_adj
+[2024-05-17T10:13:16Z INFO  aya_tracepoint_echo_open] Kernel tracepoint sys_enter_openat called,  filename /snap/firefox/4259/usr/lib/firefox/glibc-hwcaps/x86-64-v4/libmozsandbox.so
+[2024-05-17T10:13:16Z INFO  aya_tracepoint_echo_open] Kernel tracepoint sys_enter_openat called,  filename /snap/firefox/4259/usr/lib/firefox/glibc-hwcaps/x86-64-v3/libmozsandbox.so
+[2024-05-17T10:13:16Z INFO  aya_tracepoint_echo_open] Kernel tracepoint sys_enter_openat called,  filename /snap/firefox/4259/usr/lib/firefox/glibc-hwcaps/x86-64-v2/libmozsandbox.so
+```
+
