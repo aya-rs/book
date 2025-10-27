@@ -25,6 +25,7 @@ tokio = { version = "1.25", features = [
 [build-dependencies]
 aya-build = { git = "https://github.com/aya-rs/aya" }
 anyhow = "1"
+cargo_metadata = "0.23.0"
 # TODO(https://github.com/rust-lang/cargo/issues/12375): this should be an artifact dependency, but
 # it's not possible to tell cargo to use `-Z build-std` to build it. We cargo-in-cargo in the build
 # script to build this, but we want to teach cargo about the dependecy so that cache invalidation
