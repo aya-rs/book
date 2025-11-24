@@ -51,10 +51,9 @@ If you are unfamiliar with anything mentioned above or if you want more
 information about a specific topic mentioned in this guide you might find some
 of these resources helpful.
 
-| Topic | Resource | Description |
-|--------------|----------|-------------|
-| Rust  | [Rust Book][rust-book] | If you are not yet comfortable with Rust, we highly suggest reading this book. |
-| eBPF  | [Cilium BPF and XDP Reference Guide][cilium-guide] | If you are not yet comfortable with eBPF, this guide is excellent. |
+- Rust: [Rust Book][rust-book]. Read this if you are not yet comfortable
+  with Rust.
+- eBPF: [Cilium Guide][cilium-guide]. Excellent starting point for eBPF.
 
 ## How to Use This Guide
 
