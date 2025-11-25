@@ -4,10 +4,14 @@
 
 ## Program example
 
-You can follow the [basic XDP example](../start/development.md#starting-a-new-project) to make a project structure.
+You can follow the
+[basic XDP example](../start/development.md#starting-a-new-project)
+to make a project structure.
+
 E.g.: `cargo generate --name hello-sockops -d program_type=sock_ops https://github.com/aya-rs/aya-template`
 
 Below is the eBPF part of the program (`hello-sockops-ebpf/src/main.rs`) commented:
+
 ```rust
 #![no_std]
 #![no_main]
@@ -16,8 +20,10 @@ use aya_ebpf::{EbpfContext, macros::sock_ops, programs::SockOpsContext};
 use aya_log_ebpf::{info, warn};
 
 enum SockOpsResult {
-    // From the official docs: Regardless of the type of operation, the program should always return 1 on success.
-    //                         A negative integer indicate a operation is not supported.
+    // From the official docs:
+    //   Regardless of the type of operation,
+    //   the program should always return 1 on success.
+    //   A negative integer indicate a operation is not supported.
     Ok = 1,
     #[allow(dead_code)]
     Err = 2, // Some other number to indicate error
@@ -41,7 +47,7 @@ fn try_socket_ops(ctx: SockOpsContext) -> SockOpsResult {
     //     ...
     // }
     // ```
-    // This program just dumps information about the captured INET socket operation
+    // The program just dumps information about captured INET socket operation
     info!(&ctx, "started..");
     if ctx.family() == AF_INET {
         let local_ipv4_addr = ctx.local_ip4();
@@ -68,14 +74,13 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 ```
 
 The following userspace code loads the above program:
+
 ```rust
 use anyhow::Context as _;
 
 fn main() -> anyhow::Result<()> {
-    let mut ebpf_sockops = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
-        env!("OUT_DIR"),
-        "/hello-sockops"
-    )))?;
+    let mut ebpf_sockops = aya::Ebpf::load(aya::include_bytes_aligned!(
+        concat!(env!("OUT_DIR"), "/hello-sockops")))?;
 
     env_logger::init();
     let mut logger = match aya_log::EbpfLogger::init(&mut ebpf_sockops) {
@@ -106,4 +111,6 @@ fn main() -> anyhow::Result<()> {
 }
 ```
 
-Try to start the program with `RUST_LOG=warn cargo run` and run `curl goo.gle` in another terminal to see information on the new socket.
+Try to start the program with `RUST_LOG=warn cargo run` and run `curl goo.gle`
+in another terminal to see information on the new socket logged
+by the eBPF program.
