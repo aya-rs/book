@@ -65,7 +65,6 @@ fn try_socket_ops(ctx: SockOpsContext) -> SockOpsResult {
     SockOpsResult::Ok
 }
 
-// Stub panic handler to please the compiler
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
