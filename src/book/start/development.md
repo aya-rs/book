@@ -39,7 +39,7 @@ And finally to generate bindings for kernel data structures, you must install
 `bpftool`, either from your distribution or building it from
 [source](https://github.com/libbpf/bpftool).
 
-> [!BUG] Running on Ubuntu 20.04 LTS (Focal)?
+> [!WARNING]
 > If you're running on Ubuntu 20.04, there is a bug with bpftool and the
 > default kernel installed by the distribution. To avoid running into it, you
 > can install a newer bpftool version that does not include the bug with:

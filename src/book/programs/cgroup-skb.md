@@ -1,6 +1,6 @@
 # Cgroup SKB
 
-> [!EXAMPLE] Source Code
+> [!NOTE]
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## What is Cgroup SKB?
@@ -40,8 +40,8 @@ other type definitions of the common Internet protocols.
 
 Let's add it to `cgroup-skb-egress-ebpf/Cargo.toml`:
 
-```toml linenums="1" title="cgroup-skb-egress-ebpf/Cargo.toml"
---8<-- "examples/cgroup-skb-egress/cgroup-skb-egress-ebpf/Cargo.toml"
+```toml
+{{#include ../../../examples/cgroup-skb-egress/cgroup-skb-egress-ebpf/Cargo.toml}}
 ```
 
 ## eBPF code
@@ -53,8 +53,8 @@ by returning `0`. Otherwise, we are going to accept it by returning `1`.
 
 Here's how the eBPF code looks like:
 
-```rust linenums="1" title="cgroup-skb-egress-ebpf/src/main.rs"
---8<-- "examples/cgroup-skb-egress/cgroup-skb-egress-ebpf/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/cgroup-skb-egress/cgroup-skb-egress-ebpf/src/main.rs}}
 ```
 
 1. Create our map.
@@ -70,8 +70,8 @@ In this example, we'll block all egress traffic going to `1.1.1.1`.
 
 Here's how the code looks like:
 
-```rust linenums="1" title="cgroup-skb-egress/src/main.rs"
---8<-- "examples/cgroup-skb-egress/cgroup-skb-egress/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/cgroup-skb-egress/cgroup-skb-egress/src/main.rs}}
 ```
 
 1. Loading the eBPF program.

@@ -8,7 +8,7 @@ to parse packets.
 While we could go all out and parse data all the way up to L7, we'll constrain
 our example to L3, and to make things easier, IPv4 only.
 
-> [!EXAMPLE] Source Code
+> [!NOTE]
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## Using network types
@@ -27,8 +27,8 @@ protocols.
 Let's add it to our eBPF crate by adding a dependency on `network-types` in our
 `xdp-log-ebpf/Cargo.toml`:
 
-```toml linenums="1" title="xdp-log-ebpf/Cargo.toml"
---8<-- "examples/xdp-log/xdp-log-ebpf/Cargo.toml"
+```toml
+{{#include ../../../examples/xdp-log/xdp-log-ebpf/Cargo.toml}}
 ```
 
 ## Getting packet data from the context
@@ -45,15 +45,15 @@ Finally to access individual fields from the Ethernet and IPv4 headers, we're
 going to use the memoffset crate, let's add a dependency for it in
 `xdp-log-ebpf/Cargo.toml`.
 
-> [!TIP] Reading fields using `offset_of!`
+> [!TIP]
 > As there is limited stack space, it's more memory efficient to use the
 > `offset_of!` macro to read a single field from a struct, rather than reading
 > the whole struct and accessing the field by name.
 
 The resulting code looks like this:
 
-```rust linenums="1" title="xdp-log-ebpf/src/main.rs"
---8<-- "examples/xdp-log/xdp-log-ebpf/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/xdp-log/xdp-log-ebpf/src/main.rs}}
 ```
 
 1. Here we define `ptr_at` to ensure that packet access is always bound checked.
@@ -67,8 +67,8 @@ Don't forget to rebuild your eBPF program!
 Our user-space code doesn't really differ from the previous chapter, but for the
 reference, here's the code:
 
-```rust linenums="1" title="xdp-log/src/main.rs"
---8<-- "examples/xdp-log/xdp-log/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/xdp-log/xdp-log/src/main.rs}}
 ```
 
 ## Running the program
