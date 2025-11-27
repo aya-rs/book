@@ -1,6 +1,6 @@
 # Classifiers
 
-> [!EXAMPLE] Source Code
+> [!NOTE]
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## What is Classifier in eBPF?
@@ -46,7 +46,7 @@ packet. Otherwise, we are going to **pipe** it with `TC_ACT_PIPE` action - which
 means allowing it on our side, but let the packet be inspected also by another
 Classifier programs and qdisc filters.
 
-> [!NOTE] TC_ACT_OK
+> [!NOTE]
 > There is also a possibility to allow the packet while bypassing the other
 > programs and filters - `TC_ACT_OK`. We recommend that option only if absolutely
 > sure that you want your program to have a precedence over the other programs
@@ -54,8 +54,8 @@ Classifier programs and qdisc filters.
 
 Here's how the eBPF code looks like:
 
-```rust linenums="1" title="tc-egress-ebpf/src/main.rs"
---8<-- "examples/tc-egress/tc-egress-ebpf/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/tc-egress/tc-egress-ebpf/src/main.rs}}
 ```
 
 1. Create our map.
@@ -71,8 +71,8 @@ In this example, we'll block all egress traffic going to `1.1.1.1`.
 
 Here's how the code looks like:
 
-```rust linenums="1" title="tc-egress/src/main.rs"
---8<-- "examples/tc-egress/tc-egress/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/tc-egress/tc-egress/src/main.rs}}
 ```
 
 1. Get a reference to the map.

@@ -34,47 +34,44 @@ Some of the major features provided include:
 
 ## Who's Using Aya
 
-### [![Anza][anza-logo]{ width="150" }][anza]
+<!--
+We use HTML below because width attributes aren't supported. See
+https://github.com/pulldown-cmark/pulldown-cmark/issues/992.
+-->
+
+### [<img src="https://docs.anza.xyz/img/logo-horizontal.svg" alt="Anza" width="150">](https://www.anza.xyz/)
 
 Anza is using Aya with XDP in [Agave][agave], a [Solana][solana] validator
 implementation. See [source code][agave-xdp-github].
 
-### [![Deepfence][deepfence-logo]{ width="150" }][deepfence]
+### [<img src="https://threatmapper.org/img/deepfence-logo-black.svg" alt="Deepfence" width="150">](https://threatmapper.org/)
 
-Deepfence is using Aya with XDP/TC as their packet filtering stack. See
-[article][deepfence-aya-article].
+Deepfence is using Aya with LSM for managing Linux security policies. See
+[ebpfguard].
 
-### [![Exein][exein-logo]{ width="150" }][exein]
+### [<img src="https://blog.exein.io/content/images/2023/03/logoexein.png" alt="Exein" width="150">](https://exein.io)
 
 Exein is using Aya in [Pulsar][pulsar], a Runtime Security Observability Tool
 for IoT. See [pulsar on GitHub][pulsar-github].
 
-### [![Kubernetes SIGs][kubernetes-logo]{ width="150" }][kubernetes-sigs]
+### [<img src="https://raw.githubusercontent.com/cncf/artwork/refs/heads/main/projects/kubernetes/horizontal/color/kubernetes-horizontal-color.svg" alt="Kubernetes SIGs" width="150">](https://github.com/kubernetes-sigs)
 
 The [Kubernetes Special Interest Groups (SIGs)][kubernetes-sigs] are using Aya
 to develop [Blixt][blixt], a load-balancer that supports the development and
 maintenance of the [Gateway API project][gateway-api].
 
-### [![Red Hat][redhat-logo]{ width="150" }][redhat]
+### [<img src="https://www.redhat.com/cms/managed-files/Asset-Red_Hat-Logo_page-Logo-RGB.svg?itok=yWDK-rRz" alt="Red Hat" width="150">](https://redhat.com)
 
 Red Hat is using Aya to develop [bpfman][bpfman], an eBPF program loading daemon.
 
 [agave]: https://github.com/anza-xyz/agave/
 [agave-xdp-github]: https://github.com/anza-xyz/agave/tree/master/xdp
-[anza-logo]: https://docs.anza.xyz/img/logo-horizontal.svg
-[anza]: https://www.anza.xyz/
 [solana]: https://solana.com/
-[deepfence-logo]: https://uploads-ssl.webflow.com/63eaa07bbe370228bab003ea/640a069335cf3921e24def21_Deepfence%20Line.svg
-[deepfence]: https://deepfence.io/
-[deepfence-aya-article]: https://deepfence.io/aya-your-trusty-ebpf-companion/
-[exein-logo]: https://blog.exein.io/content/images/2023/03/logoexein.png
+[ebpfguard]: https://github.com/deepfence/ebpfguard
 [exein]: https://exein.io
 [pulsar]: https://pulsar.sh/
 [pulsar-github]: https://github.com/Exein-io/pulsar
-[kubernetes-logo]: https://raw.githubusercontent.com/cncf/artwork/refs/heads/main/projects/kubernetes/horizontal/color/kubernetes-horizontal-color.svg
 [kubernetes-sigs]: https://github.com/kubernetes-sigs
 [blixt]: https://github.com/kubernetes-sigs/blixt
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api
-[redhat-logo]: https://www.redhat.com/cms/managed-files/Asset-Red_Hat-Logo_page-Logo-RGB.svg?itok=yWDK-rRz
-[redhat]: https://redhat.com
 [bpfman]: https://github.com/bpfman/bpfman

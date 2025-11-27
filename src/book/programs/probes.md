@@ -1,6 +1,6 @@
 # Probes
 
-> [!EXAMPLE] Source Code
+> [!NOTE]
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## What are the probes in eBPF?
@@ -36,8 +36,8 @@ created by aya-log).
 
 Here's how the eBPF code looks like:
 
-```rust linenums="1" title="kprobetcp-ebpf/src/main.rs"
---8<-- "examples/kprobetcp/kprobetcp-ebpf/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/kprobetcp/kprobetcp-ebpf/src/main.rs}}
 ```
 
 ## Userspace code
@@ -47,8 +47,8 @@ The purpose of the userspace code is to load the eBPF program and attach it to t
 
 Here's how the code looks like:
 
-```rust linenums="1" title="kprobetcp/src/main.rs"
---8<-- "examples/kprobetcp/kprobetcp/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/kprobetcp/kprobetcp/src/main.rs}}
 ```
 
 ## Running the program

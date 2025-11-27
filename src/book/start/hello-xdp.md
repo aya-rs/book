@@ -1,6 +1,6 @@
 # Hello XDP
 
-> [!EXAMPLE] Source Code
+> [!NOTE]
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## Example Project
@@ -22,8 +22,8 @@ This is a minimal generated XDP program that permits all traffic.
 The logic for this program is located in `xdp-hello-ebpf/src/main.rs` and
 currently looks like this:
 
-```rust linenums="1" title="xdp-hello-ebpf/src/main.rs"
---8<-- "examples/xdp-hello/xdp-hello-ebpf/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/xdp-hello/xdp-hello-ebpf/src/main.rs}}
 ```
 
 1. `#![no_std]` is required since we cannot use the standard library.
@@ -120,8 +120,8 @@ program ready in `xdp-hello/src/main.rs` which is going to do that for us.
 
 Let's look at the details of our generated user-space application:
 
-```rust linenums="1" title="xdp-hello/src/main.rs"
---8<-- "examples/xdp-hello/xdp-hello/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/xdp-hello/xdp-hello/src/main.rs}}
 ```
 
 1. `tokio` is the async library we're using, which provides our
@@ -154,16 +154,16 @@ OPTIONS:
     -i, --iface <IFACE>    [default: eth0]
 ```
 
-> [!NOTE] Interface Name
-> This command assumes the interface is `eth0` by default. If you wish to
-> attach to an interface with another name, use
+> [!NOTE]
+> This command assumes the interface is `eth0` by default. To use a different
+> interface name, run:
 >
 > ```console
 > RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"' -- \
 >   --iface wlp2s0
 > ```
 >
-> where  `wlp2s0` is your interface.
+> Replace `wlp2s0` with your interface.
 
 ```console
 $ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
@@ -177,9 +177,9 @@ $ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 
 So every time a packet was received on the interface, a log was printed!
 
-> [!BUG] Error Loading Program?
-> If you get an error loading the program, try changing `XdpFlags::default()`
-> to `XdpFlags::SKB_MODE`
+> [!WARNING]
+> If you get an error loading the program, try changing
+> `XdpFlags::default()` to `XdpFlags::SKB_MODE`
 
 ### The Lifecycle of an eBPF Program
 

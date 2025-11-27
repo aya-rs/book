@@ -1,6 +1,6 @@
 # Using aya-tool
 
-> [!EXAMPLE] Source Code
+> [!NOTE]
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 Very often you will need to use type definitions that your running Linux kernel
@@ -51,20 +51,20 @@ done with:
 aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
 ```
 
-> [!TIP] Generating for multiple types
+> [!TIP]
 > You can also specify multiple types to generate, for example:
 >
 > ```console
 > aya-tool generate task_struct dentry > vmlinux.rs
 > ```
 >
-> But in the following example, we will focus only on `task_struct`.
+> The remainder of this example focuses only on `task_struct`.
 
 Then we can use `vmlinux` as a module with `mod vmlinux` in our eBPF program,
 like here:
 
-```rust linenums="1" title="myapp-ebpf/src/main.rs"
---8<-- "examples/aya-tool/myapp-ebpf/src/main.rs"
+```rust,ignore
+{{#include ../../../examples/aya-tool/myapp-ebpf/src/main.rs}}
 ```
 
 ## Portability and different kernel versions
