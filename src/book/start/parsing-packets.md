@@ -8,7 +8,7 @@ to parse packets.
 While we could go all out and parse data all the way up to L7, we'll constrain
 our example to L3, and to make things easier, IPv4 only.
 
-> [!NOTE]
+> [!EXAMPLE] Source Code
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## Using network types
@@ -45,7 +45,7 @@ Finally to access individual fields from the Ethernet and IPv4 headers, we're
 going to use the memoffset crate, let's add a dependency for it in
 `xdp-log-ebpf/Cargo.toml`.
 
-> [!TIP]
+> [!TIP] Reading fields using `offset_of!`
 > As there is limited stack space, it's more memory efficient to use the
 > `offset_of!` macro to read a single field from a struct, rather than reading
 > the whole struct and accessing the field by name.

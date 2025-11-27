@@ -1,6 +1,6 @@
 # Probes
 
-> [!NOTE]
+> [!EXAMPLE] Source Code
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## What are the probes in eBPF?

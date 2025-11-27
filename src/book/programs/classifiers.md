@@ -1,6 +1,6 @@
 # Classifiers
 
-> [!NOTE]
+> [!EXAMPLE] Source Code
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## What is Classifier in eBPF?
@@ -46,7 +46,7 @@ packet. Otherwise, we are going to **pipe** it with `TC_ACT_PIPE` action - which
 means allowing it on our side, but let the packet be inspected also by another
 Classifier programs and qdisc filters.
 
-> [!NOTE]
+> [!NOTE] TC_ACT_OK
 > There is also a possibility to allow the packet while bypassing the other
 > programs and filters - `TC_ACT_OK`. We recommend that option only if absolutely
 > sure that you want your program to have a precedence over the other programs

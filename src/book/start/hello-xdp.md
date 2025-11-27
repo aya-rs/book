@@ -1,6 +1,6 @@
 # Hello XDP
 
-> [!NOTE]
+> [!EXAMPLE] Source Code
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## Example Project
@@ -154,7 +154,7 @@ OPTIONS:
     -i, --iface <IFACE>    [default: eth0]
 ```
 
-> [!NOTE]
+> [!NOTE] Interface Name
 > This command assumes the interface is `eth0` by default. To use a different
 > interface name, run:
 >
@@ -177,7 +177,7 @@ $ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 
 So every time a packet was received on the interface, a log was printed!
 
-> [!WARNING]
+> [!BUG] Error Loading Program?
 > If you get an error loading the program, try changing
 > `XdpFlags::default()` to `XdpFlags::SKB_MODE`
 

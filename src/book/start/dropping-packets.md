@@ -3,7 +3,7 @@
 In the previous chapter our XDP program just logged traffic. In this chapter
 we're going to extend it to allow the dropping of traffic.
 
-> [!NOTE]
+> [!EXAMPLE] Source Code
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## Design
@@ -46,7 +46,7 @@ In order to add the addresses to block, we first need to get a reference to the
 as it's human-readable and can be easily converted to a `u32`. We'll block all
 traffic originating from `1.1.1.1` in this example.
 
-> [!NOTE]
+> [!NOTE] Endianness
 > IP addresses are always encoded in network byte order (big endian) within
 > packets. In our eBPF program, before checking the blocklist, we convert them
 > to host endian using `u32::from_be_bytes`. Therefore it's correct to write

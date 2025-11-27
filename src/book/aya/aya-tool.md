@@ -1,6 +1,6 @@
 # Using aya-tool
 
-> [!NOTE]
+> [!EXAMPLE] Source Code
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 Very often you will need to use type definitions that your running Linux kernel
@@ -51,7 +51,7 @@ done with:
 aya-tool generate task_struct > myapp-ebpf/src/vmlinux.rs
 ```
 
-> [!TIP]
+> [!TIP] Generating for multiple types
 > You can also specify multiple types to generate, for example:
 >
 > ```console

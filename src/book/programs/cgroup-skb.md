@@ -1,6 +1,6 @@
 # Cgroup SKB
 
-> [!NOTE]
+> [!EXAMPLE] Source Code
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## What is Cgroup SKB?
