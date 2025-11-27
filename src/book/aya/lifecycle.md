@@ -5,7 +5,7 @@ objects created through it.
 
 Consider the following example:
 
-```rust
+```rust,ignore
 use aya::Bpf;
 use aya::programs::{Xdp, XdpFlags};
 

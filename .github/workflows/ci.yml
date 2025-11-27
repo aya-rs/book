@@ -53,11 +53,10 @@ jobs:
 
       - uses: taiki-e/install-action@v2
         with:
-          tool: bpf-linker
+          tool: bpf-linker,mdbook
 
-      - uses: astral-sh/setup-uv@v7
-
-      - run: uv run mkdocs build
+      - run: mdbook build
+      - run: mdbook test
 
       - name: Check Examples
         working-directory: examples

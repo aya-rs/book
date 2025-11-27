@@ -1,6 +1,6 @@
 # XDP
 
-> [!EXAMPLE] Source Code
+> [!NOTE]
 > Full code for the example in this chapter is available [on GitHub][source-code].
 
 ## What is XDP in eBPF?
@@ -98,7 +98,7 @@ Since we want to drop the incoming packets from certain IPs, we are going to
 use the `XDP_DROP` action code whenever the IP is in our blacklist, and
 everything else will be treated with the `XDP_PASS` action code.
 
-```rust
+```rust,ignore
 #![no_std]
 #![no_main]
 
@@ -132,7 +132,7 @@ We import the necessary dependencies:
 
 Here's how the code looks:
 
-```rust
+```rust,ignore
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
@@ -143,7 +143,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 An eBPF-compatible panic handler is provided because
 eBPF programs cannot use the default panic behavior.
 
-```rust
+```rust,ignore
 #[map]
 static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
 ```
@@ -151,7 +151,7 @@ static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
 Here, we define our blocklist with a `HashMap`,
 which stores integers (u32), with a maximum of 1024 entries.
 
-```rust
+```rust,ignore
 #[xdp]
 pub fn xdp_firewall(ctx: XdpContext) -> u32 {
     match try_xdp_firewall(ctx) {
@@ -166,7 +166,7 @@ and returns a `u32`. It delegates the main packet processing logic to the
 `try_xdp_firewall` function. If an error occurs, the function returns
 `xdp_action::XDP_ABORTED` (which is equal to the `u32` `0`).
 
-```rust
+```rust,ignore
 #[inline(always)]
 unsafe fn ptr_at<T>(
     ctx: &XdpContext, offset: usize
@@ -191,8 +191,7 @@ the data (`end`). If the access is within bounds, it returns a pointer to the
 specified type; otherwise, it returns an error. We are going to use this
 function to retrieve data from the `XdpContext`.
 
-```rust
-
+```rust,ignore
 fn block_ip(address: u32) -> bool {
     unsafe { BLOCKLIST.get(&address).is_some() }
 }
@@ -241,7 +240,7 @@ action code that has been used on it. We then return `Ok(action)` as a result.
 
 The full code:
 
-```rust
+```rust,ignore
 #![no_std]
 #![no_main]
 #![allow(nonstandard_style, dead_code)]
@@ -331,7 +330,7 @@ human-readable and can be easily converted to a u32.
 
 We'll block all traffic originating from `1.1.1.1` in this example.
 
-> [!NOTE] Endianness
+> [!NOTE]
 > IP addresses are always encoded in network byte order (big endian) within
 > packets. In our eBPF program, before checking the blocklist, we convert them
 > to host endian using `u32::from_be_bytes`. Therefore it's correct to write our
@@ -345,7 +344,7 @@ Let's begin with writing the user-space code:
 
 #### Importing dependencies
 
-```rust
+```rust,ignore
 use anyhow::Context;
 use aya::{
     maps::HashMap,
@@ -378,7 +377,7 @@ we use for informational and warning messages
 
 #### Defining command-line arguments
 
-```rust
+```rust,ignore
 #[derive(Debug, Parser)]
 struct Opt {
     #[clap(short, long, default_value = "eth0")]
@@ -392,7 +391,7 @@ provide our network interface name.
 
 #### Main function
 
-```rust
+```rust,ignore
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     let opt = Opt::parse();
@@ -478,7 +477,7 @@ The program awaits the `CTRL+C` signal asynchronously using
 
 #### Full user-space code
 
-```rust
+```rust,ignore
 use anyhow::Context;
 use aya::{
     maps::HashMap,

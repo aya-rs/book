@@ -12,7 +12,8 @@ This book is a living document, and is updated continuously.
 ## Local Render
 
 ```console
-uv run mkdocs serve
+cargo install mdbook
+mdbook serve --open
 ```
 
 ## License
