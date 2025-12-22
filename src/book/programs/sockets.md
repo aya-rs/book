@@ -1,6 +1,6 @@
 # Sockets
 
-[Official eBPF program type description](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_SOCK_OPS)
+[eBPF program type description](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_SOCK_OPS)
 
 ## Program example
 
@@ -20,7 +20,7 @@ use aya_ebpf::{EbpfContext, macros::sock_ops, programs::SockOpsContext};
 use aya_log_ebpf::{info, warn};
 
 enum SockOpsResult {
-    // From the official docs:
+    // From https://docs.ebpf.io:
     //   Regardless of the type of operation,
     //   the program should always return 1 on success.
     //   A negative integer indicate a operation is not supported.
