@@ -27,7 +27,7 @@ async fn main() -> Result<(), anyhow::Error> {
     // reach for `Ebpf::load_file` instead.
     let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
         env!("OUT_DIR"),
-        "/xdp-drop"
+        "/xdp-firewall"
     )))?;
     match EbpfLogger::init(&mut bpf) {
         Err(e) => {
