@@ -88,17 +88,17 @@ is an appropriate type to use in eBPF maps.
 ## Running the program
 
 ```console
-$ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
-LOG: DEST 1.1.1.1, ACTION 2
-LOG: DEST 35.186.224.47, ACTION 3
-LOG: DEST 35.186.224.47, ACTION 3
-LOG: DEST 1.1.1.1, ACTION 2
-LOG: DEST 168.100.68.32, ACTION 3
-LOG: DEST 168.100.68.239, ACTION 3
-LOG: DEST 168.100.68.32, ACTION 3
-LOG: DEST 168.100.68.239, ACTION 3
-LOG: DEST 1.1.1.1, ACTION 2
-LOG: DEST 13.248.212.111, ACTION 3
+$ RUST_LOG=info cargo run
+LOG: SRC 1.1.1.1, ACTION 2
+LOG: SRC 35.186.224.47, ACTION 3
+LOG: SRC 35.186.224.47, ACTION 3
+LOG: SRC 1.1.1.1, ACTION 2
+LOG: SRC 168.100.68.32, ACTION 3
+LOG: SRC 168.100.68.239, ACTION 3
+LOG: SRC 168.100.68.32, ACTION 3
+LOG: SRC 168.100.68.239, ACTION 3
+LOG: SRC 1.1.1.1, ACTION 2
+LOG: SRC 13.248.212.111, ACTION 3
 ```
 
 [source-code]: https://github.com/aya-rs/book/tree/main/examples/tc-egress
