@@ -22,14 +22,16 @@ cargo install bpf-linker
 > On Debian based distributions, you need to install the `llvm-19-dev`,
 > `libclang-19-dev` and `libpolly-19-dev` packages (if using LLVM 19).
 
-If you are running **macos, or linux on any other architecture**, you need to
+If you are running **macos, or linux on any other than x86_64 architecture**, you need to
 install the newest stable version of LLVM first (for example, with
 `brew install llvm`), then install the linker with:
 
 ```console
-LLVM_SYS_180_PREFIX=$(brew --prefix llvm) cargo install \
+LLVM_SYS_190_PREFIX=$(brew --prefix llvm) cargo install \
     --no-default-features bpf-linker
 ```
+
+Note that different versions of `bpf-linker` require different versions of LLVM.
 
 To generate the scaffolding for your project, you're going to need
 `cargo-generate`, which you can install following [these
