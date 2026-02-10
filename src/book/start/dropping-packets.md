@@ -11,8 +11,8 @@ we're going to extend it to allow the dropping of traffic.
 In order for our program to drop packets, we're going to need a list of IP
 addresses to drop. Since we want to be able to lookup them up efficiently, we're
 going to use a
-[`HashMap`](https://docs.rs/aya/latest/aya/maps/struct.HashMap.html) to hold
-them.
+[`HashMap`](https://docs.rs/aya/latest/aya/maps/hash_map/struct.HashMap.html) to
+hold them.
 
 We're going to:
 
