@@ -12,24 +12,8 @@ rustup toolchain install nightly --component rust-src
 ```
 
 Once you have the Rust toolchains installed, you must also install `bpf-linker`.
-The linker depends on LLVM, and it can be built against the version shipped with
-the rust toolchain if you are running **on a linux x86_64 system** with:
-
-```console
-cargo install bpf-linker
-```
-
-> On Debian based distributions, you need to install the `llvm-19-dev`,
-> `libclang-19-dev` and `libpolly-19-dev` packages (if using LLVM 19).
-
-If you are running **macos, or linux on any other architecture**, you need to
-install the newest stable version of LLVM first (for example, with
-`brew install llvm`), then install the linker with:
-
-```console
-LLVM_SYS_180_PREFIX=$(brew --prefix llvm) cargo install \
-    --no-default-features bpf-linker
-```
+Because the required LLVM version and platform-specific steps change over time,
+follow the installation instructions in the [`bpf-linker` README][bpf-linker-readme].
 
 To generate the scaffolding for your project, you're going to need
 `cargo-generate`, which you can install following [these
@@ -74,3 +58,5 @@ for the full list of available options.
 [cargo-generate-toml]: https://github.com/aya-rs/aya-template/blob/main/cargo-generate.toml
 
 [cargo-generate-install]: https://cargo-generate.github.io/cargo-generate/installation.html
+
+[bpf-linker-readme]: https://github.com/aya-rs/bpf-linker#installation
