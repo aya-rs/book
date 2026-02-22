@@ -552,13 +552,13 @@ async fn main() -> Result<(), anyhow::Error> {
 Now that we have all the pieces for our eBPF program, we can run it using:
 
 ```console
-RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
+RUST_LOG=info cargo run
 ```
 
 or
 
 ```console
-RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"' -- \
+RUST_LOG=info cargo run -- \
   --iface <interface>
 ```
 

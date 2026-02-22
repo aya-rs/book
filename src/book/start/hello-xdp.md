@@ -159,14 +159,14 @@ OPTIONS:
 > interface name, run:
 >
 > ```console
-> RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"' -- \
+> RUST_LOG=info cargo run -- \
 >   --iface wlp2s0
 > ```
 >
 > Replace `wlp2s0` with your interface.
 
 ```console
-$ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
+$ RUST_LOG=info cargo run
 [2022-12-21T18:03:09Z INFO  xdp_hello] Waiting for Ctrl-C...
 [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
 [2022-12-21T18:03:11Z INFO  xdp_hello] received a packet
