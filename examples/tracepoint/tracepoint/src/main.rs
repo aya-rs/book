@@ -1,31 +1,34 @@
-use anyhow::Context;
-use aya::programs::{Xdp, XdpFlags};
-use aya_log::EbpfLogger;
-use clap::Parser;
-use log::{info, warn};
+use aya::programs::TracePoint;
+use env_logger::Env;
+#[rustfmt::skip]
+use log::{info, debug, warn};
 use tokio::signal;
 
-#[derive(Debug, Parser)]
-struct Opt {
-    #[clap(short, long, default_value = "eth0")]
-    iface: String,
-}
-
 #[tokio::main]
-async fn main() -> Result<(), anyhow::Error> {
-    let opt = Opt::parse();
+async fn main() -> anyhow::Result<()> {
+    env_logger::Builder::from_env(Env::default().default_filter_or("info"))
+        .init();
 
-    env_logger::init();
+    // Bump the memlock rlimit. This is needed for older kernels that don't use the
+    // new memcg based accounting, see https://lwn.net/Articles/837122/
+    let rlim = libc::rlimit {
+        rlim_cur: libc::RLIM_INFINITY,
+        rlim_max: libc::RLIM_INFINITY,
+    };
+    let ret = unsafe { libc::setrlimit(libc::RLIMIT_MEMLOCK, &rlim) };
+    if ret != 0 {
+        debug!("remove limit on locked memory failed, ret is: {ret}");
+    }
 
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
     // like to specify the eBPF program at runtime rather than at compile-time, you can
-    // reach for `Ebpf::load_file` instead.
-    let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
+    // reach for `Bpf::load_file` instead.
+    let mut ebpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
         env!("OUT_DIR"),
-        "/xdp-log"
+        "/tracepoint"
     )))?;
-    match EbpfLogger::init(&mut bpf) {
+    match aya_log::EbpfLogger::init(&mut ebpf) {
         Err(e) => {
             // This can happen if you remove all log statements from your eBPF program.
             warn!("failed to initialize eBPF logger: {e}");
@@ -44,11 +47,10 @@ async fn main() -> Result<(), anyhow::Error> {
             });
         }
     }
-    let program: &mut Xdp =
-        bpf.program_mut("xdp_firewall").unwrap().try_into()?;
+    let program: &mut TracePoint =
+        ebpf.program_mut("tracepoint_execve").unwrap().try_into()?;
     program.load()?;
-    program.attach(&opt.iface, XdpFlags::default())
-        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
+    program.attach("syscalls", "sys_enter_execve")?;
 
     let ctrl_c = signal::ctrl_c();
     info!("Waiting for Ctrl-C...");

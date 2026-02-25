@@ -93,8 +93,9 @@ async fn main() -> Result<(), anyhow::Error> {
         });
     }
 
+    let ctrl_c = signal::ctrl_c();
     info!("Waiting for Ctrl-C...");
-    signal::ctrl_c().await?;
+    ctrl_c.await?;
     info!("Exiting...");
 
     Ok(())
