@@ -1,10 +1,7 @@
 use aya::{Btf, programs::Lsm};
 use log::info;
 use std::{
-    sync::{
-        Arc,
-        atomic::{AtomicBool, Ordering},
-    },
+    sync::{Arc, barrier::Barrier},
     thread,
     time::Duration,
 };
@@ -33,18 +30,15 @@ fn try_main() -> Result<(), anyhow::Error> {
     program.load("task_alloc", &btf)?;
     program.attach()?;
 
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
+    let barrier = Arc::new(Barrier::new(2));
 
     ctrlc::set_handler(move || {
-        r.store(false, Ordering::SeqCst);
+        barrier.wait();
     })
     .expect("Error setting Ctrl-C handler");
 
     info!("Waiting for Ctrl-C...");
-    while running.load(Ordering::SeqCst) {
-        thread::sleep(Duration::from_millis(500))
-    }
+    barrier.wait();
     info!("Exiting...");
 
     Ok(())
