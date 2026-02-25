@@ -35,7 +35,8 @@ And finally to generate bindings for kernel data structures, you must install
 
 ## Starting A New Project
 
-To start a new project, you can use `cargo-generate`:
+To start a new project, you can use `cargo-generate`
+(installed via `cargo install cargo-generate`):
 
 ```console
 cargo generate https://github.com/aya-rs/aya-template
