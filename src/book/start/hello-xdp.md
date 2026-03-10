@@ -40,12 +40,19 @@ Now we can compile this using `cargo build`.
 
 ### Verifying The Program
 
+In order to find the most recent eBPF artifact, we need to look for the newest
+build folder for the `xdp-hello` project using:
+
+```console
+ls --sort=time target/debug/build | grep -E 'xdp-hello-[a-z0-9]+$'
+```
+
 Let's take a look at the compiled eBPF program:
 
 <!-- markdownlint-disable MD010 -->
 
 ```console
-$ llvm-objdump -S target/bpfel-unknown-none/debug/xdp-hello
+$ llvm-objdump -S target/debug/build/xdp-hello-<hash of the newest build directory>/out/xdp-hello
 
 target/bpfel-unknown-none/debug/xdp-hello:	file format elf64-bpf
 
