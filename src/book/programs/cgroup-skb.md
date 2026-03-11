@@ -104,7 +104,7 @@ mkdir /sys/fs/cgroup/foo
 Then run the program with:
 
 ```console
-RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
+RUST_LOG=info cargo run
 ```
 
 And then, in a separate terminal, as root, try to access `1.1.1.1`:
