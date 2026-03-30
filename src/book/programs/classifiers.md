@@ -88,7 +88,7 @@ is an appropriate type to use in eBPF maps.
 ## Running the program
 
 ```console
-$ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
+$ RUST_LOG=info cargo run
 LOG: SRC 1.1.1.1, ACTION 2
 LOG: SRC 35.186.224.47, ACTION 3
 LOG: SRC 35.186.224.47, ACTION 3

@@ -11,5 +11,5 @@
 Use `cargo build`, `cargo check`, etc. as normal. Run your program with:
 
 ```shell
-RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
+RUST_LOG=info cargo run
 ```
