@@ -1,19 +1,30 @@
-use std::net::Ipv4Addr;
+use std::{mem::MaybeUninit, net::Ipv4Addr};
 
 use aya::{
     maps::{
         HashMap,
-        perf::{Events, PerfEventArray},
+        perf::{PerfEvent, PerfEventArray},
     },
     programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
 };
-use bytes::BytesMut;
 use clap::Parser;
-use log::info;
+use log::{info, warn};
 use tokio::{signal, task};
 
 use cgroup_skb_egress_common::PacketLog;
+
+// TODO(https://github.com/rust-lang/rust/issues/93092): replace with `MaybeUninit::as_bytes_mut`
+// once stable.
+fn as_bytes_mut<T>(slot: &mut MaybeUninit<T>) -> &mut [MaybeUninit<u8>] {
+    // SAFETY: MaybeUninit<u8> imposes no validity invariants on its memory.
+    unsafe {
+        std::slice::from_raw_parts_mut(
+            slot.as_mut_ptr().cast::<MaybeUninit<u8>>(),
+            size_of::<T>(),
+        )
+    }
+}
 
 #[derive(Debug, Parser)]
 struct Opt {
@@ -66,28 +77,28 @@ async fn main() -> Result<(), anyhow::Error> {
         )?;
 
         task::spawn(async move {
-            let mut buffers =
-                std::iter::repeat_with(|| BytesMut::with_capacity(1024))
-                    .take(10)
-                    .collect::<Vec<_>>();
-
             loop {
                 let mut guard = buf.readable_mut().await.unwrap();
-                loop {
-                    let Events { read, lost: _ } = guard
-                        .get_inner_mut()
-                        .read_events(&mut buffers)
-                        .unwrap();
-                    for buf in buffers.iter_mut().take(read) {
-                        let ptr = buf.as_ptr() as *const PacketLog;
-                        let data = unsafe { ptr.read_unaligned() };
+                guard.get_inner_mut().for_each(|event| match event {
+                    PerfEvent::Sample { head, tail } => {
+                        // Samples can straddle the ring's wrap boundary; copy a contiguous window.
+                        let mut data = MaybeUninit::<PacketLog>::uninit();
+                        let bytes = as_bytes_mut(&mut data);
+                        debug_assert_eq!(head.len() + tail.len(), bytes.len());
+                        for (dst, src) in
+                            bytes.iter_mut().zip(head.iter().chain(tail))
+                        {
+                            dst.write(*src);
+                        }
+                        // SAFETY: the loop above wrote every byte of `data`; PacketLog is Pod.
+                        let data = unsafe { data.assume_init() };
                         let src_addr = Ipv4Addr::from(data.ipv4_address);
                         info!("LOG: DST {}, ACTION {}", src_addr, data.action);
                     }
-                    if read != buffers.len() {
-                        break;
+                    PerfEvent::Lost { count } => {
+                        warn!("dropped {count} samples")
                     }
-                }
+                });
                 guard.clear_ready();
             }
         });
