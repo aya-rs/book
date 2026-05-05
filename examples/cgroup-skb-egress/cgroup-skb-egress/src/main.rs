@@ -3,14 +3,13 @@ use std::net::Ipv4Addr;
 use aya::{
     maps::{
         HashMap,
-        perf::{Events, PerfEventArray},
+        perf::{PerfEvent, PerfEventArray},
     },
     programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
 };
-use bytes::BytesMut;
 use clap::Parser;
-use log::info;
+use log::{info, warn};
 use tokio::{signal, task};
 
 use cgroup_skb_egress_common::PacketLog;
@@ -66,28 +65,27 @@ async fn main() -> Result<(), anyhow::Error> {
         )?;
 
         task::spawn(async move {
-            let mut buffers =
-                std::iter::repeat_with(|| BytesMut::with_capacity(1024))
-                    .take(10)
-                    .collect::<Vec<_>>();
-
             loop {
                 let mut guard = buf.readable_mut().await.unwrap();
-                loop {
-                    let Events { read, lost: _ } = guard
-                        .get_inner_mut()
-                        .read_events(&mut buffers)
-                        .unwrap();
-                    for buf in buffers.iter_mut().take(read) {
-                        let ptr = buf.as_ptr() as *const PacketLog;
-                        let data = unsafe { ptr.read_unaligned() };
+                guard.get_inner_mut().for_each(|event| match event {
+                    PerfEvent::Sample { head, tail } => {
+                        // Samples can straddle the ring's wrap boundary; copy a contiguous window.
+                        const N: usize = size_of::<PacketLog>();
+                        let mut bytes = [0u8; N];
+                        let head_len = head.len().min(N);
+                        bytes[..head_len].copy_from_slice(&head[..head_len]);
+                        bytes[head_len..]
+                            .copy_from_slice(&tail[..N - head_len]);
+                        let data = unsafe {
+                            bytes.as_ptr().cast::<PacketLog>().read_unaligned()
+                        };
                         let src_addr = Ipv4Addr::from(data.ipv4_address);
                         info!("LOG: DST {}, ACTION {}", src_addr, data.action);
                     }
-                    if read != buffers.len() {
-                        break;
+                    PerfEvent::Lost { count } => {
+                        warn!("dropped {count} samples")
                     }
-                }
+                });
                 guard.clear_ready();
             }
         });
