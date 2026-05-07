@@ -13,9 +13,6 @@ calling `bpf_probe_read_kernel`. A fexit program also has access to the
 function's return value in the same context, without needing a separate
 return-side program the way kprobes do with kretprobes.
 
-You can find more information about fentry/fexit in the
-[kernel documentation][kernel-docs].
-
 > [!NOTE]
 > Fentry and fexit require a kernel built with BTF (`CONFIG_DEBUG_INFO_BTF=y`)
 > and a kernel version of at least 5.5.
@@ -30,8 +27,7 @@ of the newly created child on exit.
 ## Design
 
 For this demo program, we are going to rely on aya-log to print PIDs from the
-BPF program and not going to have any custom BPF maps (besides those created
-by aya-log).
+BPF program.
 
 The `kernel_clone` function is also called for thread creation, so to keep the
 output focused on process creation we filter out callers that pass the
@@ -62,8 +58,11 @@ Here's how the eBPF code looks like:
 
 The purpose of the userspace code is to load the eBPF program and attach the
 fentry and fexit handlers to `kernel_clone`. Both program types need a
-[`Btf`][aya-btf] handle so the kernel can resolve the target function by
-name.
+[`Btf`][aya-btf] handle: `Btf::from_sys_fs()` reads the running kernel's BTF
+from `/sys/kernel/btf/vmlinux`, aya uses it to translate the function name
+to its BTF type id, and the kernel uses that id to find the function's
+address and signature, so it can build a trampoline and verify your
+argument accesses.
 
 Here's how the code looks like:
 
@@ -85,7 +84,6 @@ $ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 <!-- markdownlint-enable MD013 -->
 
 [source-code]: https://github.com/aya-rs/book/tree/main/examples/fentry-fork
-[kernel-docs]: https://docs.kernel.org/bpf/prog_trace.html
-[bpf-trampoline]: https://docs.kernel.org/bpf/prog_lsm.html#bpf-trampoline
-[kernel-clone]: https://elixir.bootlin.com/linux/v6.16.9/source/kernel/fork.c#L2954
+[bpf-trampoline]: https://docs.ebpf.io/linux/concepts/trampolines/
+[kernel-clone]: https://elixir.bootlin.com/linux/v6.16.9/source/kernel/fork.c#L2558
 [aya-btf]: https://docs.rs/aya/latest/aya/struct.Btf.html
