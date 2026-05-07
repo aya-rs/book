@@ -2,9 +2,11 @@
 #![no_main]
 #![allow(linker_messages)]
 
-use aya_ebpf::helpers::bpf_get_current_pid_tgid;
-use aya_ebpf::macros::{fentry, fexit};
-use aya_ebpf::programs::{FEntryContext, FExitContext};
+use aya_ebpf::{
+    helpers::bpf_get_current_pid_tgid,
+    macros::{fentry, fexit},
+    programs::{FEntryContext, FExitContext},
+};
 use aya_log_ebpf::info;
 
 #[allow(

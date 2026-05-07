@@ -1,5 +1,7 @@
-use aya::Btf;
-use aya::programs::{FEntry, FExit};
+use aya::{
+    Btf,
+    programs::{FEntry, FExit},
+};
 use aya_log::EbpfLogger;
 use log::{info, warn};
 use tokio::signal;
