@@ -1,0 +1,13 @@
+[workspace]
+members = ["fentry-fork", "fentry-fork-ebpf"]
+
+resolver = "2"
+
+default-members = ["fentry-fork"]
+
+[workspace.package]
+edition = "2024"
+
+[profile.release.package.fentry-fork-ebpf]
+debug = 2
+codegen-units = 1
