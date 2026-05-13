@@ -14,6 +14,7 @@
     - [Using aya-log](book/aya/aya-log.md)
   - [Program Types](book/programs/index.md)
     - [Probes](book/programs/probes.md)
+    - [Fentry / Fexit](book/programs/fentry.md)
     - [Tracepoints](book/programs/tracepoints.md)
     - [Socket Programs](book/programs/sockets.md)
     - [Classifiers](book/programs/classifiers.md)
