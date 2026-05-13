@@ -7,7 +7,7 @@ Consider the following example:
 
 ```rust,ignore
 use aya::Bpf;
-use aya::programs::{Xdp, XdpFlags};
+use aya::programs::{Xdp, XdpMode};
 
 fn main() {
     {
@@ -18,7 +18,7 @@ fn main() {
         // (2)
         program.load()?;
         // (3)
-        program.attach("eth0", XdpFlags::default()).unwrap();
+        program.attach("eth0", XdpMode::default()).unwrap();
     }
     // (4)
 

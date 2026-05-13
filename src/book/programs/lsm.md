@@ -132,7 +132,7 @@ cd lsm-nice
 ```
 
 One of the arguments passed to the `task_setnice` hook is a pointer to a
-[task_struct type](https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723).
+[task_struct type](https://github.com/torvalds/linux/blob/v5.15/include/linux/sched.h#L723).
 Therefore we need to generate a binding to `task_struct` with aya-tool.
 
 > If you are not familiar with aya-tool, please refer to

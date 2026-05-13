@@ -1,7 +1,7 @@
 use anyhow::Context;
 use aya::{
     maps::HashMap,
-    programs::{Xdp, XdpFlags},
+    programs::{Xdp, XdpMode},
 };
 use aya_log::EbpfLogger;
 use clap::Parser;
@@ -51,8 +51,8 @@ async fn main() -> Result<(), anyhow::Error> {
     let program: &mut Xdp =
         bpf.program_mut("xdp_firewall").unwrap().try_into()?;
     program.load()?;
-    program.attach(&opt.iface, XdpFlags::default())
-        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
+    program.attach(&opt.iface, XdpMode::default())
+        .context("failed to attach the XDP program with default mode - try changing XdpMode::default() to XdpMode::Skb")?;
 
     // (1)
     let mut blocklist: HashMap<_, u32, u32> =

@@ -7,7 +7,7 @@ use aya_log_ebpf::info;
 use core::mem;
 use network_types::{
     eth::{EthHdr, EtherType},
-    ip::{IpProto, Ipv4Hdr},
+    ip::{IpError, IpProto, Ipv4Hdr},
     tcp::TcpHdr,
     udp::UdpHdr,
 };
@@ -49,7 +49,10 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
     let ipv4hdr: *const Ipv4Hdr = ptr_at(&ctx, EthHdr::LEN)?;
     let source_addr = u32::from_be_bytes(unsafe { (*ipv4hdr).src_addr });
 
-    let source_port = match unsafe { (*ipv4hdr).proto } {
+    let proto = unsafe { (*ipv4hdr).proto() }
+        .map_err(|IpError::InvalidProto(_proto)| ())?;
+
+    let source_port = match proto {
         IpProto::Tcp => {
             let tcphdr: *const TcpHdr =
                 ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN)?;

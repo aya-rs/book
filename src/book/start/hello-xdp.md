@@ -191,7 +191,7 @@ So every time a packet was received on the interface, a log was printed!
 
 > [!WARNING]
 > If you get an error loading the program, try changing
-> `XdpFlags::default()` to `XdpFlags::SKB_MODE`
+> `XdpMode::default()` to `XdpMode::Skb`
 
 ### The Lifecycle of an eBPF Program
 
