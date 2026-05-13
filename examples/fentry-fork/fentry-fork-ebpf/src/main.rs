@@ -32,11 +32,8 @@ pub fn fentry_clone(ctx: FEntryContext) -> u32 {
     let flags = unsafe { (*args_ptr).flags };
 
     if flags & CLONE_THREAD == 0 {
-        info!(
-            &ctx,
-            "Process creation is started by: {}",
-            bpf_get_current_pid_tgid() as u32
-        );
+        let pid = (bpf_get_current_pid_tgid() >> 32) as u32;
+        info!(&ctx, "Process creation is started by: {}", pid);
     }
     0
 }
@@ -48,12 +45,18 @@ pub fn fexit_clone(ctx: FExitContext) -> u32 {
     let return_value: i32 = ctx.arg(1);
 
     if flags & CLONE_THREAD == 0 {
-        info!(
-            &ctx,
-            "New process is created by: {} child id: {}",
-            bpf_get_current_pid_tgid() as u32,
-            return_value
-        );
+        let pid = (bpf_get_current_pid_tgid() >> 32) as u32;
+        if return_value < 0 {
+            info!(
+                &ctx,
+                "Process creation by {} failed. errno: {}", pid, return_value
+            );
+        } else {
+            info!(
+                &ctx,
+                "New process is created by: {} child id: {}", pid, return_value
+            );
+        }
     }
     0
 }

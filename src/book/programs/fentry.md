@@ -85,5 +85,5 @@ $ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
 
 [source-code]: https://github.com/aya-rs/book/tree/main/examples/fentry-fork
 [bpf-trampoline]: https://docs.ebpf.io/linux/concepts/trampolines/
-[kernel-clone]: https://elixir.bootlin.com/linux/v6.16.9/source/kernel/fork.c#L2558
+[kernel-clone]: https://github.com/torvalds/linux/blob/v7.0/kernel/fork.c#L2612
 [aya-btf]: https://docs.rs/aya/latest/aya/struct.Btf.html
