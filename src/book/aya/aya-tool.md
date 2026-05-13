@@ -77,4 +77,4 @@ target kernel (regardless of version) should have `CONFIG_DEBUG_INFO_BTF`
 option enabled.
 
 [source-code]: https://github.com/aya-rs/book/tree/main/examples/aya-tool
-[task-struct]: https://elixir.bootlin.com/linux/v5.15.3/source/include/linux/sched.h#L723
+[task-struct]: https://github.com/torvalds/linux/blob/v5.15/include/linux/sched.h#L723
