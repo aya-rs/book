@@ -49,7 +49,7 @@ pub fn fexit_clone(ctx: FExitContext) -> u32 {
         if return_value < 0 {
             info!(
                 &ctx,
-                "Process creation by {} failed. errno: {}", pid, return_value
+                "Process creation by {} failed. errno: {}", pid, -return_value
             );
         } else {
             info!(
