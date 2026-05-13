@@ -1,5 +1,5 @@
 use anyhow::Context;
-use aya::programs::{Xdp, XdpFlags};
+use aya::programs::{Xdp, XdpMode};
 use aya_log::EbpfLogger;
 use clap::Parser;
 use log::{info, warn};
@@ -50,8 +50,8 @@ async fn main() -> Result<(), anyhow::Error> {
     let program: &mut Xdp = bpf.program_mut("xdp_hello").unwrap().try_into()?;
     program.load()?; // (7)
     // (8)
-    program.attach(&opt.iface, XdpFlags::default())
-        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
+    program.attach(&opt.iface, XdpMode::default())
+        .context("failed to attach the XDP program with default mode - try changing XdpMode::default() to XdpMode::Skb")?;
 
     let ctrl_c = signal::ctrl_c();
     info!("Waiting for Ctrl-C...");

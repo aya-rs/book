@@ -348,7 +348,7 @@ Let's begin with writing the user-space code:
 use anyhow::Context;
 use aya::{
     maps::HashMap,
-    programs::{Xdp, XdpFlags},
+    programs::{Xdp, XdpMode},
 };
 use aya_log::EbpfLogger;
 use clap::Parser;
@@ -359,8 +359,8 @@ use tokio::signal;
 
 - `anyhow::Context`: Provides additional context for error handling
 - `aya`: Provides the Bpf structure and related functions for loading eBPF
-  programs, as well as the XDP program and its flags
-  (`aya::programs::{Xdp, XdpFlags}`)
+  programs, as well as the XDP program and attach mode
+  (`aya::programs::{Xdp, XdpMode}`)
 - `aya_log::EbpfLogger`: For logging within the eBPF program
 - `clap::Parser`: Provides argument parsing
 - `log::{info, warn}`: The [logging library][logging-library]
@@ -424,9 +424,9 @@ async fn main() -> Result<(), anyhow::Error> {
     let program: &mut Xdp =
         bpf.program_mut("xdp_firewall").unwrap().try_into()?;
     program.load()?;
-    program.attach(&opt.iface, XdpFlags::default())
-        .context("failed to attach the XDP program with default flags - "
-                    "try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
+    program.attach(&opt.iface, XdpMode::default())
+        .context("failed to attach the XDP program with default mode - "
+                    "try changing XdpMode::default() to XdpMode::Skb")?;
 
     let mut blocklist: HashMap<_, u32, u32> =
         HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
@@ -482,7 +482,7 @@ The program awaits the `CTRL+C` signal asynchronously using
 use anyhow::Context;
 use aya::{
     maps::HashMap,
-    programs::{Xdp, XdpFlags},
+    programs::{Xdp, XdpMode},
 };
 use aya_log::EbpfLogger;
 use clap::Parser;
@@ -528,10 +528,10 @@ async fn main() -> Result<(), anyhow::Error> {
     let program: &mut Xdp =
         bpf.program_mut("xdp_firewall").unwrap().try_into()?;
     program.load()?;
-    program.attach(&opt.iface, XdpFlags::default())
-        .context("failed to attach the XDP program with default flags - "
-                    "try changing XdpFlags::default() to "
-                    "XdpFlags::SKB_MODE")?;
+    program.attach(&opt.iface, XdpMode::default())
+        .context("failed to attach the XDP program with default mode - "
+                    "try changing XdpMode::default() to "
+                    "XdpMode::Skb")?;
 
     let mut blocklist: HashMap<_, u32, u32> =
         HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?;
