@@ -75,7 +75,7 @@ Here's how the code looks like:
 <!-- markdownlint-disable MD013 -->
 
 ```console
-$ RUST_LOG=info cargo run --config 'target."cfg(all())".runner="sudo -E"'
+$ RUST_LOG=info cargo run
 [2026-05-07T10:00:00Z INFO  fentry_fork] Waiting for Ctrl-C...
 [2026-05-07T10:00:05Z INFO  fentry_fork] Process creation is started by: 12345
 [2026-05-07T10:00:05Z INFO  fentry_fork] New process is created by: 12345 child id: 67890
