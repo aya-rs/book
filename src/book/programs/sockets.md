@@ -18,9 +18,9 @@ E.g.: `cargo generate --name hello-sockops -d program_type=sock_ops https://gith
 This example logs IPv4 socket information from a SockOps program.
 The program:
 
-- checks whether the socket family is `AF_INET`,
-- reads the local address, local port, and current pid from `SockOpsContext`,
-- logs the operation and returns `1` to indicate success.
+- Checks whether the socket family is `AF_INET`,
+- Reads the local address, local port, and current pid from `SockOpsContext`,
+- Logs the operation and returns `1` to indicate success.
 
 Here's how the eBPF code looks like:
 
