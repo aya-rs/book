@@ -15,11 +15,9 @@ fn main() -> anyhow::Result<()> {
         Ok(logger) => Some(logger),
     };
 
-    let PROGRAM_NAME: &str = "socket_ops";
-    let program: &mut aya::programs::SockOps = ebpf_sockops
-        .program_mut(PROGRAM_NAME)
-        .expect(format!("no eBPF program named {PROGRAM_NAME}").as_str())
-        .try_into()?;
+    const PROGRAM_NAME: &str = "socket_ops";
+    let program: &mut aya::programs::SockOps =
+        ebpf_sockops.program_mut(PROGRAM_NAME).unwrap().try_into()?;
     program.load()?;
     let root_cg_file = std::fs::File::open("/sys/fs/cgroup")?;
     program

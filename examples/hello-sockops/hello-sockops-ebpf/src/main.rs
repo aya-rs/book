@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use aya_ebpf::{macros::sock_ops, programs::SockOpsContext, EbpfContext};
+use aya_ebpf::{EbpfContext, macros::sock_ops, programs::SockOpsContext};
 use aya_log_ebpf::{info, warn};
 
 // Cannot do `cargo add libc` due to no_std.
