@@ -3,14 +3,12 @@ use aya::maps::XskMap;
 use aya::programs::{Xdp, XdpFlags};
 use aya_log::EbpfLogger;
 use clap::Parser;
-use log::{info, log, warn};
+use log::{info, warn};
 use std::os::fd::AsRawFd;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::signal;
-use xsk_rs::config::{
-    LibxdpFlags, SocketConfig, SocketConfigBuilder, UmemConfig,
-};
+use xsk_rs::config::{LibxdpFlags, SocketConfigBuilder, UmemConfig};
 use xsk_rs::{CompQueue, FillQueue, FrameDesc, RxQueue, Socket, TxQueue, Umem};
 
 #[derive(Debug, Parser)]
@@ -69,6 +67,31 @@ fn setup_sockets(
     Ok(res)
 }
 
+fn create_reply(pkt: &mut [u8]) -> anyhow::Result<()> {
+    let (eth_hdr, ip_packet) = pkt.split_at_mut(14);
+
+    // swap mac addresses
+    let [eth_dst, eth_src] = eth_hdr.get_disjoint_mut([0..6, 6..12])?;
+    eth_src.swap_with_slice(eth_dst);
+
+    let (ip_header, icmp_packet) = ip_packet.split_at_mut(20);
+
+    // swap ip addresses
+    let [ip_src, ip_dst] = ip_header.get_disjoint_mut([12..16, 16..20])?;
+    ip_src.swap_with_slice(ip_dst);
+
+    icmp_packet[0] = 0u8; // echo reply type
+
+    // Recompute checksum. Type and code are zero
+    let mut sum = 0u32;
+    sum += u16::from_be_bytes([icmp_packet[4], icmp_packet[5]]) as u32;
+    sum += u16::from_be_bytes([icmp_packet[5], icmp_packet[6]]) as u32;
+    sum = (sum & 0xffff) + (sum >> 16);
+    icmp_packet[2..4].copy_from_slice(&(sum as u16).to_be_bytes());
+
+    Ok(())
+}
+
 fn run_queue_loop(
     mut socket: SocketResources,
     cancellation: &AtomicBool,
@@ -78,17 +101,25 @@ fn run_queue_loop(
         let packet_cnt =
             unsafe { socket.rx_q.poll_and_consume(&mut descs, 100)? };
 
-        for desc in &descs[..packet_cnt] {
-            let mut data = unsafe { socket.umem.data(&desc) }.contents();
-
-            info!(
-                "Received packet, {} bytes: {:02x?}",
-                data.len(),
-                &data[..data.len().min(64)]
-            );
+        if packet_cnt > 0 {
+            info!("Got {packet_cnt} messages");
         }
 
-        unsafe { socket.fill_q.produce(&descs[..packet_cnt]) };
+        for desc in &mut descs[..packet_cnt] {
+            let mut data = unsafe { socket.umem.data_mut(desc) };
+            let pkt = data.contents_mut();
+            create_reply(pkt)?;
+        }
+
+        if packet_cnt > 0 {
+            info!("Replying to {packet_cnt} messages!");
+        }
+
+        unsafe { socket.tx_q.produce(&descs[..packet_cnt]) };
+
+        // move descriptors from completion into fill
+        let comp_cnt = unsafe { socket.comp_q.consume(&mut descs) };
+        unsafe { socket.fill_q.produce(&descs[..comp_cnt]) };
     }
     Ok(())
 }

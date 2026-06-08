@@ -5,18 +5,18 @@
 use aya_ebpf::{
     bindings::xdp_action,
     macros::{map, xdp},
-    maps::HashMap,
     programs::XdpContext,
 };
-use aya_log_ebpf::{info, log};
+use aya_log_ebpf::info;
 
 use aya_ebpf::maps::XskMap;
-use core::mem;
-use network_types::icmp::{Icmpv4Hdr, Icmpv4Type, Icmpv6Hdr, Icmpv6Type};
-use network_types::ip::{IpProto, Ipv6Hdr};
 use network_types::{
     eth::{EthHdr, EtherType},
     ip::Ipv4Hdr,
+};
+use network_types::{
+    icmp::{Icmpv4Hdr, Icmpv4Type},
+    ip::IpProto,
 };
 
 #[map]
@@ -42,7 +42,6 @@ pub fn xdp_ping(ctx: XdpContext) -> u32 {
 
 fn try_xdp_ping(ctx: XdpContext) -> Result<u32, ()> {
     let ethhdr: *const EthHdr = unsafe { ptr_at(&ctx, 0)? };
-    info!(&ctx, "Got a message");
     match unsafe { (*ethhdr).ether_type() } {
         Ok(EtherType::Ipv4) => {
             // Get protocol type from ip header
@@ -52,32 +51,21 @@ fn try_xdp_ping(ctx: XdpContext) -> Result<u32, ()> {
                 return Ok(xdp_action::XDP_PASS);
             }
 
+            // Ignore ip packets with options
+            if unsafe { (*ipv4hdr).options_len() } > 0 {
+                return Ok(xdp_action::XDP_PASS);
+            }
+
             // Get ICMP type and code
             let icmp_hdr: *const Icmpv4Hdr =
                 unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN)? };
             let msg_type: Icmpv4Type =
                 unsafe { (*icmp_hdr).icmp_type().map_err(|_| ())? };
             if matches!(msg_type, Icmpv4Type::Echo) {
-                Ok(SOCKS.redirect(ctx.rx_queue_index(), 0).unwrap_or(xdp_action::XDP_PASS))
-            } else {
-                Ok(xdp_action::XDP_PASS)
-            }
-        }
-        Ok(EtherType::Ipv6) => {
-            // Get protocol type from ip header
-            let ipv6hdr: *const Ipv6Hdr = unsafe { ptr_at(&ctx, EthHdr::LEN)? };
-            let protocol = unsafe { (*ipv6hdr).next_hdr().map_err(|_| ())? };
-            if protocol != IpProto::Icmp {
-                return Ok(xdp_action::XDP_PASS);
-            }
-
-            // Get ICMP type and code
-            let icmp_hdr: *const Icmpv6Hdr =
-                unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv6Hdr::LEN)? };
-            let msg_type: Icmpv6Type =
-                unsafe { (*icmp_hdr).icmp_type().map_err(|_| ())? };
-            if matches!(msg_type, Icmpv6Type::EchoRequest) {
-                Ok(SOCKS.redirect(ctx.rx_queue_index(), 0).unwrap_or(xdp_action::XDP_PASS))
+                info!(&ctx, "Got a message in XDP. Forwarding");
+                Ok(SOCKS
+                    .redirect(ctx.rx_queue_index(), 0)
+                    .unwrap_or(xdp_action::XDP_PASS))
             } else {
                 Ok(xdp_action::XDP_PASS)
             }
