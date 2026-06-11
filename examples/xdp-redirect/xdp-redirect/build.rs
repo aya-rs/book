@@ -10,9 +10,9 @@ fn main() -> anyhow::Result<()> {
     let ebpf_package = packages
         .into_iter()
         .find(|cargo_metadata::Package { name, .. }| {
-            name.as_str() == "xdp-hello-ebpf"
+            name.as_str() == "xdp-redirect-ebpf"
         })
-        .ok_or_else(|| anyhow!("xdp-hello-ebpf package not found"))?;
+        .ok_or_else(|| anyhow!("xdp-redirect-ebpf package not found"))?;
     let cargo_metadata::Package {
         name,
         manifest_path,

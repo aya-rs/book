@@ -132,7 +132,7 @@ async fn main() -> anyhow::Result<()> {
 
     let mut bpf = aya::Ebpf::load(aya::include_bytes_aligned!(concat!(
         env!("OUT_DIR"),
-        "/xdp-hello"
+        "/xdp-redirect"
     )))?;
     match EbpfLogger::init(&mut bpf) {
         Err(e) => {

@@ -1,4 +1,4 @@
-# xdp-hello
+# xdp-redirect
 
 ## Prerequisites
 

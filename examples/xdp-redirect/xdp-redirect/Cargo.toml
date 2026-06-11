@@ -1,5 +1,5 @@
 [package]
-name = "xdp-hello"
+name = "xdp-redirect"
 version = "0.1.0"
 edition.workspace = true
 publish = false
@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 aya = { git = "https://github.com/aya-rs/aya" }
 aya-log = { git = "https://github.com/aya-rs/aya" }
-xdp-hello-common = { path = "../xdp-hello-common", features = ["user"] }
+xdp-redirect-common = { path = "../xdp-redirect-common", features = ["user"] }
 anyhow = "1"
 clap = { version = "4.1", features = ["derive"] }
 log = "0.4"
@@ -38,8 +38,8 @@ cargo_metadata = "0.23.0"
 # Finally note that *any* usage of `artifact = ...` in *any* Cargo.toml in the workspace breaks
 # workflows with stable cargo; stable cargo outright refuses to load manifests that use unstable
 # features.
-xdp-hello-ebpf = { path = "../xdp-hello-ebpf" }
+xdp-redirect-ebpf = { path = "../xdp-redirect-ebpf" }
 
 [[bin]]
-name = "xdp-hello"
+name = "xdp-redirect"
 path = "src/main.rs"

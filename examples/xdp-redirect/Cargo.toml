@@ -1,13 +1,13 @@
 [workspace]
-members = ["xdp-hello", "xdp-hello-common", "xdp-hello-ebpf"]
+members = ["xdp-redirect", "xdp-redirect-common", "xdp-redirect-ebpf"]
 
 resolver = "2"
 
-default-members = ["xdp-hello", "xdp-hello-common"]
+default-members = ["xdp-redirect", "xdp-redirect-common"]
 
 [workspace.package]
 edition = "2024"
 
-[profile.release.package.xdp-hello-ebpf]
+[profile.release.package.xdp-redirect-ebpf]
 debug = 2
 codegen-units = 1
