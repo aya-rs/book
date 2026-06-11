@@ -1,21 +1,25 @@
 use anyhow::Context;
-use aya::maps::XskMap;
-use aya::programs::{Xdp, XdpMode};
+use aya::{
+    maps::XskMap,
+    programs::{Xdp, XdpMode},
+};
 use aya_log::EbpfLogger;
 use clap::Parser;
 use log::{info, warn};
-use std::os::fd::AsRawFd;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
-use tokio::signal;
-use xsk_rs::config::{LibxdpFlags, SocketConfigBuilder, UmemConfig};
-use xsk_rs::{CompQueue, FillQueue, FrameDesc, RxQueue, Socket, TxQueue, Umem};
-
-use network_types::{
-    eth::EthHdr,
-    icmp::Icmpv4Type,
-    ip::Ipv4Hdr,
+use std::{
+    os::fd::AsRawFd,
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
 };
+use tokio::signal;
+use xsk_rs::{
+    CompQueue, FillQueue, FrameDesc, RxQueue, Socket, TxQueue, Umem,
+    config::{LibxdpFlags, SocketConfigBuilder, UmemConfig},
+};
+
+use network_types::{eth::EthHdr, icmp::Icmpv4Type, ip::Ipv4Hdr};
 
 #[derive(Debug, Parser)]
 struct Opt {
@@ -83,7 +87,8 @@ fn create_reply(pkt: &mut [u8]) {
     let (ip_header, icmp_packet) = ip_packet.split_at_mut(Ipv4Hdr::LEN);
 
     // swap ip addresses
-    let [ip_src, ip_dst] = ip_header.get_disjoint_mut([12..16, 16..20]).unwrap();
+    let [ip_src, ip_dst] =
+        ip_header.get_disjoint_mut([12..16, 16..20]).unwrap();
     ip_src.swap_with_slice(ip_dst);
 
     icmp_packet[0] = Icmpv4Type::EchoReply as u8;
