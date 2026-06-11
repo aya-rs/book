@@ -8,7 +8,7 @@ set of blocked IP addresses: any packet from a blocked address is dropped with
 `XDP_DROP`, while everything else is allowed through with `XDP_PASS`. If you need
 a refresher on XDP itself, see the [XDP overview](xdp.md).
 
-### Setting up the development environment
+## Setting up the development environment
 
 Make sure you already have the [prerequisites][prerequisites].
 
@@ -20,7 +20,7 @@ cargo generate --name simple-xdp-program -d program_type=xdp \
     https://github.com/aya-rs/aya-template
 ```
 
-### Creating the eBPF component
+## Creating the eBPF component
 
 First, we must create the eBPF component for our program, in this component, we
 will decide what to do with the incoming packets.
@@ -248,7 +248,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
 }
 ```
 
-### Populating our map from user-space
+## Populating our map from user-space
 
 In order to add the addresses to block, we first need to get a reference to the
 `BLOCKLIST` map.
@@ -273,7 +273,7 @@ We'll block all traffic originating from `1.1.1.1` in this example.
 
 Let's begin with writing the user-space code:
 
-#### Importing dependencies
+### Importing dependencies
 
 ```rust,ignore
 use anyhow::Context;
@@ -306,7 +306,7 @@ we use for informational and warning messages
 > [`aya_log:EbpfLogger`][aya-ebpf-logger] instead if you are using the more
 > recent versions.
 
-#### Defining command-line arguments
+### Defining command-line arguments
 
 ```rust,ignore
 #[derive(Debug, Parser)]
@@ -320,7 +320,7 @@ A simple struct is defined for command-line parsing using
 [clap's derive feature][clap-derive], with the optional argument `iface` to
 provide our network interface name.
 
-#### Main function
+### Main function
 
 ```rust,ignore
 #[tokio::main]
@@ -375,39 +375,39 @@ async fn main() -> Result<(), anyhow::Error> {
 }
 ```
 
-##### Parsing command-line arguments
+#### Parsing command-line arguments
 
 Inside the `main` function, we first parse the command-line arguments,
 using [`Opt::parse()`][clap-parse] and the struct defined earlier.
 
-##### Initializing environment logging
+#### Initializing environment logging
 
 Logging is initialized using [`env_logger::init()`][env-logger-init], we will
 make use of the environment logger later in our code.
 
-##### Loading the eBPF program
+#### Loading the eBPF program
 
 The eBPF program is loaded using `Ebpf::load()`, choosing the debug or release
 version based on the build configuration (`debug_assertions`).
 
-##### Loading and attaching our XDP
+#### Loading and attaching our XDP
 
 The XDP program named `xdp_firewall` is retrieved from the eBPF program we
 defined earlier using `bpf.program_mut()`. The XDP program is then loaded and
 attached to our network interface.
 
-##### Setting up the IP blocklist
+#### Setting up the IP blocklist
 
 The IP blocklist (`BLOCKLIST` map) is loaded from the eBPF program and
 converted to a `HashMap`. The IP `1.1.1.1` is added to the blocklist.
 
-##### Waiting for the exit signal
+#### Waiting for the exit signal
 
 The program awaits the `CTRL+C` signal asynchronously using
 `signal::ctrl_c().await`, once received, it logs an exit message and returns
 `Ok(())`.
 
-#### Full user-space code
+### Full user-space code
 
 ```rust,ignore
 use anyhow::Context;
@@ -480,7 +480,7 @@ async fn main() -> Result<(), anyhow::Error> {
 }
 ```
 
-### Running our program
+## Running our program
 
 Now that we have all the pieces for our eBPF program, we can run it using:
 
