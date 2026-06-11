@@ -21,6 +21,8 @@
     - [Cgroups](book/programs/cgroups.md)
     - [Cgroup SKB](book/programs/cgroup-skb.md)
     - [XDP](book/programs/xdp.md)
+      - [Blocklist Firewall](book/programs/xdp-blocklist.md)
+      - [Redirecting with AF_XDP](book/programs/xdp-redirect.md)
     - [LSM](book/programs/lsm.md)
 - [Community](community/index.md)
   - [Code of Conduct](community/code_of_conduct.md)
