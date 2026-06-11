@@ -5,18 +5,14 @@
 use aya_ebpf::{
     bindings::xdp_action,
     macros::{map, xdp},
+    maps::XskMap,
     programs::XdpContext,
 };
 use aya_log_ebpf::info;
-
-use aya_ebpf::maps::XskMap;
 use network_types::{
     eth::{EthHdr, EtherType},
-    ip::Ipv4Hdr,
-};
-use network_types::{
     icmp::{Icmpv4Hdr, Icmpv4Type},
-    ip::IpProto,
+    ip::{IpProto, Ipv4Hdr},
 };
 
 #[map]

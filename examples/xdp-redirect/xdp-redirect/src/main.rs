@@ -11,6 +11,12 @@ use tokio::signal;
 use xsk_rs::config::{LibxdpFlags, SocketConfigBuilder, UmemConfig};
 use xsk_rs::{CompQueue, FillQueue, FrameDesc, RxQueue, Socket, TxQueue, Umem};
 
+use network_types::{
+    eth::EthHdr,
+    icmp::Icmpv4Type,
+    ip::Ipv4Hdr,
+};
+
 #[derive(Debug, Parser)]
 struct Opt {
     #[clap(short, long, default_value = "eth0")]
@@ -67,29 +73,26 @@ fn setup_sockets(
     Ok(res)
 }
 
-fn create_reply(pkt: &mut [u8]) -> anyhow::Result<()> {
-    let (eth_hdr, ip_packet) = pkt.split_at_mut(14);
+fn create_reply(pkt: &mut [u8]) {
+    let (eth_hdr, ip_packet) = pkt.split_at_mut(EthHdr::LEN);
 
     // swap mac addresses
-    let [eth_dst, eth_src] = eth_hdr.get_disjoint_mut([0..6, 6..12])?;
+    let [eth_dst, eth_src] = eth_hdr.get_disjoint_mut([0..6, 6..12]).unwrap();
     eth_src.swap_with_slice(eth_dst);
 
-    let (ip_header, icmp_packet) = ip_packet.split_at_mut(20);
+    let (ip_header, icmp_packet) = ip_packet.split_at_mut(Ipv4Hdr::LEN);
 
     // swap ip addresses
-    let [ip_src, ip_dst] = ip_header.get_disjoint_mut([12..16, 16..20])?;
+    let [ip_src, ip_dst] = ip_header.get_disjoint_mut([12..16, 16..20]).unwrap();
     ip_src.swap_with_slice(ip_dst);
 
-    icmp_packet[0] = 0u8; // echo reply type
+    icmp_packet[0] = Icmpv4Type::EchoReply as u8;
 
-    // Recompute checksum. Type and code are zero
-    let mut sum = 0u32;
-    sum += u16::from_be_bytes([icmp_packet[4], icmp_packet[5]]) as u32;
-    sum += u16::from_be_bytes([icmp_packet[5], icmp_packet[6]]) as u32;
+    // Recompute checksum. RFC 1624
+    let mut sum = u16::from_be_bytes([icmp_packet[2], icmp_packet[3]]) as u32;
+    sum += 0x0800;
     sum = (sum & 0xffff) + (sum >> 16);
     icmp_packet[2..4].copy_from_slice(&(sum as u16).to_be_bytes());
-
-    Ok(())
 }
 
 fn run_queue_loop(
@@ -108,7 +111,7 @@ fn run_queue_loop(
         for desc in &mut descs[..packet_cnt] {
             let mut data = unsafe { socket.umem.data_mut(desc) };
             let pkt = data.contents_mut();
-            create_reply(pkt)?;
+            create_reply(pkt);
         }
 
         if packet_cnt > 0 {
@@ -191,7 +194,9 @@ async fn main() -> anyhow::Result<()> {
     std::thread::scope(|s| {
         for socket in socket_resources.into_iter() {
             s.spawn(|| {
-                run_queue_loop(socket, &cancellation);
+                if let Err(e) = run_queue_loop(socket, &cancellation) {
+                    warn!("queue loop exited: {e}");
+                }
             });
         }
     });

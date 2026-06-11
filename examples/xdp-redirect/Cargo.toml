@@ -1,9 +1,9 @@
 [workspace]
-members = ["xdp-redirect", "xdp-redirect-common", "xdp-redirect-ebpf"]
+members = ["xdp-redirect", "xdp-redirect-ebpf"]
 
 resolver = "2"
 
-default-members = ["xdp-redirect", "xdp-redirect-common"]
+default-members = ["xdp-redirect"]
 
 [workspace.package]
 edition = "2024"
