@@ -116,7 +116,7 @@ program.
 ```rust,ignore
 let program: &mut Xdp = bpf.program_mut("xdp_ping").unwrap().try_into()?;
 program.load()?;
-program.attach(&opt.iface, XdpFlags::default())?;
+program.attach(&opt.iface, XdpMode::default())?;
 
 // Create AF_XDP sockets
 let queue_cnt: u32 = 8;
