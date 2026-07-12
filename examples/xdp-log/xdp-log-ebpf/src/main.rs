@@ -63,7 +63,7 @@ fn try_xdp_firewall(ctx: XdpContext) -> Result<u32, ()> {
                 ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN)?;
             unsafe { (*udphdr).src_port() }
         }
-        _ => return Err(()),
+        _ => return Ok(xdp_action::XDP_PASS),
     };
 
     // (3)
