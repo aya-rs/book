@@ -1,0 +1,13 @@
+[workspace]
+members = ["xdp-redirect", "xdp-redirect-ebpf"]
+
+resolver = "2"
+
+default-members = ["xdp-redirect"]
+
+[workspace.package]
+edition = "2024"
+
+[profile.release.package.xdp-redirect-ebpf]
+debug = 2
+codegen-units = 1
