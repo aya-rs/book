@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: DavidAnson/markdownlint-cli2-action@v24
+      - uses: DavidAnson/markdownlint-cli2-action@v24.1.0
         with:
           globs: '**/*.md'
 
@@ -51,7 +51,7 @@ jobs:
             examples/xdp-hello
             examples/xdp-log
 
-      - uses: taiki-e/install-action@v2
+      - uses: taiki-e/install-action@v2.85.5
         with:
           tool: bpf-linker,mdbook
 
