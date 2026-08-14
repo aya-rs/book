@@ -100,7 +100,7 @@ And finally, rebooting the system.
 
 ## Writing LSM BPF program
 
-Let's try to create an LSM eBPF program which which is triggered by
+Let's try to create an LSM eBPF program which is triggered by
 `task_setnice` hook. The purpose of this program will be denying setting the
 nice value lower than 0 (which means higher priority), for a particular process.
 
