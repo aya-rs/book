@@ -64,7 +64,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
 
     // (3)
-    blocklist.insert(block_addr, 0, 0)?;
+    blocklist.insert(&block_addr, &0, 0)?;
 
     let mut perf_array =
         PerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;

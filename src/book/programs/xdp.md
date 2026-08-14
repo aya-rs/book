@@ -433,7 +433,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
     let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
 
-    blocklist.insert(block_addr, 0, 0)?;
+    blocklist.insert(&block_addr, &0, 0)?;
 
     let ctrl_c = signal::ctrl_c();
     info!("Waiting for Ctrl-C...");
@@ -538,7 +538,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
     let block_addr: u32 = Ipv4Addr::new(1, 1, 1, 1).into();
 
-    blocklist.insert(block_addr, 0, 0)?;
+    blocklist.insert(&block_addr, &0, 0)?;
 
     let ctrl_c = signal::ctrl_c();
     info!("Waiting for Ctrl-C...");
