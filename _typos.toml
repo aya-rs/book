@@ -1,0 +1,25 @@
+[default.extend-words]
+# eBPF-specific terms that typos might flag
+xdp = "xdp"
+ebpf = "ebpf"
+bpf = "bpf"
+cgroup = "cgroup"
+skb = "skb"
+tc = "tc"
+lsm = "lsm"
+fentry = "fentry"
+fexit = "fexit"
+kprobe = "kprobe"
+uprobe = "uprobe"
+perf = "perf"
+mmap = "mmap"
+rlim = "rlim"
+
+[default.extend-identifiers]
+# eBPF function/helper names
+XDP_PASS = "XDP_PASS"
+XDP_DROP = "XDP_DROP"
+XDP_ABORTED = "XDP_ABORTED"
+XDP_REDIRECT = "XDP_REDIRECT"
+XDP_TX = "XDP_TX"
+ETH_P_IP = "ETH_P_IP"
