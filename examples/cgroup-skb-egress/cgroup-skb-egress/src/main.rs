@@ -3,7 +3,7 @@ use std::{mem::MaybeUninit, net::Ipv4Addr};
 use aya::{
     maps::{
         HashMap,
-        perf::{PerfEvent, PerfEventArray},
+        perf::{PerfEvent, PerfEventArray, PerfEventArrayBuffer},
     },
     programs::{CgroupAttachMode, CgroupSkb, CgroupSkbAttachType},
     util::online_cpus,
@@ -70,7 +70,8 @@ async fn main() -> Result<(), anyhow::Error> {
         PerfEventArray::try_from(bpf.take_map("EVENTS").unwrap())?;
 
     for cpu_id in online_cpus().map_err(|(_, error)| error)? {
-        let buf = perf_array.open(cpu_id, None)?;
+        let buf = PerfEventArrayBuffer::open(cpu_id, 2)?;
+        perf_array.set(cpu_id, &buf)?;
         let mut buf = tokio::io::unix::AsyncFd::with_interest(
             buf,
             tokio::io::Interest::READABLE,
