@@ -151,6 +151,12 @@ static BLOCKLIST: HashMap<u32, u32> = HashMap::with_max_entries(1024, 0);
 Here, we define our blocklist with a `HashMap`,
 which stores integers (u32), with a maximum of 1024 entries.
 
+> [!NOTE]
+> In aya 0.12+, maps are accessed via `bpf.map_mut("NAME")` which returns
+> `Option<&mut Map>`, or `bpf.take_map("NAME")` for ownership transfer.
+> Maps are converted to their typed wrappers (e.g., `HashMap`) using
+> `HashMap::try_from(bpf.map_mut("BLOCKLIST").unwrap())?`.
+
 ```rust,ignore
 #[xdp]
 pub fn xdp_firewall(ctx: XdpContext) -> u32 {
@@ -369,12 +375,6 @@ we use for informational and warning messages
 - `tokio::signal`: For handling signals asynchronously, see
   [this link][tokio-signal] for more information
 
-> [!NOTE]
-> `aya::Bpf` is deprecated since version `0.13.0` and `aya_log:BpfLogger`
-> since `0.2.1`. Use [`aya::Ebpf`][aya-ebpf] and
-> [`aya_log:EbpfLogger`][aya-ebpf-logger] instead if you are using the more
-> recent versions.
-
 #### Defining command-line arguments
 
 ```rust,ignore
@@ -574,8 +574,6 @@ omit `RUST_LOG=info`, but you won't get any logging.
 [prerequisites]: https://aya-rs.dev/book/start/development/
 [logging-library]: https://docs.rs/log/latest/log/index.html
 [tokio-signal]: https://docs.rs/tokio/latest/tokio/signal/
-[aya-ebpf]: https://docs.aya-rs.dev/aya/struct.ebpf
-[aya-ebpf-logger]: https://docs.aya-rs.dev/aya_log/struct.ebpflogger
 [clap-derive]: https://docs.rs/clap/latest/clap/_derive/index.html
 [clap-parse]: https://docs.rs/clap/latest/clap/trait.Parser.html#method.parse
 [env-logger-init]: https://docs.rs/env_logger/latest/env_logger/fn.init.html
