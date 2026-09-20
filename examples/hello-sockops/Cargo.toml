@@ -1,0 +1,13 @@
+[workspace]
+members = ["hello-sockops", "hello-sockops-ebpf"]
+
+resolver = "2"
+
+default-members = ["hello-sockops"]
+
+[workspace.package]
+edition = "2024"
+
+[profile.release.package.hello-sockops-ebpf]
+debug = 2
+codegen-units = 1

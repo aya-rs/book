@@ -1,2 +1,4 @@
 .venv
 site
+Cargo.lock
+target
