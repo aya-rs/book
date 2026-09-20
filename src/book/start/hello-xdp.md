@@ -177,6 +177,15 @@ OPTIONS:
 >
 > Replace `wlp2s0` with your interface.
 
+<!-- keeps markdownlint happy -->
+
+> [!TIP]
+> Use this command to see all network interfaces on your machine:
+>
+> ```console
+> ip -brief link show
+> ```
+
 ```console
 $ RUST_LOG=info cargo run
 [2022-12-21T18:03:09Z INFO  xdp_hello] Waiting for Ctrl-C...
