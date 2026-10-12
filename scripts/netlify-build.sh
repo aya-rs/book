@@ -2,6 +2,7 @@
 set -euo pipefail
 
 MDBOOK_VERSION=${MDBOOK_VERSION:-0.5.1}
+MDBOOK_MERMAID_VERSION=${MDBOOK_MERMAID_VERSION:-0.17.1}
 CACHE_DIR="${NETLIFY_CACHE_DIR:-$HOME/.cache}/mdbook/${MDBOOK_VERSION}"
 BIN_DIR="$CACHE_DIR/bin"
 
@@ -13,6 +14,11 @@ curl -sSL "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSI
   | tar -xz -C "$CACHE_DIR/src"
 mv "$CACHE_DIR/src/mdbook" "$BIN_DIR/mdbook"
 
+curl -fsSL "https://github.com/badboy/mdbook-mermaid/releases/download/v${MDBOOK_MERMAID_VERSION}/mdbook-mermaid-v${MDBOOK_MERMAID_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+  | tar -xz -C "$CACHE_DIR/src"
+mv "$CACHE_DIR/src/mdbook-mermaid" "$BIN_DIR/mdbook-mermaid"
+
+mdbook-mermaid install .
 mdbook build
 
 if [ "${NOINDEX:-}" = "1" ]; then

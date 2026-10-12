@@ -13,8 +13,9 @@ which is considered unsafe. However, what Rust combined with Aya does offer is
 a fast and efficient development experience:
 
 - Cargo for project scaffolding, build, test and debugging
-- Generation of Rust bindings to Kernel Headers with Compile-Once,
-  Run-Everywhere (CO-RE) support
+- Generation of Rust bindings to kernel types with `aya-tool`
+- Userspace loader support for [Compile Once, Run Everywhere (CO-RE)][co-re]
+  relocations emitted by the eBPF compiler
 - Easy code sharing between user-space and eBPF programs
 - Fast compile times
 - No runtime dependency on LLVM, BCC or libbpf
@@ -85,3 +86,4 @@ directly from kernel memory.
 
 [rust-book]: https://doc.rust-lang.org/book/
 [cilium-guide]: https://docs.cilium.io/en/stable/bpf/
+[co-re]: aya/co-re.md

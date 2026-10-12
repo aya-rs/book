@@ -8,7 +8,12 @@ src = "src"
 [build]
 build-dir = "site"
 
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+renderers = ["html"]
+
 [output.html]
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
 default-theme = "light"
 preferred-dark-theme = "ayu"
 site-url = "https://aya-rs.dev"
