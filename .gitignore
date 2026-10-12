@@ -1,2 +1,4 @@
 .venv
 site
+/mermaid.min.js
+/mermaid-init.js
