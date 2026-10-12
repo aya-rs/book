@@ -53,8 +53,9 @@ jobs:
 
       - uses: taiki-e/install-action@v2
         with:
-          tool: bpf-linker,mdbook
+          tool: bpf-linker,mdbook,mdbook-mermaid
 
+      - run: mdbook-mermaid install .
       - run: mdbook build
       - run: mdbook test
 

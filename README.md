@@ -12,9 +12,14 @@ This book is a living document, and is updated continuously.
 ## Local Render
 
 ```console
-cargo install mdbook
+cargo install mdbook mdbook-mermaid
+mdbook-mermaid install .
 mdbook serve --open
 ```
+
+Diagrams use Mermaid code blocks in Markdown. `mdbook-mermaid install .`
+generates the JavaScript assets needed to render them; these files are ignored
+by Git.
 
 ## License
 
