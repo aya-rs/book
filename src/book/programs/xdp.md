@@ -353,7 +353,7 @@ use aya::{
 use aya_log::EbpfLogger;
 use clap::Parser;
 use log::{info, warn};
-use std::net::Ipv4Addr;
+use std::{ffi::CString, net::Ipv4Addr};
 use tokio::signal;
 ```
 
@@ -366,6 +366,7 @@ use tokio::signal;
 - `log::{info, warn}`: The [logging library][logging-library]
 we use for informational and warning messages
 - `std::net::Ipv4Addr`: A struct to work with IPv4 addresses
+- `std::ffi::CString`: A NUL-terminated interface name for Aya
 - `tokio::signal`: For handling signals asynchronously, see
   [this link][tokio-signal] for more information
 
@@ -381,13 +382,14 @@ we use for informational and warning messages
 #[derive(Debug, Parser)]
 struct Opt {
     #[clap(short, long, default_value = "eth0")]
-    iface: String,
+    iface: CString,
 }
 ```
 
 A simple struct is defined for command-line parsing using
 [clap's derive feature][clap-derive], with the optional argument `iface` to
 provide our network interface name.
+Clap parses it as a `CString`, which Aya borrows when attaching the program.
 
 #### Main function
 
@@ -491,13 +493,13 @@ use aya::{
 use aya_log::EbpfLogger;
 use clap::Parser;
 use log::{info, warn};
-use std::net::Ipv4Addr;
+use std::{ffi::CString, net::Ipv4Addr};
 use tokio::signal;
 
 #[derive(Debug, Parser)]
 struct Opt {
     #[clap(short, long, default_value = "eth0")]
-    iface: String,
+    iface: CString,
 }
 
 #[tokio::main]

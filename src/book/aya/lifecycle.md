@@ -18,7 +18,7 @@ fn main() {
         // (2)
         program.load()?;
         // (3)
-        program.attach("eth0", XdpMode::default()).unwrap();
+        program.attach(c"eth0", XdpMode::default()).unwrap();
     }
     // (4)
 

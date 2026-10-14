@@ -6,13 +6,13 @@ use aya::{
 use aya_log::EbpfLogger;
 use clap::Parser;
 use log::{info, warn};
-use std::net::Ipv4Addr;
+use std::{ffi::CString, net::Ipv4Addr};
 use tokio::signal;
 
 #[derive(Debug, Parser)]
 struct Opt {
     #[clap(short, long, default_value = "eth0")]
-    iface: String,
+    iface: CString,
 }
 
 #[tokio::main]

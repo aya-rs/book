@@ -1,3 +1,5 @@
+use std::ffi::CString;
+
 use anyhow::Context;
 use aya::programs::{Xdp, XdpMode};
 use aya_log::EbpfLogger;
@@ -8,7 +10,7 @@ use tokio::signal; // (1)
 #[derive(Debug, Parser)]
 struct Opt {
     #[clap(short, long, default_value = "eth0")]
-    iface: String, // (2)
+    iface: CString, // (2)
 }
 
 #[tokio::main] // (3)
