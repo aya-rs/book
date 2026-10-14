@@ -72,10 +72,14 @@ async fn main() -> Result<(), anyhow::Error> {
     for cpu_id in online_cpus().map_err(|(_, error)| error)? {
         let buf = PerfEventArrayBuffer::open(cpu_id, 2)?;
         perf_array.set(cpu_id, &buf)?;
-        let mut buf = tokio::io::unix::AsyncFd::with_interest(
-            buf,
-            tokio::io::Interest::READABLE,
-        )?;
+        // SAFETY: The buffer owns the fd, and `for_each` does not close
+        // or replace it.
+        let mut buf = unsafe {
+            tokio::io::unix::AsyncFd::register_with_interest(
+                buf,
+                tokio::io::Interest::READABLE,
+            )
+        }?;
 
         task::spawn(async move {
             loop {

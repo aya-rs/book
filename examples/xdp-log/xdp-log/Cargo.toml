@@ -11,7 +11,7 @@ xdp-log-common = { path = "../xdp-log-common", features = ["user"] }
 anyhow = "1"
 clap = { version = "4.1", features = ["derive"] }
 log = "0.4"
-tokio = { version = "1.25", features = [
+tokio = { version = "1.53.3", features = [
   "macros",
   "rt",
   "rt-multi-thread",
