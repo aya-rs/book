@@ -1,0 +1,15 @@
+[package]
+name = "hello-sockops-ebpf"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+aya-ebpf = { git = "https://github.com/aya-rs/aya" }
+aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
+
+[build-dependencies]
+which = { version = "8.0.0", default-features = false, features = ["real-sys"] }
+
+[[bin]]
+name = "hello-sockops"
+path = "src/main.rs"

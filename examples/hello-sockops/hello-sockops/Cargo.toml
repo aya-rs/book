@@ -1,0 +1,22 @@
+[package]
+name = "hello-sockops"
+version = "0.1.0"
+edition.workspace = true
+publish = false
+
+[dependencies]
+aya = { git = "https://github.com/aya-rs/aya" }
+aya-log = { git = "https://github.com/aya-rs/aya" }
+anyhow = "1"
+env_logger = "0.11"
+log = "0.4"
+
+[build-dependencies]
+aya-build = { git = "https://github.com/aya-rs/aya" }
+anyhow = "1"
+cargo_metadata = "0.23.0"
+hello-sockops-ebpf = { path = "../hello-sockops-ebpf" }
+
+[[bin]]
+name = "hello-sockops"
+path = "src/main.rs"
