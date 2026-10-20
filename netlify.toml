@@ -2,5 +2,8 @@
 publish = "site"
 command = "bash scripts/netlify-build.sh"
 
+[build.environment]
+PYTHON_VERSION = "latest"
+
 [context.staging.environment]
 NOINDEX = "1"
