@@ -41,14 +41,14 @@ that keeps the eBPF verifier happy, we're going to introduce a helper function
 called `ptr_at`. The function ensures that before we access any packet data, we
 insert the bound checks which are required by the verifier.
 
-Finally to access individual fields from the Ethernet and IPv4 headers, we're
-going to use the memoffset crate, let's add a dependency for it in
-`xdp-log-ebpf/Cargo.toml`.
+The [network-types](https://crates.io/crates/network-types) crate provides
+constant definitions like `EthHdr::LEN` and `Ipv4Hdr::LEN` for header sizes,
+which we use to calculate offsets when accessing packet fields.
 
 > [!TIP]
-> As there is limited stack space, it's more memory efficient to use the
-> `offset_of!` macro to read a single field from a struct, rather than reading
-> the whole struct and accessing the field by name.
+> As there is limited stack space in eBPF programs, it's more memory efficient
+> to read individual fields via pointer offsets (using `ptr_at`) rather than
+> copying entire header structs onto the stack.
 
 The resulting code looks like this:
 
