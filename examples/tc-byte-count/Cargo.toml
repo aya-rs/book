@@ -1,0 +1,3 @@
+[workspace]
+members = ["tc-byte-count", "tc-byte-count-common", "xtask"]
+resolver="2"
